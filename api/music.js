@@ -1,204 +1,170 @@
 const JAMENDO_CLIENT_ID =
   process.env.JAMENDO_CLIENT_ID || "709fa152";
 
-const REQUEST_TIMEOUT = 8000;
+const JAMENDO_TIMEOUT = 6000;
 
-function corsHeaders() {
+function headers(type = "application/json") {
   return {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Cache-Control": "no-store"
+    "Cache-Control": "no-store",
+    "Content-Type": type
   };
 }
 
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      ...corsHeaders(),
-      "Content-Type": "application/json; charset=utf-8"
+function responseJSON(data, status = 200) {
+  return new Response(
+    JSON.stringify(data),
+    {
+      status,
+      headers: headers()
     }
+  );
+}
+
+function timeoutFetch(url, options = {}, ms = JAMENDO_TIMEOUT) {
+  const controller = new AbortController();
+
+  const timer = setTimeout(
+    () => controller.abort(),
+    ms
+  );
+
+  return fetch(url, {
+    ...options,
+    signal: controller.signal
+  }).finally(() => {
+    clearTimeout(timer);
   });
 }
 
-function clean(value, max = 120) {
-  return String(value || "")
-    .trim()
-    .slice(0, max);
-}
+/* =========================
+   SEARCH MUSIC
+========================= */
 
-function timeoutSignal(ms) {
-  return AbortSignal.timeout(ms);
-}
+async function searchMusic(request) {
+  const url = new URL(request.url);
 
-/* -----------------------------
-   BUILD MUSIC SEARCHES
------------------------------ */
+  const query =
+    (url.searchParams.get("query") || "")
+      .trim()
+      .slice(0, 100);
 
-function buildSearches(request) {
-  const text = clean(request).toLowerCase();
-
-  const searches = [];
-
-  if (/cinematic|movie|film|dramatic/.test(text)) {
-    searches.push({
-      fuzzytags: "cinematic soundtrack"
-    });
-
-    searches.push({
-      fuzzytags: "dramatic soundtrack"
-    });
-  }
-
-  if (/motivational|motivation|inspiring|inspiration/.test(text)) {
-    searches.push({
-      fuzzytags: "motivational rock"
-    });
-
-    searches.push({
-      fuzzytags: "energetic rock"
-    });
-  }
-
-  if (/calm|relax|peaceful|piano/.test(text)) {
-    searches.push({
-      fuzzytags: "calm piano"
-    });
-
-    searches.push({
-      fuzzytags: "ambient relaxation"
-    });
-  }
-
-  if (/energetic|energy|workout|gym|fast/.test(text)) {
-    searches.push({
-      fuzzytags: "energetic electronic"
-    });
-
-    searches.push({
-      fuzzytags: "energetic rock"
-    });
-  }
-
-  if (/romantic|love/.test(text)) {
-    searches.push({
-      fuzzytags: "romantic acoustic"
-    });
-
-    searches.push({
-      fuzzytags: "romantic piano"
-    });
-  }
-
-  /* Always have a general fallback */
-  searches.push({
-    fuzzytags: "soundtrack"
-  });
-
-  searches.push({
-    tags: "instrumental"
-  });
-
-  return searches.slice(0, 5);
-}
-
-/* -----------------------------
-   JAMENDO SEARCH
------------------------------ */
-
-async function searchJamendo(params) {
-  const url = new URL(
+  const jamendoURL = new URL(
     "https://api.jamendo.com/v3.0/tracks/"
   );
 
-  url.searchParams.set(
+  jamendoURL.searchParams.set(
     "client_id",
     JAMENDO_CLIENT_ID
   );
 
-  url.searchParams.set(
+  jamendoURL.searchParams.set(
     "format",
     "json"
   );
 
-  url.searchParams.set(
+  jamendoURL.searchParams.set(
     "limit",
-    "10"
+    "8"
   );
 
-  url.searchParams.set(
+  jamendoURL.searchParams.set(
     "audioformat",
     "mp32"
   );
 
-  url.searchParams.set(
+  jamendoURL.searchParams.set(
     "type",
     "single albumtrack"
   );
 
-  for (const [key, value] of Object.entries(params)) {
-    if (
-      value !== undefined &&
-      value !== null &&
-      value !== ""
-    ) {
-      url.searchParams.set(
-        key,
-        value
-      );
-    }
-  }
+  /*
+   * Use one search only.
+   * This prevents the API from hanging
+   * while trying many Jamendo searches.
+   */
 
-  const response = await fetch(url, {
-    method: "GET",
-    signal: timeoutSignal(
-      REQUEST_TIMEOUT
-    )
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Jamendo HTTP ${response.status}`
+  if (query) {
+    jamendoURL.searchParams.set(
+      "search",
+      query
+    );
+  } else {
+    jamendoURL.searchParams.set(
+      "featured",
+      "1"
     );
   }
 
-  const data =
-    await response.json();
+  let upstream;
 
-  if (
-    !data ||
-    !Array.isArray(data.results)
-  ) {
-    return [];
+  try {
+    upstream = await timeoutFetch(
+      jamendoURL,
+      {
+        method: "GET"
+      },
+      JAMENDO_TIMEOUT
+    );
+  } catch (error) {
+    return responseJSON(
+      {
+        ok: false,
+        error:
+          error?.name === "AbortError"
+            ? "Music search timed out."
+            : "Music search failed."
+      },
+      504
+    );
   }
 
-  return data.results;
-}
+  if (!upstream.ok) {
+    return responseJSON(
+      {
+        ok: false,
+        error:
+          `Jamendo returned HTTP ${upstream.status}.`
+      },
+      502
+    );
+  }
 
-/* -----------------------------
-   FILTER TRACKS
------------------------------ */
+  let data;
 
-function usableTracks(tracks) {
-  const seen =
-    new Set();
+  try {
+    data = await upstream.json();
+  } catch {
+    return responseJSON(
+      {
+        ok: false,
+        error:
+          "Invalid response from music service."
+      },
+      502
+    );
+  }
 
-  const output = [];
+  const results =
+    Array.isArray(data?.results)
+      ? data.results
+      : [];
 
-  for (const track of tracks) {
-    if (
-      !track ||
-      !track.id
-    ) {
-      continue;
-    }
+  /*
+   * Only keep tracks that can actually
+   * be downloaded/streamed.
+   */
 
-    if (
-      !track.audio
-    ) {
-      continue;
-    }
+  const seen = new Set();
+
+  const tracks = [];
+
+  for (const track of results) {
+    if (!track?.id) continue;
+
+    if (!track?.audio) continue;
 
     if (
       track.audiodownload_allowed === false
@@ -209,133 +175,64 @@ function usableTracks(tracks) {
     const id =
       String(track.id);
 
-    if (
-      seen.has(id)
-    ) {
-      continue;
-    }
+    if (seen.has(id)) continue;
 
     seen.add(id);
 
-    output.push(track);
+    tracks.push({
+      id,
+
+      name:
+        track.name ||
+        "Untitled",
+
+      artist_name:
+        track.artist_name ||
+        "Unknown artist",
+
+      duration:
+        Number(track.duration) ||
+        0,
+
+      license_ccurl:
+        track.license_ccurl ||
+        "",
+
+      audiodownload_allowed:
+        true
+    });
   }
-
-  return output;
-}
-
-/* -----------------------------
-   SEARCH HANDLER
------------------------------ */
-
-async function handleSearch(request) {
-  const url =
-    new URL(request.url);
-
-  const query =
-    clean(
-      url.searchParams.get(
-        "query"
-      )
-    );
-
-  const searches =
-    buildSearches(query);
-
-  /*
-   Run searches in parallel instead
-   of waiting for each one.
-  */
-
-  const results =
-    await Promise.allSettled(
-      searches.map(
-        (params) =>
-          searchJamendo(params)
-      )
-    );
-
-  const candidates = [];
-
-  for (const result of results) {
-    if (
-      result.status ===
-      "fulfilled"
-    ) {
-      candidates.push(
-        ...result.value
-      );
-    }
-  }
-
-  const tracks =
-    usableTracks(
-      candidates
-    ).slice(0, 15);
 
   if (!tracks.length) {
-    return json(
+    return responseJSON(
       {
         ok: false,
         error:
-          "YARUVA could not find suitable music right now."
+          "No usable music was found."
       },
       404
     );
   }
 
-  return json({
+  return responseJSON({
     ok: true,
-
-    tracks:
-      tracks.map(
-        (track) => ({
-          id:
-            String(track.id),
-
-          name:
-            track.name ||
-            "Untitled",
-
-          artist_name:
-            track.artist_name ||
-            "Unknown artist",
-
-          duration:
-            Number(
-              track.duration
-            ) || 0,
-
-          license_ccurl:
-            track.license_ccurl ||
-            "",
-
-          audiodownload_allowed:
-            track.audiodownload_allowed !== false
-        })
-      )
+    tracks
   });
 }
 
-/* -----------------------------
-   STREAM HANDLER
------------------------------ */
+/* =========================
+   STREAM MUSIC
+========================= */
 
-async function handleStream(request) {
-  const url =
-    new URL(request.url);
+async function streamMusic(request) {
+  const url = new URL(request.url);
 
   const id =
-    clean(
-      url.searchParams.get(
-        "id"
-      ),
-      30
-    );
+    (url.searchParams.get("id") || "")
+      .trim();
 
-  if (
-    !/^\d+$/.test(id)
-  ) {
-    return json(
+  if (!/^\d+$/.test(id)) {
+    return responseJSON(
       {
         ok: false,
         error:
@@ -345,10 +242,9 @@ async function handleStream(request) {
     );
   }
 
-  const jamendoURL =
-    new URL(
-      "https://api.jamendo.com/v3.0/tracks/file/"
-    );
+  const jamendoURL = new URL(
+    "https://api.jamendo.com/v3.0/tracks/file/"
+  );
 
   jamendoURL.searchParams.set(
     "client_id",
@@ -370,24 +266,35 @@ async function handleStream(request) {
     "stream"
   );
 
-  const upstream =
-    await fetch(
+  let upstream;
+
+  try {
+    upstream = await timeoutFetch(
       jamendoURL,
       {
         method: "GET",
-        redirect: "follow",
-        signal:
-          timeoutSignal(
-            12000
-          )
-      }
+        redirect: "follow"
+      },
+      12000
     );
+  } catch (error) {
+    return responseJSON(
+      {
+        ok: false,
+        error:
+          error?.name === "AbortError"
+            ? "Music stream timed out."
+            : "Music stream failed."
+      },
+      504
+    );
+  }
 
   if (
     !upstream.ok ||
     !upstream.body
   ) {
-    return json(
+    return responseJSON(
       {
         ok: false,
         error:
@@ -397,33 +304,25 @@ async function handleStream(request) {
     );
   }
 
-  const headers =
+  const responseHeaders =
     new Headers(
-      corsHeaders()
+      headers("audio/mpeg")
     );
 
-  headers.set(
-    "Content-Type",
-    upstream.headers.get(
-      "content-type"
-    ) ||
-      "audio/mpeg"
-  );
-
-  headers.set(
+  responseHeaders.set(
     "Content-Disposition",
     "inline"
   );
 
-  const length =
+  const contentLength =
     upstream.headers.get(
       "content-length"
     );
 
-  if (length) {
-    headers.set(
+  if (contentLength) {
+    responseHeaders.set(
       "Content-Length",
-      length
+      contentLength
     );
   }
 
@@ -431,37 +330,34 @@ async function handleStream(request) {
     upstream.body,
     {
       status: 200,
-      headers
+      headers: responseHeaders
     }
   );
 }
 
-/* -----------------------------
-   MAIN API
------------------------------ */
+/* =========================
+   MAIN HANDLER
+========================= */
 
 export default async function handler(
   request
 ) {
   if (
-    request.method ===
-    "OPTIONS"
+    request.method === "OPTIONS"
   ) {
     return new Response(
       null,
       {
         status: 204,
-        headers:
-          corsHeaders()
+        headers: headers()
       }
     );
   }
 
   if (
-    request.method !==
-    "GET"
+    request.method !== "GET"
   ) {
-    return json(
+    return responseJSON(
       {
         ok: false,
         error:
@@ -475,17 +371,18 @@ export default async function handler(
     const url =
       new URL(request.url);
 
-    if (
+    const mode =
       url.searchParams.get(
         "mode"
-      ) === "stream"
-    ) {
-      return await handleStream(
+      );
+
+    if (mode === "stream") {
+      return await streamMusic(
         request
       );
     }
 
-    return await handleSearch(
+    return await searchMusic(
       request
     );
 
@@ -495,7 +392,7 @@ export default async function handler(
       error
     );
 
-    return json(
+    return responseJSON(
       {
         ok: false,
         error:
