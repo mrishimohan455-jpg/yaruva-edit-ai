@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09090b">
+  <title>YARUVA Edit AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #09090b;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      margin: auto;
+      min-height: 100vh;
+      padding: 24px 20px 40px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 45px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .ai-badge {
+      background: #18181b;
+      border: 1px solid #27272a;
+      padding: 8px 13px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #c4b5fd;
+    }
+
+    .hero {
+      margin-bottom: 35px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span {
+      color: #a78bfa;
+    }
+
+    .hero p {
+      color: #a1a1aa;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .primary {
+      width: 100%;
+      padding: 18px;
+      border: none;
+      border-radius: 16px;
+      background: #ffffff;
+      color: #09090b;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 14px;
+    }
+
+    .primary:active {
+      transform: scale(0.98);
+    }
+
+    .card {
+      background: #111113;
+      border: 1px solid #27272a;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 14px;
+      cursor: pointer;
+    }
+
+    .card:active {
+      transform: scale(0.99);
+    }
+
+    .icon {
+      font-size: 25px;
+      margin-bottom: 12px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 7px;
+    }
+
+    .card p {
+      color: #a1a1aa;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .section-title {
+      margin: 35px 0 14px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #71717a;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .feature {
+      background: #111113;
+      border: 1px solid #27272a;
+      border-radius: 16px;
+      padding: 17px;
+    }
+
+    .feature strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .feature span {
+      color: #71717a;
+      font-size: 12px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #52525b;
+      font-size: 12px;
+      margin-top: 45px;
+    }
+
+    @media (min-width: 700px) {
+      .app {
+        padding-top: 50px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="app">
+
+    <header class="top">
+      <div class="logo">YARUVA</div>
+      <div class="ai-badge">✦ AI EDITOR</div>
+    </header>
+
+    <section class="hero">
+      <h1>Create.<br><span>Learn. Edit.</span></h1>
+      <p>
+        A beginner-friendly video editor that helps you
+        understand editing while you create.
+      </p>
+    </section>
+
+    <button class="primary" onclick="newProject()">
+      ＋ Create New Project
+    </button>
+
+    <div class="card" onclick="learn()">
+      <div class="icon">📚</div>
+      <h2>Learn Editing</h2>
+      <p>
+        Learn trimming, transitions, text, audio,
+        colour grading and more — step by step.
+      </p>
+    </div>
+
+    <div class="card" onclick="aiAssistant()">
+      <div class="icon">✨</div>
+      <h2>AI Editing Assistant</h2>
+      <p>
+        Tell AI what you want to create and get
+        editing suggestions designed for beginners.
+      </p>
+    </div>
+
+    <div class="section-title">What you'll learn</div>
+
+    <section class="features">
+
+      <div class="feature">
+        <strong>✂️ Cutting</strong>
+        <span>Trim & arrange clips</span>
+      </div>
+
+      <div class="feature">
+        <strong>🎵 Audio</strong>
+        <span>Music & voice-over</span>
+      </div>
+
+      <div class="feature">
+        <strong>📝 Text</strong>
+        <span>Titles & captions</span>
+      </div>
+
+      <div class="feature">
+        <strong>🎨 Visuals</strong>
+        <span>Colour & effects</span>
+      </div>
+
+    </section>
+
+    <div class="footer">
+      YARUVA Edit AI · Learn while you create
+    </div>
+
+  </main>
+
+  <script>
+
+    function newProject() {
+      alert("🎬 New Project\n\nVideo editor coming next!");
+    }
+
+    function learn() {
+      alert("📚 Learn Editing\n\nYour editing lessons will appear here.");
+    }
+
+    function aiAssistant() {
+      alert("✨ AI Assistant\n\nTell me what kind of video you want to create!");
+    }
+
+  </script>
+
+</body>
+</html>
