@@ -5,7 +5,8 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>YARUVA Edit AI</title>
 
@@ -20,7 +21,10 @@
 body{
     background:#090909;
     color:#fff;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-family:-apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
     min-height:100vh;
 }
 
@@ -307,7 +311,7 @@ textarea:focus{
     </div>
 
     <div class="badge">
-        EDIT AI • LOCAL
+        EDIT AI • V2
     </div>
 
 </header>
@@ -323,13 +327,17 @@ textarea:focus{
     </h1>
 
     <p>
-        Upload your video and describe the result naturally.
-        YARUVA interprets your request and renders the
-        edited video in your browser.
+        Describe your video edit naturally.
+        YARUVA interprets your request and
+        renders the finished video locally.
     </p>
 
 </section>
 
+
+<!-- =================================================
+     UPLOAD
+================================================= -->
 
 <section class="card">
 
@@ -365,28 +373,30 @@ textarea:focus{
 </section>
 
 
+<!-- =================================================
+     REQUEST
+================================================= -->
+
 <section class="card">
 
     <h2>
         02 • Tell YARUVA what you want
     </h2>
 
-
     <textarea
         id="aiPrompt"
-        placeholder='Example: Make this a professional motivational Instagram Reel. Make it darker, more colourful, remove the boring intro, add caption "Never Give Up" in the middle and make it 10 seconds.'
+        placeholder='Example: Make this a professional motivational Instagram Reel. Give it a cinematic look, add an animated caption "Never Give Up" in the middle, make the text slide up, and remove the boring intro.'
     ></textarea>
 
 
     <div class="example">
 
-        YARUVA understands natural phrases such as:
+        Try phrases like:
 
-        professional • cinematic • motivational •
-        moody • brighter • colourful • vertical •
-        Reel • faster • slow • remove intro •
-        remove outro • cut sections • captions •
-        duration requests
+        cinematic • professional • motivational •
+        moody • colourful • darker • Reel •
+        animated caption • fade text • slide up text •
+        remove intro • remove outro • slow • fast
 
     </div>
 
@@ -394,23 +404,23 @@ textarea:focus{
     <div class="chips">
 
         <span class="chip">
-            Professional Reel
+            Cinematic Reel
         </span>
 
         <span class="chip">
-            Dark cinematic
+            Animated Caption
         </span>
 
         <span class="chip">
-            Remove intro
+            Slide Up Text
         </span>
 
         <span class="chip">
-            Add caption
+            Remove Intro
         </span>
 
         <span class="chip">
-            Make 15 seconds
+            Professional Look
         </span>
 
     </div>
@@ -448,7 +458,6 @@ textarea:focus{
 
         </div>
 
-
         <div
             id="status"
             class="status"
@@ -456,12 +465,10 @@ textarea:focus{
             Preparing editor...
         </div>
 
-
         <div
             id="audioStatus"
             class="audio-status"
         ></div>
-
 
         <div
             id="errorBox"
@@ -473,6 +480,10 @@ textarea:focus{
 </section>
 
 
+<!-- =================================================
+     SETTINGS
+================================================= -->
+
 <section
     id="settingsCard"
     class="card"
@@ -482,7 +493,6 @@ textarea:focus{
     <h2>
         YARUVA Edit Settings
     </h2>
-
 
     <div class="settings">
 
@@ -566,6 +576,17 @@ textarea:focus{
 
         <div class="setting">
 
+            <label>ANIMATION</label>
+
+            <strong id="animationValue">
+                None
+            </strong>
+
+        </div>
+
+
+        <div class="setting">
+
             <label>TRIM</label>
 
             <strong id="trimValue">
@@ -578,6 +599,10 @@ textarea:focus{
 
 </section>
 
+
+<!-- =================================================
+     RESULT
+================================================= -->
 
 <section
     id="resultCard"
@@ -621,10 +646,11 @@ textarea:focus{
             YARUVA:
         </div>
 
-        Natural-language instructions are interpreted
-        locally. The renderer then creates a real edited
-        video with the requested visual, timing,
-        caption and audio changes.
+        V2 adds animated captions,
+        cinematic treatment and smoother
+        visual presentation while keeping
+        the actual browser-based video
+        rendering system.
 
     </div>
 
@@ -638,7 +664,7 @@ textarea:focus{
 
 
 /* =====================================================
-   GLOBAL VARIABLES
+   GLOBALS
 ===================================================== */
 
 const videoInput =
@@ -755,7 +781,7 @@ videoInput.addEventListener(
 
 
 /* =====================================================
-   VIDEO READY
+   WAIT FOR VIDEO
 ===================================================== */
 
 function waitForVideoReady(video){
@@ -874,7 +900,7 @@ function waitForVideoReady(video){
 
 
 /* =====================================================
-   HTML ESCAPE
+   ESCAPE
 ===================================================== */
 
 function escapeHTML(text){
@@ -900,7 +926,7 @@ function escapeHTML(text){
 
 
 /* =====================================================
-   FIXED CAPTION INTERPRETER
+   CAPTION EXTRACTION
 ===================================================== */
 
 function extractCaption(text){
@@ -911,18 +937,12 @@ function extractCaption(text){
     let match;
 
 
-    /*
-       QUOTED CAPTION
-
-       Add caption "Never Give Up"
-       Put "Never Give Up" in the middle
-       Add text "Never Give Up" at the end
-    */
+    /* QUOTED */
 
     match =
         original.match(
 
-            /(?:add|put|write|show|display)\s+(?:my\s+|the\s+)?(?:a\s+)?(?:caption|text)\s*(?:at|in)?\s*(?:the\s+)?(?:beginning|start|middle|center|end)?\s*[:\-]?\s*[“”"']([^“”"']+)[“”"']/i
+            /(?:add|put|write|show|display)\s+(?:my\s+|the\s+)?(?:a\s+)?(?:animated\s+)?(?:caption|text)\s*(?:at|in)?\s*(?:the\s+)?(?:beginning|start|middle|center|end)?\s*[:\-]?\s*[“”"']([^“”"']+)[“”"']/i
 
         );
 
@@ -934,13 +954,7 @@ function extractCaption(text){
     }
 
 
-    /*
-       CAPTION WITH COLON
-
-       Caption: Never Give Up
-       Text: Never Give Up
-       Add caption: Never Give Up
-    */
+    /* COLON */
 
     match =
         original.match(
@@ -957,16 +971,12 @@ function extractCaption(text){
     }
 
 
-    /*
-       ADD CAPTION WITHOUT QUOTES
-
-       Add caption Never Give Up in the middle
-    */
+    /* ADD CAPTION */
 
     match =
         original.match(
 
-            /(?:add|put|write|show|display)\s+(?:my\s+|the\s+)?(?:a\s+)?(?:caption|text)\s*[:\-]?\s+(.+)/i
+            /(?:add|put|write|show|display)\s+(?:my\s+|the\s+)?(?:a\s+)?(?:animated\s+)?(?:caption|text)\s*[:\-]?\s+(.+)/i
 
         );
 
@@ -997,17 +1007,7 @@ function extractCaption(text){
         value =
             value.replace(
 
-                /\s+(?:on|onto)\s+(?:the\s+)?video\b.*$/i,
-
-                ""
-
-            ).trim();
-
-
-        value =
-            value.replace(
-
-                /\s+(?:for)\s+(?:the\s+)?(?:reel|video)\b.*$/i,
+                /\s+(?:with|using)\s+(?:a\s+)?(?:fade|slide|animation).*$/i,
 
                 ""
 
@@ -1023,12 +1023,7 @@ function extractCaption(text){
     }
 
 
-    /*
-       CAPTION TEXT WITHOUT "ADD"
-
-       Caption Never Give Up
-       Text Never Give Up
-    */
+    /* CAPTION WORD */
 
     match =
         original.match(
@@ -1059,11 +1054,7 @@ function extractCaption(text){
     }
 
 
-    /*
-       PUT TEXT ON VIDEO
-
-       Put Never Give Up on the video
-    */
+    /* PUT TEXT ON VIDEO */
 
     match =
         original.match(
@@ -1092,7 +1083,7 @@ function extractCaption(text){
 
 
 /* =====================================================
-   NATURAL LANGUAGE EDIT INTERPRETER
+   INTERPRETER
 ===================================================== */
 
 function interpretRequest(text){
@@ -1127,8 +1118,8 @@ function interpretRequest(text){
         captionMode:
             "all",
 
-        captionDuration:
-            3,
+        captionAnimation:
+            "none",
 
         speed:
             1,
@@ -1151,6 +1142,12 @@ function interpretRequest(text){
         maxDuration:
             null,
 
+        vignette:
+            false,
+
+        fade:
+            false,
+
         notes:
             [],
 
@@ -1172,7 +1169,9 @@ function interpretRequest(text){
     }
 
 
-    /* STYLE */
+    /* =================================================
+       STYLE
+    ================================================= */
 
     if(
         has(
@@ -1195,7 +1194,13 @@ function interpretRequest(text){
             125;
 
         edit.saturation =
-            88;
+            90;
+
+        edit.vignette =
+            true;
+
+        edit.fade =
+            true;
 
     }
 
@@ -1221,6 +1226,12 @@ function interpretRequest(text){
         edit.saturation =
             105;
 
+        edit.vignette =
+            true;
+
+        edit.fade =
+            true;
+
     }
 
     else if(
@@ -1245,6 +1256,9 @@ function interpretRequest(text){
         edit.saturation =
             108;
 
+        edit.fade =
+            true;
+
     }
 
     else if(
@@ -1267,17 +1281,24 @@ function interpretRequest(text){
         edit.saturation =
             90;
 
+        edit.vignette =
+            true;
+
+        edit.fade =
+            true;
+
     }
 
 
-    /* BRIGHTNESS */
+    /* =================================================
+       DARK
+    ================================================= */
 
     if(
         has(
             "dark",
             "darker",
-            "dim",
-            "moody"
+            "dim"
         )
     ){
 
@@ -1286,6 +1307,10 @@ function interpretRequest(text){
 
     }
 
+
+    /* =================================================
+       BRIGHT
+    ================================================= */
 
     if(
         has(
@@ -1302,14 +1327,15 @@ function interpretRequest(text){
     }
 
 
-    /* CONTRAST */
+    /* =================================================
+       CONTRAST
+    ================================================= */
 
     if(
         has(
             "high contrast",
             "more contrast",
             "strong contrast",
-            "dramatic",
             "dramatic contrast"
         )
     ){
@@ -1333,7 +1359,9 @@ function interpretRequest(text){
     }
 
 
-    /* SATURATION */
+    /* =================================================
+       SATURATION
+    ================================================= */
 
     if(
         has(
@@ -1383,7 +1411,9 @@ function interpretRequest(text){
     }
 
 
-    /* FORMAT */
+    /* =================================================
+       FORMAT
+    ================================================= */
 
     if(
         has(
@@ -1401,7 +1431,9 @@ function interpretRequest(text){
     }
 
 
-    /* SPEED */
+    /* =================================================
+       SPEED
+    ================================================= */
 
     if(
         has(
@@ -1456,7 +1488,9 @@ function interpretRequest(text){
     }
 
 
-    /* AUDIO */
+    /* =================================================
+       AUDIO
+    ================================================= */
 
     if(
         has(
@@ -1474,7 +1508,9 @@ function interpretRequest(text){
     }
 
 
-    /* REMOVE FIRST X */
+    /* =================================================
+       FIRST X SECONDS
+    ================================================= */
 
     let match =
         lower.match(
@@ -1494,7 +1530,9 @@ function interpretRequest(text){
     }
 
 
-    /* NATURAL INTRO */
+    /* =================================================
+       INTRO
+    ================================================= */
 
     if(
         !edit.removeStart &&
@@ -1521,7 +1559,9 @@ function interpretRequest(text){
     }
 
 
-    /* REMOVE LAST X */
+    /* =================================================
+       LAST X SECONDS
+    ================================================= */
 
     match =
         lower.match(
@@ -1541,7 +1581,9 @@ function interpretRequest(text){
     }
 
 
-    /* NATURAL OUTRO */
+    /* =================================================
+       OUTRO
+    ================================================= */
 
     if(
         !edit.removeEnd &&
@@ -1567,7 +1609,9 @@ function interpretRequest(text){
     }
 
 
-    /* CUT FROM X TO Y */
+    /* =================================================
+       CUT X TO Y
+    ================================================= */
 
     match =
         lower.match(
@@ -1592,38 +1636,9 @@ function interpretRequest(text){
     }
 
 
-    /* SECOND CUT FORMAT */
-
-    if(
-        edit.cutStart === null
-    ){
-
-        match =
-            lower.match(
-
-                /(?:remove|cut|skip|delete|trim).*?(\d+(?:\.\d+)?)\s*(?:to|-)\s*(\d+(?:\.\d+)?)\s*(?:seconds?|secs?|s)/
-
-            );
-
-
-        if(match){
-
-            edit.cutStart =
-                parseFloat(
-                    match[1]
-                );
-
-            edit.cutEnd =
-                parseFloat(
-                    match[2]
-                );
-
-        }
-
-    }
-
-
-    /* MAKE X SECONDS */
+    /* =================================================
+       MAKE X SECONDS
+    ================================================= */
 
     match =
         lower.match(
@@ -1643,51 +1658,19 @@ function interpretRequest(text){
     }
 
 
-    /* SHORT VIDEO */
-
-    if(
-        edit.maxDuration === null &&
-        has(
-            "short reel",
-            "short clip",
-            "short video"
-        )
-    ){
-
-        edit.maxDuration =
-            15;
-
-        edit.notes.push(
-            "Short video request interpreted as 15 seconds"
-        );
-
-    }
-
-
-    /* BEST MOMENT */
-
-    if(
-        has(
-            "best 15 seconds",
-            "best 20 seconds",
-            "best 30 seconds"
-        )
-    ){
-
-        edit.notes.push(
-            "Best-moment selection is not yet content-aware; duration limit applied"
-        );
-
-    }
-
-
-    /* CAPTION */
+    /* =================================================
+       CAPTION
+    ================================================= */
 
     edit.caption =
         extractCaption(
             original
         );
 
+
+    /* =================================================
+       CAPTION POSITION
+    ================================================= */
 
     if(
         edit.caption
@@ -1699,7 +1682,9 @@ function interpretRequest(text){
                 "caption at beginning",
                 "caption in the beginning",
                 "caption at start",
-                "caption in the start"
+                "caption in the start",
+                "text at the beginning",
+                "text at beginning"
             )
         ){
 
@@ -1714,7 +1699,9 @@ function interpretRequest(text){
                 "caption at the middle",
                 "caption midway",
                 "caption in the center",
-                "caption at center"
+                "caption at center",
+                "text in the middle",
+                "text at middle"
             )
         ){
 
@@ -1727,7 +1714,9 @@ function interpretRequest(text){
             has(
                 "caption at the end",
                 "caption in the end",
-                "caption at end"
+                "caption at end",
+                "text at the end",
+                "text at end"
             )
         ){
 
@@ -1739,24 +1728,134 @@ function interpretRequest(text){
     }
 
 
-    /* BORING PARTS */
+    /* =================================================
+       CAPTION ANIMATION
+    ================================================= */
 
     if(
         has(
-            "remove boring parts",
-            "remove boring sections",
-            "remove boring moments"
+            "animated caption",
+            "animated text",
+            "animate caption",
+            "animate text",
+            "moving caption",
+            "moving text"
         )
     ){
 
-        edit.notes.push(
-            "Boring-part removal needs video content analysis; no unsafe guess was made"
-        );
+        edit.captionAnimation =
+            "slide";
 
     }
 
 
-    /* CONFIDENCE */
+    if(
+        has(
+            "slide up",
+            "slide-up",
+            "slides up",
+            "text rises",
+            "rise up"
+        )
+    ){
+
+        edit.captionAnimation =
+            "slide";
+
+    }
+
+
+    if(
+        has(
+            "fade caption",
+            "fade text",
+            "fading caption",
+            "fading text",
+            "fade in caption",
+            "fade in text"
+        )
+    ){
+
+        edit.captionAnimation =
+            "fade";
+
+    }
+
+
+    if(
+        has(
+            "pop caption",
+            "pop text",
+            "popup caption",
+            "pop up text"
+        )
+    ){
+
+        edit.captionAnimation =
+            "pop";
+
+    }
+
+
+    /* If caption exists but user asks for cinematic /
+       motivational style, use subtle fade automatically */
+
+    if(
+        edit.caption &&
+        edit.captionAnimation === "none" &&
+        (
+            edit.style === "Cinematic" ||
+            edit.style === "Motivational" ||
+            edit.style === "Professional"
+        )
+    ){
+
+        edit.captionAnimation =
+            "fade";
+
+    }
+
+
+    /* =================================================
+       VIGNETTE
+    ================================================= */
+
+    if(
+        has(
+            "vignette",
+            "dark edges",
+            "dark corners"
+        )
+    ){
+
+        edit.vignette =
+            true;
+
+    }
+
+
+    /* =================================================
+       FADE
+    ================================================= */
+
+    if(
+        has(
+            "fade",
+            "smooth fade",
+            "fade in",
+            "fade out"
+        )
+    ){
+
+        edit.fade =
+            true;
+
+    }
+
+
+    /* =================================================
+       CONFIDENCE
+    ================================================= */
 
     const recognized =
 
@@ -1772,6 +1871,8 @@ function interpretRequest(text){
 
         edit.caption ||
 
+        edit.captionAnimation !== "none" ||
+
         edit.speed !== 1 ||
 
         edit.mute ||
@@ -1782,12 +1883,16 @@ function interpretRequest(text){
 
         edit.cutStart !== null ||
 
-        edit.maxDuration !== null;
+        edit.maxDuration !== null ||
+
+        edit.vignette ||
+
+        edit.fade;
 
 
     edit.confidence =
         recognized
-            ? 90
+            ? 92
             : 40;
 
 
@@ -1797,7 +1902,7 @@ function interpretRequest(text){
 
 
 /* =====================================================
-   BUILD SEGMENTS
+   SEGMENTS
 ===================================================== */
 
 function buildSegments(
@@ -1884,8 +1989,11 @@ function buildSegments(
         ){
 
             segments.push({
+
                 start:start,
+
                 end:cutStart
+
             });
 
         }
@@ -1896,8 +2004,11 @@ function buildSegments(
         ){
 
             segments.push({
+
                 start:cutEnd,
+
                 end:end
+
             });
 
         }
@@ -1907,8 +2018,11 @@ function buildSegments(
     else{
 
         segments.push({
+
             start:start,
+
             end:end
+
         });
 
     }
@@ -1931,12 +2045,10 @@ function buildSegments(
 
 
 /* =====================================================
-   FORMAT TIME
+   TIME
 ===================================================== */
 
-function formatTime(
-    seconds
-){
+function formatTime(seconds){
 
     const value =
         Math.max(
@@ -1974,7 +2086,7 @@ function formatTime(
 
 
 /* =====================================================
-   SHOW SETTINGS
+   SETTINGS
 ===================================================== */
 
 function showSettings(
@@ -2041,6 +2153,31 @@ function showSettings(
 
 
     document.getElementById(
+        "animationValue"
+    ).textContent =
+
+        edit.captionAnimation === "slide"
+
+            ? "Slide Up"
+
+            :
+
+        edit.captionAnimation === "fade"
+
+            ? "Fade In"
+
+            :
+
+        edit.captionAnimation === "pop"
+
+            ? "Pop"
+
+            :
+
+            "None";
+
+
+    document.getElementById(
         "trimValue"
     ).textContent =
 
@@ -2066,7 +2203,7 @@ function showSettings(
 
 
 /* =====================================================
-   RENDER PLAN
+   PLAN
 ===================================================== */
 
 function renderPlan(
@@ -2084,6 +2221,7 @@ function renderPlan(
             ) =>
 
                 total +
+
                 (
                     segment.end -
                     segment.start
@@ -2160,15 +2298,34 @@ function renderPlan(
     }
 
 
-    let notes =
-        "";
+    let notes = "";
+
+
+    if(
+        edit.vignette
+    ){
+
+        notes +=
+            "<br>Vignette: <strong>Enabled</strong>";
+
+    }
+
+
+    if(
+        edit.fade
+    ){
+
+        notes +=
+            "<br>Video fade: <strong>Enabled</strong>";
+
+    }
 
 
     if(
         edit.notes.length
     ){
 
-        notes =
+        notes +=
 
             "<br><br>⚠ <strong>Note:</strong> " +
 
@@ -2240,7 +2397,6 @@ function renderPlan(
         "<br>" +
 
         "Trim: " +
-
         escapeHTML(
             cutText
         ) +
@@ -2271,6 +2427,24 @@ function renderPlan(
 
         (
 
+            edit.captionAnimation !== "none"
+
+                ?
+
+                "<br>Caption animation: <strong>" +
+
+                edit.captionAnimation +
+
+                "</strong>"
+
+                :
+
+                ""
+
+        ) +
+
+        (
+
             edit.mute
 
                 ?
@@ -2283,21 +2457,21 @@ function renderPlan(
 
         ) +
 
+        notes +
+
         "<br><br>" +
 
         "Estimated output: " +
 
         formatTime(
             totalOutput
-        ) +
-
-        notes;
+        );
 
 }
 
 
 /* =====================================================
-   START EDITING
+   START
 ===================================================== */
 
 async function startEditing(){
@@ -2389,7 +2563,7 @@ async function startEditing(){
         document.getElementById(
             "status"
         ).textContent =
-            "Preparing renderer...";
+            "Preparing V2 renderer...";
 
 
         document.getElementById(
@@ -2427,7 +2601,7 @@ async function startEditing(){
 
 
 /* =====================================================
-   RECORDING FORMAT
+   MIME
 ===================================================== */
 
 function getRecordingFormat(){
@@ -2960,6 +3134,7 @@ async function renderVideo(
             ) =>
 
                 total +
+
                 (
                     segment.end -
                     segment.start
@@ -2980,7 +3155,6 @@ async function renderVideo(
 
 
     video.pause();
-
 
     video.playbackRate =
         edit.speed;
@@ -3006,11 +3180,8 @@ async function renderVideo(
     catch(error){
 
         try{
-
             recorder.stop();
-
         }
-
         catch(_){}
 
 
@@ -3024,7 +3195,7 @@ async function renderVideo(
     document.getElementById(
         "status"
     ).textContent =
-        "Rendering video + audio...";
+        "Rendering V2 video + audio...";
 
 
     for(
@@ -3123,7 +3294,7 @@ async function renderVideo(
     document.getElementById(
         "status"
     ).textContent =
-        "Finishing video...";
+        "Finishing V2 video...";
 
 
     await sleep(
@@ -3147,7 +3318,6 @@ async function renderVideo(
 
 
     video.pause();
-
 
     video.playbackRate =
         1;
@@ -3204,7 +3374,7 @@ async function renderVideo(
 
 
     download.download =
-        "yaruva-edited-video." +
+        "yaruva-v2-edited-video." +
         extension;
 
 
@@ -3228,7 +3398,7 @@ async function renderVideo(
     document.getElementById(
         "status"
     ).textContent =
-        "✓ YARUVA editing complete";
+        "✓ YARUVA V2 editing complete";
 
 
     document.getElementById(
@@ -3351,6 +3521,7 @@ function renderSegment(
                 updateProgress(
 
                     currentOutput,
+
                     total
 
                 );
@@ -3407,7 +3578,6 @@ function updateProgress(
                         elapsed /
                         total
                     ) *
-
                     100
 
                 )
@@ -3428,7 +3598,7 @@ function updateProgress(
         "status"
     ).textContent =
 
-        "Rendering video + audio... " +
+        "Rendering V2 video + audio... " +
 
         percent +
 
@@ -3438,7 +3608,7 @@ function updateProgress(
 
 
 /* =====================================================
-   DRAW VIDEO
+   DRAW VIDEO FRAME
 ===================================================== */
 
 function drawVideoFrame(
@@ -3605,6 +3775,46 @@ function drawVideoFrame(
         "none";
 
 
+    /* VIGNETTE */
+
+    if(
+        edit.vignette
+    ){
+
+        drawVignette(
+
+            ctx,
+
+            canvasWidth,
+
+            canvasHeight
+
+        );
+
+    }
+
+
+    /* VIDEO FADE */
+
+    if(
+        edit.fade
+    ){
+
+        drawVideoFade(
+
+            ctx,
+
+            outputTime,
+
+            total
+
+        );
+
+    }
+
+
+    /* CAPTION */
+
     if(
 
         edit.caption &&
@@ -3621,14 +3831,174 @@ function drawVideoFrame(
 
     ){
 
-        drawCaption(
+        drawAnimatedCaption(
 
             ctx,
 
             edit.caption,
 
             canvasWidth,
-            canvasHeight
+
+            canvasHeight,
+
+            edit.captionAnimation,
+
+            outputTime,
+
+            total
+
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   VIGNETTE
+===================================================== */
+
+function drawVignette(
+
+    ctx,
+    width,
+    height
+
+){
+
+    const gradient =
+
+        ctx.createRadialGradient(
+
+            width / 2,
+            height / 2,
+            Math.min(
+                width,
+                height
+            ) * 0.20,
+
+            width / 2,
+            height / 2,
+            Math.max(
+                width,
+                height
+            ) * 0.72
+
+        );
+
+
+    gradient.addColorStop(
+        0,
+        "rgba(0,0,0,0)"
+    );
+
+
+    gradient.addColorStop(
+        0.60,
+        "rgba(0,0,0,0.08)"
+    );
+
+
+    gradient.addColorStop(
+        1,
+        "rgba(0,0,0,0.62)"
+    );
+
+
+    ctx.fillStyle =
+        gradient;
+
+
+    ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+}
+
+
+/* =====================================================
+   VIDEO FADE
+===================================================== */
+
+function drawVideoFade(
+
+    ctx,
+    time,
+    total
+
+){
+
+    const fadeDuration =
+        0.45;
+
+
+    let alpha =
+        0;
+
+
+    if(
+        time < fadeDuration
+    ){
+
+        alpha =
+            1 -
+            (
+                time /
+                fadeDuration
+            );
+
+    }
+
+
+    if(
+        total > 0 &&
+        time >
+        total -
+        fadeDuration
+    ){
+
+        alpha =
+            Math.max(
+
+                alpha,
+
+                (
+                    time -
+                    (
+                        total -
+                        fadeDuration
+                    )
+                ) /
+                fadeDuration
+
+            );
+
+    }
+
+
+    if(
+        alpha > 0
+    ){
+
+        ctx.fillStyle =
+
+            "rgba(0,0,0," +
+            Math.min(
+                1,
+                alpha
+            ) +
+            ")";
+
+
+        ctx.fillRect(
+
+            0,
+            0,
+            ctx.canvas.width,
+            ctx.canvas.height
 
         );
 
@@ -3642,9 +4012,11 @@ function drawVideoFrame(
 ===================================================== */
 
 function shouldShowCaption(
+
     mode,
     time,
     total
+
 ){
 
     const duration =
@@ -3715,15 +4087,18 @@ function shouldShowCaption(
 
 
 /* =====================================================
-   DRAW CAPTION
+   ANIMATED CAPTION
 ===================================================== */
 
-function drawCaption(
+function drawAnimatedCaption(
 
     ctx,
     text,
     width,
-    height
+    height,
+    animation,
+    time,
+    total
 
 ){
 
@@ -3895,36 +4270,213 @@ function drawCaption(
 
         lines.length *
         lineHeight +
-
         paddingY * 2;
 
 
-    const x =
-
-        (
-            width -
-            boxWidth
-        ) / 2;
+    let x =
+        width / 2;
 
 
-    const y =
+    let y =
+        height * 0.74;
 
-        height *
-        0.74;
+
+    let alpha =
+        1;
+
+
+    let scale =
+        1;
+
+
+    /* ANIMATION */
+
+    if(
+        animation ===
+        "slide"
+    ){
+
+        const animationTime =
+            0.55;
+
+
+        const progress =
+
+            Math.min(
+
+                1,
+
+                Math.max(
+
+                    0,
+
+                    (
+                        time %
+                        animationTime
+                    ) /
+                    animationTime
+
+                )
+
+            );
+
+
+        const eased =
+
+            1 -
+            Math.pow(
+                1 - progress,
+                3
+            );
+
+
+        y +=
+            80 *
+            (
+                1 -
+                eased
+            );
+
+        alpha =
+            eased;
+
+    }
+
+
+    else if(
+        animation ===
+        "fade"
+    ){
+
+        const animationTime =
+            0.55;
+
+
+        const progress =
+
+            Math.min(
+
+                1,
+
+                Math.max(
+
+                    0,
+
+                    (
+                        time %
+                        animationTime
+                    ) /
+                    animationTime
+
+                )
+
+            );
+
+
+        alpha =
+            progress;
+
+    }
+
+
+    else if(
+        animation ===
+        "pop"
+    ){
+
+        const animationTime =
+            0.45;
+
+
+        const progress =
+
+            Math.min(
+
+                1,
+
+                Math.max(
+
+                    0,
+
+                    (
+                        time %
+                        animationTime
+                    ) /
+                    animationTime
+
+                )
+
+            );
+
+
+        const eased =
+
+            1 -
+            Math.pow(
+                1 - progress,
+                3
+            );
+
+
+        scale =
+            0.75 +
+            (
+                0.25 *
+                eased
+            );
+
+
+        alpha =
+            eased;
+
+    }
+
+
+    ctx.save();
+
+
+    ctx.globalAlpha =
+        alpha;
+
+
+    ctx.translate(
+        x,
+        y
+    );
+
+
+    ctx.scale(
+        scale,
+        scale
+    );
+
+
+    ctx.translate(
+        -x,
+        -y
+    );
+
+
+    const boxX =
+
+        x -
+        boxWidth / 2;
 
 
     ctx.fillStyle =
-        "rgba(0,0,0,0.68)";
+        "rgba(0,0,0,0.72)";
 
 
     roundRect(
 
         ctx,
 
-        x,
+        boxX,
+
         y,
 
         boxWidth,
+
         boxHeight,
 
         16
@@ -3950,7 +4502,7 @@ function drawCaption(
 
                 line,
 
-                width / 2,
+                x,
 
                 y +
 
@@ -3966,6 +4518,9 @@ function drawCaption(
         }
 
     );
+
+
+    ctx.restore();
 
 }
 
