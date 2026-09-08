@@ -1,262 +1,497 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
 <title>YARUVA Edit AI</title>
 
+
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
 }
 
+
 body{
+
     background:#090909;
+
     color:#fff;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
     min-height:100vh;
+
 }
+
 
 .header{
+
     padding:22px 18px;
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
+
     border-bottom:1px solid #222;
+
 }
+
 
 .logo{
+
     font-size:21px;
+
     font-weight:800;
+
     letter-spacing:2px;
+
 }
+
 
 .badge{
+
     font-size:11px;
+
     color:#aaa;
+
     border:1px solid #333;
+
     padding:6px 10px;
+
     border-radius:20px;
+
 }
+
 
 .container{
+
     max-width:850px;
+
     margin:auto;
+
     padding:20px 16px 50px;
+
 }
+
 
 .hero{
+
     margin:10px 0 22px;
+
 }
+
 
 .hero h1{
+
     font-size:28px;
+
     line-height:1.15;
+
     margin-bottom:8px;
+
 }
+
 
 .hero p{
+
     color:#999;
+
     font-size:14px;
+
     line-height:1.5;
+
 }
+
 
 .card{
+
     background:#111;
+
     border:1px solid #242424;
+
     border-radius:18px;
+
     padding:18px;
+
     margin-bottom:16px;
+
 }
+
 
 .card h2{
+
     font-size:16px;
+
     margin-bottom:12px;
+
 }
+
 
 input[type=file]{
+
     width:100%;
+
     padding:15px;
+
     background:#181818;
+
     color:#aaa;
+
     border:1px dashed #444;
+
     border-radius:12px;
+
 }
+
 
 .video-box{
+
     margin-top:15px;
+
     background:#000;
+
     border-radius:14px;
+
     overflow:hidden;
+
     min-height:180px;
+
     display:flex;
+
     align-items:center;
+
     justify-content:center;
+
 }
+
 
 video{
+
     width:100%;
+
     max-height:480px;
+
     display:block;
+
 }
+
 
 textarea{
+
     width:100%;
+
     min-height:110px;
+
     resize:vertical;
+
     background:#181818;
+
     color:#fff;
+
     border:1px solid #333;
+
     border-radius:12px;
+
     padding:14px;
+
     font-size:14px;
+
     outline:none;
+
 }
+
 
 textarea:focus{
+
     border-color:#777;
+
 }
+
 
 .example{
+
     color:#777;
+
     font-size:12px;
+
     margin-top:9px;
+
     line-height:1.5;
+
 }
+
 
 button{
+
     border:none;
+
     cursor:pointer;
+
     font-weight:700;
+
 }
+
 
 .primary{
+
     width:100%;
+
     margin-top:13px;
+
     padding:15px;
+
     border-radius:12px;
+
     background:#fff;
+
     color:#000;
+
     font-size:15px;
+
 }
+
 
 .primary:disabled{
-    opacity:.4;
+
+    opacity:.45;
+
     cursor:not-allowed;
+
 }
+
 
 .progress-wrap{
+
     display:none;
+
     margin-top:16px;
+
 }
+
 
 .progress-bar{
+
     height:8px;
+
     background:#242424;
+
     border-radius:10px;
+
     overflow:hidden;
+
 }
+
 
 .progress{
+
     width:0%;
+
     height:100%;
+
     background:#fff;
-    transition:width .15s linear;
+
+    transition:width .1s linear;
+
 }
+
 
 .status{
+
     margin-top:10px;
+
     color:#aaa;
+
     font-size:13px;
+
 }
+
 
 .plan{
+
     display:none;
+
     background:#151515;
+
     border-radius:12px;
+
     padding:13px;
+
     margin-top:14px;
+
     color:#bbb;
+
     font-size:13px;
+
     line-height:1.6;
+
 }
+
 
 .result{
+
     display:none;
+
 }
+
 
 .download{
+
     display:block;
+
     text-decoration:none;
+
     text-align:center;
+
     background:#fff;
+
     color:#000;
+
     padding:15px;
+
     border-radius:12px;
+
     margin-top:14px;
+
     font-weight:800;
+
 }
+
 
 .settings{
+
     display:grid;
+
     grid-template-columns:1fr 1fr;
+
     gap:10px;
+
     margin-top:15px;
+
 }
+
 
 .setting{
+
     background:#181818;
+
     border-radius:12px;
+
     padding:12px;
+
 }
+
 
 .setting label{
+
     display:block;
+
     color:#888;
+
     font-size:11px;
+
     margin-bottom:7px;
+
 }
+
 
 .setting strong{
+
     font-size:14px;
+
 }
 
+
 .tip{
+
     color:#777;
+
     font-size:12px;
+
     line-height:1.5;
+
 }
+
+
+.error{
+
+    color:#ff8a8a;
+
+    background:#211010;
+
+    border:1px solid #4a2222;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    margin-top:12px;
+
+    display:none;
+
+}
+
 
 @media(max-width:600px){
 
     .hero h1{
+
         font-size:25px;
+
     }
 
+
     .container{
+
         padding-left:13px;
+
         padding-right:13px;
+
     }
+
 }
+
 </style>
+
 </head>
 
 
 <body>
 
+
 <header class="header">
 
     <div class="logo">
+
         YARUVA
+
     </div>
 
+
     <div class="badge">
+
         EDIT AI • LOCAL
+
     </div>
 
 </header>
+
 
 
 <main class="container">
@@ -265,26 +500,36 @@ button{
 <section class="hero">
 
     <h1>
+
         Create. Edit. Transform.
+
     </h1>
 
+
     <p>
-        Upload your video and tell YARUVA exactly how you want it edited.
-        YARUVA will apply the requested edits and create a new video.
+
+        Upload your video and tell YARUVA exactly how
+        you want it edited. YARUVA processes the edit
+        directly in your browser.
+
     </p>
 
 </section>
 
 
-<!-- =========================
+
+<!-- ==============================
      UPLOAD
-========================= -->
+================================ -->
 
 <section class="card">
 
     <h2>
+
         01 • Upload your video
+
     </h2>
+
 
     <input
         id="videoInput"
@@ -292,20 +537,26 @@ button{
         accept="video/*"
     >
 
+
     <div class="video-box">
 
         <video
             id="sourceVideo"
             controls
             playsinline
+            webkit-playsinline
+            preload="auto"
             style="display:none;"
         ></video>
+
 
         <div
             id="videoPlaceholder"
             style="color:#555;font-size:13px;"
         >
+
             Your video preview will appear here
+
         </div>
 
     </div>
@@ -313,27 +564,36 @@ button{
 </section>
 
 
-<!-- =========================
-     AI REQUEST
-========================= -->
+
+<!-- ==============================
+     REQUEST
+================================ -->
 
 <section class="card">
 
     <h2>
+
         02 • Tell YARUVA what you want
+
     </h2>
+
 
     <textarea
         id="aiPrompt"
         placeholder='Example: Make this a cinematic motivational Reel. Make the colours darker, increase contrast and add caption "Never Give Up".'
     ></textarea>
 
+
     <div class="example">
 
         Try:
+
         “Make it cinematic” •
+
         “Make it brighter” •
+
         “Make a motivational Reel” •
+
         “Add caption Never Give Up”
 
     </div>
@@ -345,7 +605,9 @@ button{
         disabled
         onclick="startEditing()"
     >
+
         ✦ Create Edited Video
+
     </button>
 
 
@@ -369,21 +631,31 @@ button{
 
         </div>
 
+
         <div
             id="status"
             class="status"
         >
+
             Preparing editor...
+
         </div>
+
+
+        <div
+            id="errorBox"
+            class="error"
+        ></div>
 
     </div>
 
 </section>
 
 
-<!-- =========================
+
+<!-- ==============================
      SETTINGS
-========================= -->
+================================ -->
 
 <section
     id="settingsCard"
@@ -392,16 +664,18 @@ button{
 >
 
     <h2>
+
         YARUVA Edit Settings
+
     </h2>
+
 
     <div class="settings">
 
+
         <div class="setting">
 
-            <label>
-                STYLE
-            </label>
+            <label>STYLE</label>
 
             <strong id="styleValue">
                 Original
@@ -412,9 +686,7 @@ button{
 
         <div class="setting">
 
-            <label>
-                FORMAT
-            </label>
+            <label>FORMAT</label>
 
             <strong id="formatValue">
                 Original
@@ -425,9 +697,7 @@ button{
 
         <div class="setting">
 
-            <label>
-                BRIGHTNESS
-            </label>
+            <label>BRIGHTNESS</label>
 
             <strong id="brightnessValue">
                 100%
@@ -438,9 +708,7 @@ button{
 
         <div class="setting">
 
-            <label>
-                CONTRAST
-            </label>
+            <label>CONTRAST</label>
 
             <strong id="contrastValue">
                 100%
@@ -451,9 +719,7 @@ button{
 
         <div class="setting">
 
-            <label>
-                SATURATION
-            </label>
+            <label>SATURATION</label>
 
             <strong id="saturationValue">
                 100%
@@ -464,9 +730,7 @@ button{
 
         <div class="setting">
 
-            <label>
-                CAPTION
-            </label>
+            <label>CAPTION</label>
 
             <strong id="captionValue">
                 None
@@ -474,14 +738,16 @@ button{
 
         </div>
 
+
     </div>
 
 </section>
 
 
-<!-- =========================
+
+<!-- ==============================
      RESULT
-========================= -->
+================================ -->
 
 <section
     id="resultCard"
@@ -489,7 +755,9 @@ button{
 >
 
     <h2>
+
         03 • Your edited video
+
     </h2>
 
 
@@ -499,6 +767,7 @@ button{
             id="resultVideo"
             controls
             playsinline
+            webkit-playsinline
         ></video>
 
     </div>
@@ -507,12 +776,14 @@ button{
     <a
         id="downloadBtn"
         class="download"
-        download="yaruva-edited-video.webm"
     >
+
         ⬇ Download Edited Video
+
     </a>
 
 </section>
+
 
 
 <section class="card">
@@ -520,13 +791,16 @@ button{
     <div class="tip">
 
         <strong style="color:#fff;">
+
             YARUVA tip:
+
         </strong>
 
         <br><br>
 
-        Your video is processed directly in the browser
-        for this free MVP.
+        This version renders the visual edit directly
+        in your browser. Audio preservation will be
+        added in the next rendering upgrade.
 
     </div>
 
@@ -536,40 +810,51 @@ button{
 </main>
 
 
+
 <script>
 
 
 /* =====================================================
-   VARIABLES
+   GLOBAL VARIABLES
 ===================================================== */
+
 
 const videoInput =
     document.getElementById("videoInput");
 
+
 const sourceVideo =
     document.getElementById("sourceVideo");
+
 
 const videoPlaceholder =
     document.getElementById("videoPlaceholder");
 
+
 const generateBtn =
     document.getElementById("generateBtn");
 
-let videoURL = null;
 
 let sourceFile = null;
 
+let videoURL = null;
+
+let outputURL = null;
+
+
 
 /* =====================================================
-   VIDEO UPLOAD
+   UPLOAD
 ===================================================== */
+
 
 videoInput.addEventListener(
     "change",
-    function(){
+    async function(){
 
         const file =
             this.files[0];
+
 
         if(!file){
 
@@ -597,8 +882,22 @@ videoInput.addEventListener(
             );
 
 
+        sourceVideo.pause();
+
+
         sourceVideo.src =
             videoURL;
+
+
+        sourceVideo.muted =
+            true;
+
+
+        sourceVideo.playsInline =
+            true;
+
+
+        sourceVideo.load();
 
 
         sourceVideo.style.display =
@@ -610,23 +909,167 @@ videoInput.addEventListener(
 
 
         generateBtn.disabled =
-            false;
+            true;
+
+
+        /*
+           Wait until browser can actually
+           read the uploaded video.
+        */
+
+        try{
+
+            await waitForVideoReady(
+                sourceVideo
+            );
+
+
+            generateBtn.disabled =
+                false;
+
+
+        }catch(error){
+
+            alert(
+                "YARUVA could not read this video. Please try another video."
+            );
+
+        }
 
     }
 );
 
 
+
 /* =====================================================
-   YARUVA LOCAL AI INTERPRETER
+   VIDEO READY
 ===================================================== */
+
+
+function waitForVideoReady(video){
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            if(
+                video.readyState >= 3 &&
+                video.videoWidth > 0
+            ){
+
+                resolve();
+
+                return;
+
+            }
+
+
+            const timeout =
+                setTimeout(
+                    ()=>{
+
+                        cleanup();
+
+                        reject(
+                            new Error(
+                                "Video loading timeout"
+                            )
+                        );
+
+                    },
+                    15000
+                );
+
+
+            function ready(){
+
+                if(
+                    video.videoWidth > 0 &&
+                    video.videoHeight > 0
+                ){
+
+                    cleanup();
+
+                    resolve();
+
+                }
+
+            }
+
+
+            function error(){
+
+                cleanup();
+
+                reject(
+                    new Error(
+                        "Video could not be loaded"
+                    )
+                );
+
+            }
+
+
+            function cleanup(){
+
+                clearTimeout(
+                    timeout
+                );
+
+                video.removeEventListener(
+                    "loadedmetadata",
+                    ready
+                );
+
+                video.removeEventListener(
+                    "canplay",
+                    ready
+                );
+
+                video.removeEventListener(
+                    "error",
+                    error
+                );
+
+            }
+
+
+            video.addEventListener(
+                "loadedmetadata",
+                ready
+            );
+
+
+            video.addEventListener(
+                "canplay",
+                ready
+            );
+
+
+            video.addEventListener(
+                "error",
+                error
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   LOCAL AI INTERPRETER
+===================================================== */
+
 
 function interpretRequest(text){
 
-    const originalText =
+    const original =
         text.trim();
 
+
     const lower =
-        originalText.toLowerCase();
+        original.toLowerCase();
 
 
     const edit = {
@@ -646,24 +1089,31 @@ function interpretRequest(text){
     };
 
 
-    /* ---------------------------------
-       CINEMATIC
-    --------------------------------- */
+
+    /* CINEMATIC */
+
 
     if(
+
         lower.includes("cinematic") ||
+
         lower.includes("movie") ||
+
         lower.includes("film")
+
     ){
 
         edit.style =
             "Cinematic";
 
+
         edit.brightness =
             88;
 
+
         edit.contrast =
             125;
+
 
         edit.saturation =
             88;
@@ -671,23 +1121,29 @@ function interpretRequest(text){
     }
 
 
-    /* ---------------------------------
-       MOTIVATIONAL
-    --------------------------------- */
+
+    /* MOTIVATIONAL */
+
 
     if(
+
         lower.includes("motivational") ||
+
         lower.includes("motivation")
+
     ){
 
         edit.style =
             "Motivational";
 
+
         edit.brightness =
             92;
 
+
         edit.contrast =
             120;
+
 
         edit.saturation =
             105;
@@ -695,29 +1151,16 @@ function interpretRequest(text){
     }
 
 
-    /* ---------------------------------
-       BRIGHT
-    --------------------------------- */
+
+    /* DARK */
+
 
     if(
-        lower.includes("bright") ||
-        lower.includes("brighter") ||
-        lower.includes("light")
-    ){
 
-        edit.brightness =
-            115;
-
-    }
-
-
-    /* ---------------------------------
-       DARK
-    --------------------------------- */
-
-    if(
         lower.includes("dark") ||
+
         lower.includes("darker")
+
     ){
 
         edit.brightness =
@@ -726,13 +1169,34 @@ function interpretRequest(text){
     }
 
 
-    /* ---------------------------------
-       CONTRAST
-    --------------------------------- */
+
+    /* BRIGHT */
+
 
     if(
+
+        lower.includes("bright") ||
+
+        lower.includes("brighter")
+
+    ){
+
+        edit.brightness =
+            115;
+
+    }
+
+
+
+    /* CONTRAST */
+
+
+    if(
+
         lower.includes("contrast") ||
+
         lower.includes("dramatic")
+
     ){
 
         edit.contrast =
@@ -741,14 +1205,18 @@ function interpretRequest(text){
     }
 
 
-    /* ---------------------------------
-       COLOUR
-    --------------------------------- */
+
+    /* COLOUR */
+
 
     if(
+
         lower.includes("colour") ||
+
         lower.includes("color") ||
+
         lower.includes("vibrant")
+
     ){
 
         edit.saturation =
@@ -757,15 +1225,20 @@ function interpretRequest(text){
     }
 
 
-    /* ---------------------------------
-       BLACK & WHITE
-    --------------------------------- */
+
+    /* BLACK AND WHITE */
+
 
     if(
+
         lower.includes("black and white") ||
+
         lower.includes("black & white") ||
+
         lower.includes("grayscale") ||
+
         lower.includes("greyscale")
+
     ){
 
         edit.saturation =
@@ -774,15 +1247,20 @@ function interpretRequest(text){
     }
 
 
-    /* ---------------------------------
-       REEL FORMAT
-    --------------------------------- */
+
+    /* REEL */
+
 
     if(
+
         lower.includes("reel") ||
+
         lower.includes("instagram") ||
+
         lower.includes("9:16") ||
+
         lower.includes("vertical")
+
     ){
 
         edit.aspect =
@@ -791,24 +1269,25 @@ function interpretRequest(text){
     }
 
 
+
     /* =================================================
-       CAPTION DETECTION
+       CAPTION
     ================================================= */
 
 
-    let caption =
-        "";
+    let caption = "";
 
 
     /*
-       METHOD 1
-
-       add caption "Never Give Up"
+       Caption "Never Give Up"
     */
 
+
     let match =
-        originalText.match(
+        original.match(
+
             /(?:add\s+(?:my\s+)?caption|caption)\s*[:\-]?\s*["“”']([^"“”']+)["“”']/i
+
         );
 
 
@@ -820,17 +1299,19 @@ function interpretRequest(text){
     }
 
 
-    /*
-       METHOD 2
 
+    /*
        caption: Never Give Up
     */
 
+
     if(!caption){
 
         match =
-            originalText.match(
+            original.match(
+
                 /(?:add\s+(?:my\s+)?caption|caption)\s*[:\-]\s*(.+?)(?:\.|$)/i
+
             );
 
 
@@ -844,17 +1325,19 @@ function interpretRequest(text){
     }
 
 
-    /*
-       METHOD 3
 
+    /*
        Add caption Never Give Up
     */
 
+
     if(!caption){
 
         match =
-            originalText.match(
+            original.match(
+
                 /add\s+(?:my\s+)?caption\s+(.+?)(?:\.|$)/i
+
             );
 
 
@@ -868,17 +1351,19 @@ function interpretRequest(text){
     }
 
 
-    /*
-       METHOD 4
 
+    /*
        Put this caption: Never Give Up
     */
 
+
     if(!caption){
 
         match =
-            originalText.match(
+            original.match(
+
                 /(?:put|write|show|display)\s+(?:this\s+)?(?:caption|text)\s*[:\-]?\s*["“”']?(.+?)["“”']?(?:\.|$)/i
+
             );
 
 
@@ -892,17 +1377,19 @@ function interpretRequest(text){
     }
 
 
-    /*
-       METHOD 5
 
+    /*
        Add text "Never Give Up"
     */
 
+
     if(!caption){
 
         match =
-            originalText.match(
+            original.match(
+
                 /add\s+(?:the\s+)?text\s*[:\-]?\s*["“”']([^"“”']+)["“”']/i
+
             );
 
 
@@ -916,16 +1403,13 @@ function interpretRequest(text){
     }
 
 
-    /*
-       CLEAN CAPTION
-    */
 
     if(caption){
 
         caption =
             caption
-                .replace(/^["“”']+/, "")
-                .replace(/["“”']+$/, "")
+                .replace(/^["“”']+/,"")
+                .replace(/["“”']+$/,"")
                 .trim();
 
 
@@ -940,9 +1424,11 @@ function interpretRequest(text){
 }
 
 
+
 /* =====================================================
-   SHOW SETTINGS
+   SETTINGS UI
 ===================================================== */
+
 
 function showSettings(edit){
 
@@ -961,8 +1447,11 @@ function showSettings(edit){
     document.getElementById(
         "formatValue"
     ).textContent =
+
         edit.aspect === "9:16"
+
             ? "9:16 Reel"
+
             : "Original";
 
 
@@ -987,15 +1476,19 @@ function showSettings(edit){
     document.getElementById(
         "captionValue"
     ).textContent =
+
         edit.caption ||
+
         "None";
 
 }
 
 
+
 /* =====================================================
-   START EDITING
+   START
 ===================================================== */
+
 
 async function startEditing(){
 
@@ -1020,7 +1513,7 @@ async function startEditing(){
     if(!prompt){
 
         alert(
-            "Tell YARUVA how you want your video edited."
+            "Tell YARUVA what you want."
         );
 
         return;
@@ -1050,40 +1543,70 @@ async function startEditing(){
 
 
     plan.innerHTML =
-        "✦ YARUVA understood your request.<br><br>" +
+
+        "✦ YARUVA understood your request." +
+
+        "<br><br>" +
 
         "Applying <strong>" +
+
         edit.style +
+
         "</strong> styling, " +
 
         edit.brightness +
+
         "% brightness, " +
 
         edit.contrast +
+
         "% contrast, " +
 
         edit.saturation +
+
         "% saturation" +
 
         (
+
             edit.caption
+
             ?
+
             ', and caption <strong>"' +
+
             edit.caption +
+
             '"</strong>.'
+
             :
+
             "."
+
         );
 
 
-    const progressWrap =
-        document.getElementById(
-            "progressWrap"
-        );
-
-
-    progressWrap.style.display =
+    document.getElementById(
+        "progressWrap"
+    ).style.display =
         "block";
+
+
+    document.getElementById(
+        "errorBox"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "progress"
+    ).style.width =
+        "0%";
+
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "Loading video for rendering...";
 
 
     generateBtn.disabled =
@@ -1096,21 +1619,17 @@ async function startEditing(){
             edit
         );
 
+
     }catch(error){
 
         console.error(
+            "YARUVA RENDER ERROR:",
             error
         );
 
 
-        document.getElementById(
-            "status"
-        ).textContent =
-            "Rendering failed.";
-
-
-        alert(
-            "YARUVA could not render this video. Try a shorter video."
+        showRenderError(
+            error.message
         );
 
     }
@@ -1122,9 +1641,96 @@ async function startEditing(){
 }
 
 
+
 /* =====================================================
-   VIDEO RENDER ENGINE
+   RENDER ERROR
 ===================================================== */
+
+
+function showRenderError(message){
+
+    const box =
+        document.getElementById(
+            "errorBox"
+        );
+
+
+    box.style.display =
+        "block";
+
+
+    box.textContent =
+
+        "YARUVA could not finish rendering: " +
+
+        (
+            message ||
+            "Unknown rendering error"
+        );
+
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "Rendering stopped.";
+
+}
+
+
+
+/* =====================================================
+   FIND SUPPORTED RECORDING FORMAT
+===================================================== */
+
+
+function getRecordingFormat(){
+
+    const formats = [
+
+        "video/mp4;codecs=avc1.4d002a",
+
+        "video/mp4",
+
+        "video/webm;codecs=vp9",
+
+        "video/webm;codecs=vp8",
+
+        "video/webm"
+
+    ];
+
+
+    for(
+        const format of formats
+    ){
+
+        try{
+
+            if(
+                MediaRecorder.isTypeSupported(
+                    format
+                )
+            ){
+
+                return format;
+
+            }
+
+        }catch(error){}
+
+    }
+
+
+    return "";
+
+}
+
+
+
+/* =====================================================
+   MAIN RENDER ENGINE
+===================================================== */
+
 
 async function renderVideo(edit){
 
@@ -1132,75 +1738,103 @@ async function renderVideo(edit){
         sourceVideo;
 
 
-    if(video.readyState < 2){
+    /*
+       Ensure video is loaded
+    */
 
-        await new Promise(
-            resolve => {
 
-                video.addEventListener(
-                    "loadedmetadata",
-                    resolve,
-                    {
-                        once:true
-                    }
-                );
+    document.getElementById(
+        "status"
+    ).textContent =
+        "Preparing video...";
 
-            }
+
+    await waitForVideoReady(
+        video
+    );
+
+
+    const width =
+        video.videoWidth;
+
+
+    const height =
+        video.videoHeight;
+
+
+    if(
+        !width ||
+        !height
+    ){
+
+        throw new Error(
+            "Video dimensions could not be detected."
         );
 
     }
 
 
-    const originalWidth =
-        video.videoWidth;
-
-    const originalHeight =
-        video.videoHeight;
+    /*
+       Canvas dimensions
+    */
 
 
     let canvasWidth =
-        originalWidth;
+        width;
+
 
     let canvasHeight =
-        originalHeight;
+        height;
 
 
-    /* ---------------------------------
-       9:16 REEL
-    --------------------------------- */
-
-    if(edit.aspect === "9:16"){
+    if(
+        edit.aspect === "9:16"
+    ){
 
         canvasWidth =
             720;
 
+
         canvasHeight =
             1280;
 
-    }else{
+    }
 
-        const maxWidth =
+
+    else{
+
+        const maximum =
             1280;
 
 
-        if(originalWidth > maxWidth){
+        if(
+            width >
+            maximum
+        ){
 
             canvasWidth =
-                maxWidth;
+                maximum;
 
 
             canvasHeight =
                 Math.round(
-                    originalHeight *
+
+                    height *
                     (
-                        maxWidth /
-                        originalWidth
+                        maximum /
+                        width
                     )
+
                 );
 
         }
 
     }
+
+
+    /*
+       Canvas
+    */
 
 
     const canvas =
@@ -1212,23 +1846,23 @@ async function renderVideo(edit){
     canvas.width =
         canvasWidth;
 
+
     canvas.height =
         canvasHeight;
 
 
     const ctx =
         canvas.getContext(
-            "2d"
+            "2d",
+            {
+                alpha:false
+            }
         );
 
 
-    if(!canvas.captureStream){
-
-        throw new Error(
-            "Canvas capture is not supported."
-        );
-
-    }
+    /*
+       Capture canvas
+    */
 
 
     const stream =
@@ -1237,63 +1871,64 @@ async function renderVideo(edit){
         );
 
 
-    let mimeType =
-        "";
-
-
-    if(
-        MediaRecorder.isTypeSupported(
-            "video/webm;codecs=vp9"
-        )
-    ){
-
-        mimeType =
-            "video/webm;codecs=vp9";
-
-    }
-
-    else if(
-        MediaRecorder.isTypeSupported(
-            "video/webm;codecs=vp8"
-        )
-    ){
-
-        mimeType =
-            "video/webm;codecs=vp8";
-
-    }
-
-    else if(
-        MediaRecorder.isTypeSupported(
-            "video/webm"
-        )
-    ){
-
-        mimeType =
-            "video/webm";
-
-    }
-
-    else{
+    if(!stream){
 
         throw new Error(
-            "Video recording is not supported."
+            "Canvas video capture is unavailable."
         );
 
     }
 
 
+    /*
+       Find Safari-friendly format
+    */
+
+
+    const mimeType =
+        getRecordingFormat();
+
+
+    if(!mimeType){
+
+        throw new Error(
+            "This browser does not provide a supported recording format."
+        );
+
+    }
+
+
+    /*
+       Recorder
+    */
+
+
     const recorder =
         new MediaRecorder(
+
             stream,
+
             {
-                mimeType:mimeType
+
+                mimeType:
+
+                    mimeType,
+
+                videoBitsPerSecond:
+
+                    6000000
+
             }
+
         );
 
 
     const chunks =
         [];
+
+
+    let recorderError =
+        null;
 
 
     recorder.ondataavailable =
@@ -1313,24 +1948,284 @@ async function renderVideo(edit){
         };
 
 
-    const recordingFinished =
-        new Promise(
-            resolve => {
+    recorder.onerror =
+        function(event){
+
+            recorderError =
+                event.error ||
+                new Error(
+                    "MediaRecorder error"
+                );
+
+        };
+
+
+    /*
+       Start recording
+    */
+
+
+    recorder.start(
+        250
+    );
+
+
+    /*
+       VERY IMPORTANT:
+       mute source video so iPhone
+       doesn't block playback.
+    */
+
+
+    video.muted =
+        true;
+
+
+    video.playsInline =
+        true;
+
+
+    video.currentTime =
+        0;
+
+
+    /*
+       Wait for seek
+    */
+
+
+    await waitForSeek(
+        video
+    );
+
+
+    /*
+       Start playback.
+       muted = true makes this
+       much more reliable on iPhone.
+    */
+
+
+    try{
+
+        await video.play();
+
+    }catch(error){
+
+        recorder.stop();
+
+        throw new Error(
+            "iPhone could not start the video renderer."
+        );
+
+    }
+
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "Rendering video...";
+
+
+    /*
+       Render loop
+    */
+
+
+    await new Promise(
+        (resolve,reject)=>{
+
+            let lastTime =
+                -1;
+
+
+            function renderFrame(){
+
+                if(
+                    recorderError
+                ){
+
+                    reject(
+                        recorderError
+                    );
+
+                    return;
+
+                }
+
+
+                if(
+                    video.ended ||
+                    video.paused &&
+                    video.currentTime >=
+                    video.duration - 0.05
+                ){
+
+                    resolve();
+
+                    return;
+
+                }
+
+
+                drawVideoFrame(
+                    ctx,
+                    video,
+                    edit,
+                    canvasWidth,
+                    canvasHeight
+                );
+
+
+                const duration =
+                    video.duration;
+
+
+                if(
+                    duration &&
+                    isFinite(duration)
+                ){
+
+                    const percent =
+                        Math.min(
+
+                            99,
+
+                            Math.round(
+
+                                (
+                                    video.currentTime /
+                                    duration
+                                ) * 100
+
+                            )
+
+                        );
+
+
+                    document.getElementById(
+                        "progress"
+                    ).style.width =
+                        percent + "%";
+
+
+                    document.getElementById(
+                        "status"
+                    ).textContent =
+
+                        "Rendering video... " +
+
+                        percent +
+
+                        "%";
+
+                }
+
+
+                /*
+                   Keep rendering even if
+                   iPhone drops frames.
+                */
+
+
+                requestAnimationFrame(
+                    renderFrame
+                );
+
+            }
+
+
+            renderFrame();
+
+        }
+    );
+
+
+    /*
+       Draw final frame
+    */
+
+
+    drawVideoFrame(
+        ctx,
+        video,
+        edit,
+        canvasWidth,
+        canvasHeight
+    );
+
+
+    document.getElementById(
+        "progress"
+    ).style.width =
+        "100%";
+
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "Finishing video...";
+
+
+    /*
+       Allow encoder to receive
+       final frames.
+    */
+
+
+    await sleep(
+        1000
+    );
+
+
+    /*
+       Stop recorder
+    */
+
+
+    recorder.stop();
+
+
+    /*
+       Wait for final blob
+    */
+
+
+    const blob =
+        await new Promise(
+            (resolve,reject)=>{
 
                 recorder.onstop =
                     function(){
 
-                        const blob =
+                        if(
+                            recorderError
+                        ){
+
+                            reject(
+                                recorderError
+                            );
+
+                            return;
+
+                        }
+
+
+                        const finalBlob =
                             new Blob(
+
                                 chunks,
+
                                 {
-                                    type:mimeType
+                                    type:
+                                        mimeType
                                 }
+
                             );
 
 
                         resolve(
-                            blob
+                            finalBlob
                         );
 
                     };
@@ -1339,260 +2234,23 @@ async function renderVideo(edit){
         );
 
 
-    /* ---------------------------------
-       START RECORDING
-    --------------------------------- */
+    /*
+       Create output
+    */
 
-    recorder.start(
-        250
-    );
 
+    if(outputURL){
 
-    video.currentTime =
-        0;
-
-
-    await video.play();
-
-
-    const duration =
-        video.duration;
-
-
-    /* ---------------------------------
-       DRAW FRAMES
-    --------------------------------- */
-
-    function drawFrame(){
-
-        if(
-            video.paused ||
-            video.ended
-        ){
-
-            return;
-
-        }
-
-
-        /*
-           Colour effects
-        */
-
-        ctx.filter =
-            "brightness(" +
-            edit.brightness +
-            "%) " +
-
-            "contrast(" +
-            edit.contrast +
-            "%) " +
-
-            "saturate(" +
-            edit.saturation +
-            "%)";
-
-
-        /* ---------------------------------
-           9:16 CROP
-        --------------------------------- */
-
-        if(edit.aspect === "9:16"){
-
-            const sourceRatio =
-                originalWidth /
-                originalHeight;
-
-
-            const targetRatio =
-                canvasWidth /
-                canvasHeight;
-
-
-            let drawWidth;
-
-            let drawHeight;
-
-            let offsetX;
-
-            let offsetY;
-
-
-            if(
-                sourceRatio >
-                targetRatio
-            ){
-
-                drawHeight =
-                    canvasHeight;
-
-
-                drawWidth =
-                    drawHeight *
-                    sourceRatio;
-
-
-                offsetX =
-                    (
-                        canvasWidth -
-                        drawWidth
-                    ) / 2;
-
-
-                offsetY =
-                    0;
-
-            }
-
-            else{
-
-                drawWidth =
-                    canvasWidth;
-
-
-                drawHeight =
-                    drawWidth /
-                    sourceRatio;
-
-
-                offsetX =
-                    0;
-
-
-                offsetY =
-                    (
-                        canvasHeight -
-                        drawHeight
-                    ) / 2;
-
-            }
-
-
-            ctx.drawImage(
-                video,
-                offsetX,
-                offsetY,
-                drawWidth,
-                drawHeight
-            );
-
-        }
-
-        else{
-
-            ctx.drawImage(
-                video,
-                0,
-                0,
-                canvasWidth,
-                canvasHeight
-            );
-
-        }
-
-
-        ctx.filter =
-            "none";
-
-
-        /* ---------------------------------
-           CAPTION
-        --------------------------------- */
-
-        if(edit.caption){
-
-            drawCaption(
-                ctx,
-                edit.caption,
-                canvasWidth,
-                canvasHeight
-            );
-
-        }
-
-
-        /* ---------------------------------
-           PROGRESS
-        --------------------------------- */
-
-        const percent =
-            Math.min(
-                100,
-                Math.round(
-                    (
-                        video.currentTime /
-                        duration
-                    ) * 100
-                )
-            );
-
-
-        document.getElementById(
-            "progress"
-        ).style.width =
-            percent + "%";
-
-
-        document.getElementById(
-            "status"
-        ).textContent =
-            "Rendering video… " +
-            percent +
-            "%";
-
-
-        requestAnimationFrame(
-            drawFrame
+        URL.revokeObjectURL(
+            outputURL
         );
 
     }
 
 
-    drawFrame();
-
-
-    /* ---------------------------------
-       WAIT FOR VIDEO END
-    --------------------------------- */
-
-    await new Promise(
-        resolve => {
-
-            video.addEventListener(
-                "ended",
-                resolve,
-                {
-                    once:true
-                }
-            );
-
-        }
-    );
-
-
-    await new Promise(
-        resolve =>
-            setTimeout(
-                resolve,
-                700
-            )
-    );
-
-
-    recorder.stop();
-
-
-    const outputBlob =
-        await recordingFinished;
-
-
-    /* ---------------------------------
-       OUTPUT VIDEO
-    --------------------------------- */
-
-    const outputURL =
+    outputURL =
         URL.createObjectURL(
-            outputBlob
+            blob
         );
 
 
@@ -1606,30 +2264,61 @@ async function renderVideo(edit){
         outputURL;
 
 
-    document.getElementById(
-        "resultCard"
-    ).style.display =
-        "block";
+    resultVideo.load();
 
 
-    const downloadBtn =
+    /*
+       File extension
+    */
+
+
+    const isMP4 =
+        mimeType.includes(
+            "mp4"
+        );
+
+
+    const extension =
+        isMP4
+            ? "mp4"
+            : "webm";
+
+
+    const download =
         document.getElementById(
             "downloadBtn"
         );
 
 
-    downloadBtn.href =
+    download.href =
         outputURL;
 
 
-    downloadBtn.download =
-        "yaruva-edited-video.webm";
+    download.download =
+        "yaruva-edited-video." +
+        extension;
+
+
+    download.textContent =
+
+        "⬇ Download Edited " +
+
+        (
+            isMP4
+                ? "MP4"
+                : "Video"
+        );
+
+
+    /*
+       Show result
+    */
 
 
     document.getElementById(
-        "progress"
-    ).style.width =
-        "100%";
+        "resultCard"
+    ).style.display =
+        "block";
 
 
     document.getElementById(
@@ -1641,15 +2330,281 @@ async function renderVideo(edit){
     document.getElementById(
         "resultCard"
     ).scrollIntoView({
-        behavior:"smooth"
+
+        behavior:
+            "smooth"
+
     });
 
 }
 
 
+
 /* =====================================================
-   CAPTION RENDERING
+   DRAW VIDEO FRAME
 ===================================================== */
+
+
+function drawVideoFrame(
+    ctx,
+    video,
+    edit,
+    canvasWidth,
+    canvasHeight
+){
+
+    /*
+       Clear
+    */
+
+
+    ctx.fillStyle =
+        "#000";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        canvasWidth,
+        canvasHeight
+    );
+
+
+    /*
+       Apply colour effects
+    */
+
+
+    ctx.filter =
+
+        "brightness(" +
+
+        edit.brightness +
+
+        "%) " +
+
+        "contrast(" +
+
+        edit.contrast +
+
+        "%) " +
+
+        "saturate(" +
+
+        edit.saturation +
+
+        "%)";
+
+
+    /*
+       9:16
+    */
+
+
+    if(
+        edit.aspect === "9:16"
+    ){
+
+        const sourceRatio =
+            video.videoWidth /
+            video.videoHeight;
+
+
+        const targetRatio =
+            canvasWidth /
+            canvasHeight;
+
+
+        let drawWidth;
+
+        let drawHeight;
+
+        let offsetX;
+
+        let offsetY;
+
+
+        if(
+            sourceRatio >
+            targetRatio
+        ){
+
+            drawHeight =
+                canvasHeight;
+
+
+            drawWidth =
+                drawHeight *
+                sourceRatio;
+
+
+            offsetX =
+                (
+                    canvasWidth -
+                    drawWidth
+                ) / 2;
+
+
+            offsetY =
+                0;
+
+        }
+
+        else{
+
+            drawWidth =
+                canvasWidth;
+
+
+            drawHeight =
+                drawWidth /
+                sourceRatio;
+
+
+            offsetX =
+                0;
+
+
+            offsetY =
+                (
+                    canvasHeight -
+                    drawHeight
+                ) / 2;
+
+        }
+
+
+        ctx.drawImage(
+
+            video,
+
+            offsetX,
+
+            offsetY,
+
+            drawWidth,
+
+            drawHeight
+
+        );
+
+    }
+
+
+    else{
+
+        ctx.drawImage(
+
+            video,
+
+            0,
+
+            0,
+
+            canvasWidth,
+
+            canvasHeight
+
+        );
+
+    }
+
+
+    /*
+       Reset filter
+    */
+
+
+    ctx.filter =
+        "none";
+
+
+    /*
+       Caption
+    */
+
+
+    if(
+        edit.caption
+    ){
+
+        drawCaption(
+
+            ctx,
+
+            edit.caption,
+
+            canvasWidth,
+
+            canvasHeight
+
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   SEEK
+===================================================== */
+
+
+function waitForSeek(video){
+
+    return new Promise(
+        resolve=>{
+
+            if(
+                video.currentTime === 0
+            ){
+
+                resolve();
+
+                return;
+
+            }
+
+
+            video.addEventListener(
+                "seeked",
+                resolve,
+                {
+                    once:true
+                }
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   SLEEP
+===================================================== */
+
+
+function sleep(ms){
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
+    );
+
+}
+
+
+
+/* =====================================================
+   CAPTION
+===================================================== */
+
 
 function drawCaption(
     ctx,
@@ -1660,16 +2615,23 @@ function drawCaption(
 
     const fontSize =
         Math.max(
+
             30,
+
             Math.round(
-                width * 0.055
+                width *
+                0.055
             )
+
         );
 
 
     ctx.font =
+
         "800 " +
+
         fontSize +
+
         "px Arial";
 
 
@@ -1689,19 +2651,130 @@ function drawCaption(
         16;
 
 
-    const metrics =
+    /*
+       Handle long captions
+    */
+
+
+    const maxWidth =
+        width * 0.82;
+
+
+    let displayText =
+        text;
+
+
+    if(
         ctx.measureText(
-            text
+            displayText
+        ).width >
+        maxWidth
+    ){
+
+        let words =
+            text.split(" ");
+
+
+        let line1 =
+            "";
+
+
+        let line2 =
+            "";
+
+
+        for(
+            const word of words
+        ){
+
+            const test =
+                line1
+                    ? line1 +
+                      " " +
+                      word
+                    : word;
+
+
+            if(
+                ctx.measureText(
+                    test
+                ).width <=
+                maxWidth
+            ){
+
+                line1 =
+                    test;
+
+            }
+
+            else{
+
+                line2 +=
+
+                    (
+                        line2
+                            ? " "
+                            : ""
+                    ) +
+
+                    word;
+
+            }
+
+        }
+
+
+        displayText =
+            line1 +
+            "\n" +
+            line2;
+
+    }
+
+
+    const lines =
+        displayText.split(
+            "\n"
         );
 
 
+    const lineHeight =
+        fontSize *
+        1.2;
+
+
+    let widest =
+        0;
+
+
+    for(
+        const line of lines
+    ){
+
+        widest =
+            Math.max(
+
+                widest,
+
+                ctx.measureText(
+                    line
+                ).width
+
+            );
+
+    }
+
+
     const boxWidth =
-        metrics.width +
+        widest +
         paddingX * 2;
 
 
     const boxHeight =
-        fontSize +
+
+        lines.length *
+        lineHeight +
+
         paddingY * 2;
 
 
@@ -1713,127 +2786,196 @@ function drawCaption(
 
 
     const y =
-        height * 0.76;
+        height *
+        0.74;
 
 
-    /* ---------------------------------
-       Caption background
-    --------------------------------- */
+    /*
+       Background
+    */
+
 
     ctx.fillStyle =
-        "rgba(0,0,0,0.65)";
+        "rgba(0,0,0,0.68)";
 
 
     roundRect(
+
         ctx,
+
         x,
+
         y,
+
         boxWidth,
+
         boxHeight,
+
         16
+
     );
 
 
     ctx.fill();
 
 
-    /* ---------------------------------
-       Caption text
-    --------------------------------- */
+    /*
+       Text
+    */
+
 
     ctx.fillStyle =
         "#ffffff";
 
 
-    ctx.fillText(
-        text,
-        width / 2,
-        y +
-        boxHeight / 2
+    lines.forEach(
+        (line,index)=>{
+
+            ctx.fillText(
+
+                line,
+
+                width / 2,
+
+                y +
+                paddingY +
+                lineHeight / 2 +
+                index *
+                lineHeight
+
+            );
+
+        }
     );
 
 }
+
 
 
 /* =====================================================
    ROUNDED RECTANGLE
 ===================================================== */
 
+
 function roundRect(
+
     ctx,
+
     x,
+
     y,
+
     width,
+
     height,
+
     radius
+
 ){
 
     ctx.beginPath();
 
 
     ctx.moveTo(
+
         x + radius,
+
         y
+
     );
 
 
     ctx.lineTo(
+
         x +
         width -
         radius,
+
         y
+
     );
 
 
     ctx.quadraticCurveTo(
+
         x + width,
+
         y,
+
         x + width,
+
         y + radius
+
     );
 
 
     ctx.lineTo(
+
         x + width,
+
         y +
         height -
         radius
+
     );
 
 
     ctx.quadraticCurveTo(
+
         x + width,
+
         y + height,
-        x + width - radius,
+
+        x + width -
+        radius,
+
         y + height
+
     );
 
 
     ctx.lineTo(
+
         x + radius,
+
         y + height
+
     );
 
 
     ctx.quadraticCurveTo(
+
         x,
+
         y + height,
+
         x,
-        y + height - radius
+
+        y + height -
+        radius
+
     );
 
 
     ctx.lineTo(
+
         x,
+
         y + radius
+
     );
 
 
     ctx.quadraticCurveTo(
+
         x,
+
         y,
+
         x + radius,
+
         y
+
     );
 
 
@@ -1844,4 +2986,5 @@ function roundRect(
 </script>
 
 </body>
+
 </html>
