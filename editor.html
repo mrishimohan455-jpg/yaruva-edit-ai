@@ -5,10 +5,7 @@
 
 <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>YARUVA Edit AI</title>
 
@@ -180,6 +177,12 @@ button{
     font-size:13px;
 }
 
+.audio-status{
+    margin-top:8px;
+    color:#888;
+    font-size:12px;
+}
+
 .plan{
     display:none;
     background:#151515;
@@ -238,19 +241,15 @@ button{
 }
 
 .error{
-    color:#ff9a9a;
+    display:none;
+    margin-top:12px;
+    padding:13px;
+    border-radius:10px;
     background:#211010;
     border:1px solid #4a2222;
-    padding:12px;
-    border-radius:10px;
-    margin-top:12px;
-    display:none;
-}
-
-.audio-status{
-    margin-top:10px;
-    color:#888;
-    font-size:12px;
+    color:#ff9a9a;
+    font-size:13px;
+    line-height:1.5;
 }
 
 @media(max-width:600px){
@@ -297,8 +296,8 @@ button{
     </h1>
 
     <p>
-        Upload your video and tell YARUVA exactly how
-        you want it edited.
+        Upload your video and tell YARUVA exactly
+        how you want it edited.
     </p>
 
 </section>
@@ -449,9 +448,7 @@ button{
 
         <div class="setting">
 
-            <label>
-                STYLE
-            </label>
+            <label>STYLE</label>
 
             <strong id="styleValue">
                 Original
@@ -462,9 +459,7 @@ button{
 
         <div class="setting">
 
-            <label>
-                FORMAT
-            </label>
+            <label>FORMAT</label>
 
             <strong id="formatValue">
                 Original
@@ -475,9 +470,7 @@ button{
 
         <div class="setting">
 
-            <label>
-                BRIGHTNESS
-            </label>
+            <label>BRIGHTNESS</label>
 
             <strong id="brightnessValue">
                 100%
@@ -488,9 +481,7 @@ button{
 
         <div class="setting">
 
-            <label>
-                CONTRAST
-            </label>
+            <label>CONTRAST</label>
 
             <strong id="contrastValue">
                 100%
@@ -501,9 +492,7 @@ button{
 
         <div class="setting">
 
-            <label>
-                SATURATION
-            </label>
+            <label>SATURATION</label>
 
             <strong id="saturationValue">
                 100%
@@ -514,16 +503,13 @@ button{
 
         <div class="setting">
 
-            <label>
-                CAPTION
-            </label>
+            <label>CAPTION</label>
 
             <strong id="captionValue">
                 None
             </strong>
 
         </div>
-
 
     </div>
 
@@ -576,8 +562,8 @@ button{
 
         <br><br>
 
-        Your visual edits and original audio are processed
-        locally in the browser for this MVP.
+        Visual edits and original audio are processed
+        locally in your browser.
 
     </div>
 
@@ -594,55 +580,33 @@ button{
    VARIABLES
 ===================================================== */
 
-
 const videoInput =
-    document.getElementById(
-        "videoInput"
-    );
-
+    document.getElementById("videoInput");
 
 const sourceVideo =
-    document.getElementById(
-        "sourceVideo"
-    );
-
+    document.getElementById("sourceVideo");
 
 const videoPlaceholder =
-    document.getElementById(
-        "videoPlaceholder"
-    );
-
+    document.getElementById("videoPlaceholder");
 
 const generateBtn =
-    document.getElementById(
-        "generateBtn"
-    );
+    document.getElementById("generateBtn");
 
 
-let sourceFile =
-    null;
+let sourceFile = null;
 
+let videoURL = null;
 
-let videoURL =
-    null;
+let outputURL = null;
 
+let audioContext = null;
 
-let outputURL =
-    null;
-
-
-let audioContext =
-    null;
-
-
-let mediaSourceNode =
-    null;
+let mediaSourceNode = null;
 
 
 /* =====================================================
-   VIDEO UPLOAD
+   UPLOAD VIDEO
 ===================================================== */
-
 
 videoInput.addEventListener(
     "change",
@@ -651,13 +615,9 @@ videoInput.addEventListener(
         const file =
             this.files[0];
 
-
         if(!file){
-
             return;
-
         }
-
 
         sourceFile =
             file;
@@ -680,29 +640,16 @@ videoInput.addEventListener(
 
         sourceVideo.pause();
 
-
         sourceVideo.src =
             videoURL;
 
-
-        sourceVideo.volume =
-            1;
-
-
-        sourceVideo.playsInline =
-            true;
-
-
         sourceVideo.load();
-
 
         sourceVideo.style.display =
             "block";
 
-
         videoPlaceholder.style.display =
             "none";
-
 
         generateBtn.disabled =
             true;
@@ -714,15 +661,13 @@ videoInput.addEventListener(
                 sourceVideo
             );
 
-
             generateBtn.disabled =
                 false;
 
-
         }catch(error){
 
-            alert(
-                "YARUVA could not read this video. Please try another video."
+            showRenderError(
+                "This video could not be loaded."
             );
 
         }
@@ -734,7 +679,6 @@ videoInput.addEventListener(
 /* =====================================================
    WAIT FOR VIDEO
 ===================================================== */
-
 
 function waitForVideoReady(video){
 
@@ -756,6 +700,7 @@ function waitForVideoReady(video){
             const timeout =
                 setTimeout(
                     ()=>{
+
                         cleanup();
 
                         reject(
@@ -763,6 +708,7 @@ function waitForVideoReady(video){
                                 "Video loading timeout"
                             )
                         );
+
                     },
                     15000
                 );
@@ -826,12 +772,10 @@ function waitForVideoReady(video){
                 ready
             );
 
-
             video.addEventListener(
                 "canplay",
                 ready
             );
-
 
             video.addEventListener(
                 "error",
@@ -845,15 +789,13 @@ function waitForVideoReady(video){
 
 
 /* =====================================================
-   LOCAL YARUVA INTERPRETER
+   YARUVA LOCAL INTERPRETER
 ===================================================== */
-
 
 function interpretRequest(text){
 
     const original =
         text.trim();
-
 
     const lower =
         original.toLowerCase();
@@ -974,7 +916,7 @@ function interpretRequest(text){
     }
 
 
-    /* BLACK AND WHITE */
+    /* BLACK & WHITE */
 
     if(
         lower.includes("black and white") ||
@@ -1008,12 +950,16 @@ function interpretRequest(text){
        CAPTION
     ================================================= */
 
+    let caption = "";
 
-    let caption =
-        "";
+    let match;
 
 
-    let match =
+    /*
+       add caption "Never Give Up"
+    */
+
+    match =
         original.match(
             /(?:add\s+(?:my\s+)?caption|caption)\s*[:\-]?\s*["“”']([^"“”']+)["“”']/i
         );
@@ -1026,6 +972,10 @@ function interpretRequest(text){
 
     }
 
+
+    /*
+       caption: Never Give Up
+    */
 
     if(!caption){
 
@@ -1045,6 +995,10 @@ function interpretRequest(text){
     }
 
 
+    /*
+       Add caption Never Give Up
+    */
+
     if(!caption){
 
         match =
@@ -1063,6 +1017,10 @@ function interpretRequest(text){
     }
 
 
+    /*
+       put/write/show text
+    */
+
     if(!caption){
 
         match =
@@ -1080,6 +1038,10 @@ function interpretRequest(text){
 
     }
 
+
+    /*
+       add text
+    */
 
     if(!caption){
 
@@ -1116,9 +1078,8 @@ function interpretRequest(text){
 
 
 /* =====================================================
-   SETTINGS
+   SETTINGS UI
 ===================================================== */
-
 
 function showSettings(edit){
 
@@ -1172,7 +1133,6 @@ function showSettings(edit){
 /* =====================================================
    START EDITING
 ===================================================== */
-
 
 async function startEditing(){
 
@@ -1230,29 +1190,43 @@ async function startEditing(){
 
     plan.innerHTML =
         "✦ YARUVA understood your request." +
+
         "<br><br>" +
 
         "Applying <strong>" +
+
         edit.style +
+
         "</strong> styling, " +
 
         edit.brightness +
+
         "% brightness, " +
 
         edit.contrast +
+
         "% contrast, " +
 
         edit.saturation +
+
         "% saturation" +
 
         (
+
             edit.caption
-                ?
-                ', and caption <strong>"' +
-                edit.caption +
-                '"</strong>.'
-                :
-                "."
+
+            ?
+
+            ', and caption <strong>"' +
+
+            edit.caption +
+
+            '"</strong>.'
+
+            :
+
+            "."
+
         );
 
 
@@ -1296,11 +1270,10 @@ async function startEditing(){
             edit
         );
 
-
     }catch(error){
 
         console.error(
-            "YARUVA ERROR:",
+            "YARUVA rendering error:",
             error
         );
 
@@ -1321,7 +1294,6 @@ async function startEditing(){
 /* =====================================================
    RECORDING FORMAT
 ===================================================== */
-
 
 function getRecordingFormat(){
 
@@ -1370,7 +1342,6 @@ function getRecordingFormat(){
    AUDIO SETUP
 ===================================================== */
 
-
 async function setupAudio(){
 
     const AudioCtx =
@@ -1381,7 +1352,7 @@ async function setupAudio(){
     if(!AudioCtx){
 
         throw new Error(
-            "Audio processing is not supported by this browser."
+            "Web Audio is not supported."
         );
 
     }
@@ -1405,13 +1376,6 @@ async function setupAudio(){
     }
 
 
-    /*
-       Only create the media
-       source once for this
-       video element.
-    */
-
-
     if(!mediaSourceNode){
 
         mediaSourceNode =
@@ -1422,46 +1386,31 @@ async function setupAudio(){
     }
 
 
-    /*
-       Recording destination
-    */
-
-
     const destination =
         audioContext.createMediaStreamDestination();
 
 
-    /*
-       Gain for recording
-    */
-
-
-    const recordGain =
+    const gain =
         audioContext.createGain();
 
 
-    recordGain.gain.value =
+    gain.gain.value =
         1;
 
 
     mediaSourceNode.connect(
-        recordGain
+        gain
     );
 
 
-    recordGain.connect(
+    gain.connect(
         destination
     );
 
 
     /*
-       Silent speaker path.
-       This prevents the original
-       audio from blasting through
-       the phone speaker while
-       rendering.
+       Silent speaker output
     */
-
 
     const silentGain =
         audioContext.createGain();
@@ -1487,9 +1436,8 @@ async function setupAudio(){
 
 
 /* =====================================================
-   RENDER VIDEO
+   MAIN RENDER ENGINE
 ===================================================== */
-
 
 async function renderVideo(edit){
 
@@ -1503,9 +1451,8 @@ async function renderVideo(edit){
 
 
     /*
-       Audio
+       AUDIO
     */
-
 
     let audioStream =
         null;
@@ -1533,15 +1480,14 @@ async function renderVideo(edit){
         document.getElementById(
             "audioStatus"
         ).textContent =
-            "Visual rendering active • audio unavailable in this browser";
+            "Visual rendering active • audio unavailable";
 
     }
 
 
     /*
-       Canvas dimensions
+       VIDEO DIMENSIONS
     */
-
 
     const originalWidth =
         video.videoWidth;
@@ -1559,6 +1505,10 @@ async function renderVideo(edit){
         originalHeight;
 
 
+    /*
+       9:16
+    */
+
     if(
         edit.aspect === "9:16"
     ){
@@ -1570,7 +1520,14 @@ async function renderVideo(edit){
         canvasHeight =
             1280;
 
-    }else{
+    }
+
+
+    /*
+       NORMAL FORMAT
+    */
+
+    else{
 
         const maximum =
             1280;
@@ -1602,9 +1559,8 @@ async function renderVideo(edit){
 
 
     /*
-       Canvas
+       CANVAS
     */
-
 
     const canvas =
         document.createElement(
@@ -1630,9 +1586,8 @@ async function renderVideo(edit){
 
 
     /*
-       Video stream
+       VIDEO STREAM
     */
-
 
     const videoStream =
         canvas.captureStream(
@@ -1641,9 +1596,8 @@ async function renderVideo(edit){
 
 
     /*
-       Combine video + audio
+       COMBINED STREAM
     */
-
 
     const combinedStream =
         new MediaStream();
@@ -1674,9 +1628,8 @@ async function renderVideo(edit){
 
 
     /*
-       Recording format
+       RECORDING FORMAT
     */
-
 
     const mimeType =
         getRecordingFormat();
@@ -1685,16 +1638,15 @@ async function renderVideo(edit){
     if(!mimeType){
 
         throw new Error(
-            "This browser does not support a suitable video export format."
+            "No supported recording format was found."
         );
 
     }
 
 
     /*
-       Recorder
+       RECORDER
     */
-
 
     const recorder =
         new MediaRecorder(
@@ -1755,7 +1707,6 @@ async function renderVideo(edit){
        STOP PROMISE
     */
 
-
     const stopped =
         new Promise(
             (resolve,reject)=>{
@@ -1800,12 +1751,10 @@ async function renderVideo(edit){
 
 
     /*
-       Reset video
+       RESET
     */
 
-
     video.pause();
-
 
     video.currentTime =
         0;
@@ -1817,9 +1766,8 @@ async function renderVideo(edit){
 
 
     /*
-       Start recording
+       START RECORDING
     */
-
 
     recorder.start(
         250
@@ -1827,13 +1775,8 @@ async function renderVideo(edit){
 
 
     /*
-       IMPORTANT:
-       This is triggered from
-       the user's button click,
-       allowing iPhone Safari
-       to start playback.
+       START VIDEO
     */
-
 
     try{
 
@@ -1844,7 +1787,7 @@ async function renderVideo(edit){
         recorder.stop();
 
         throw new Error(
-            "iPhone could not start the rendering playback."
+            "iPhone could not start rendering playback."
         );
 
     }
@@ -1857,9 +1800,8 @@ async function renderVideo(edit){
 
 
     /*
-       Render frames
+       RENDER LOOP
     */
-
 
     await new Promise(
         (resolve,reject)=>{
@@ -1879,13 +1821,12 @@ async function renderVideo(edit){
                 }
 
 
+                /*
+                   Finished
+                */
+
                 if(
-                    video.ended ||
-                    (
-                        video.paused &&
-                        video.currentTime >=
-                        video.duration - 0.05
-                    )
+                    video.ended
                 ){
 
                     resolve();
@@ -1894,6 +1835,10 @@ async function renderVideo(edit){
 
                 }
 
+
+                /*
+                   Draw
+                */
 
                 drawVideoFrame(
 
@@ -1909,6 +1854,10 @@ async function renderVideo(edit){
 
                 );
 
+
+                /*
+                   Progress
+                */
 
                 const duration =
                     video.duration;
@@ -1969,9 +1918,8 @@ async function renderVideo(edit){
 
 
     /*
-       Final frame
+       FINAL FRAME
     */
-
 
     drawVideoFrame(
 
@@ -1997,13 +1945,12 @@ async function renderVideo(edit){
     document.getElementById(
         "status"
     ).textContent =
-        "Finishing audio and video...";
+        "Finishing video...";
 
 
     /*
-       Give encoder time
+       Encoder delay
     */
-
 
     await sleep(
         1200
@@ -2021,7 +1968,6 @@ async function renderVideo(edit){
        Stop tracks
     */
 
-
     combinedStream
         .getTracks()
         .forEach(
@@ -2031,9 +1977,8 @@ async function renderVideo(edit){
 
 
     /*
-       Output URL
+       OUTPUT URL
     */
-
 
     if(outputURL){
 
@@ -2051,9 +1996,8 @@ async function renderVideo(edit){
 
 
     /*
-       Result video
+       RESULT
     */
-
 
     const resultVideo =
         document.getElementById(
@@ -2069,9 +2013,8 @@ async function renderVideo(edit){
 
 
     /*
-       File extension
+       FORMAT
     */
-
 
     const isMP4 =
         mimeType.includes(
@@ -2086,9 +2029,8 @@ async function renderVideo(edit){
 
 
     /*
-       Download
+       DOWNLOAD
     */
-
 
     const download =
         document.getElementById(
@@ -2117,9 +2059,8 @@ async function renderVideo(edit){
 
 
     /*
-       Show result
+       SHOW RESULT
     */
-
 
     document.getElementById(
         "resultCard"
@@ -2149,7 +2090,6 @@ async function renderVideo(edit){
    DRAW VIDEO FRAME
 ===================================================== */
 
-
 function drawVideoFrame(
 
     ctx,
@@ -2167,7 +2107,6 @@ function drawVideoFrame(
     /*
        Background
     */
-
 
     ctx.fillStyle =
         "#000";
@@ -2189,7 +2128,6 @@ function drawVideoFrame(
     /*
        Colour effects
     */
-
 
     ctx.filter =
 
@@ -2213,9 +2151,8 @@ function drawVideoFrame(
 
 
     /*
-       Reel crop
+       9:16
     */
-
 
     if(
         edit.aspect === "9:16"
@@ -2302,7 +2239,10 @@ function drawVideoFrame(
 
         );
 
-    }else{
+    }
+
+
+    else{
 
         ctx.drawImage(
 
@@ -2321,16 +2261,21 @@ function drawVideoFrame(
     }
 
 
+    /*
+       Reset filter
+    */
+
     ctx.filter =
         "none";
 
 
     /*
-       Caption
+       CAPTION
     */
 
-
-    if(edit.caption){
+    if(
+        edit.caption
+    ){
 
         drawCaption(
 
@@ -2352,7 +2297,6 @@ function drawVideoFrame(
 /* =====================================================
    CAPTION
 ===================================================== */
-
 
 function drawCaption(
 
@@ -2414,9 +2358,8 @@ function drawCaption(
 
 
     /*
-       Wrap long caption
+       Wrap text
     */
-
 
     if(
         ctx.measureText(
@@ -2431,20 +2374,20 @@ function drawCaption(
             );
 
 
-        let line =
-            "";
-
-
         lines =
             [];
+
+
+        let current =
+            "";
 
 
         words.forEach(
             word=>{
 
                 const test =
-                    line
-                        ? line +
+                    current
+                        ? current +
                           " " +
                           word
                         : word;
@@ -2457,20 +2400,20 @@ function drawCaption(
                     maxWidth
                 ){
 
-                    line =
+                    current =
                         test;
 
                 }else{
 
-                    if(line){
+                    if(current){
 
                         lines.push(
-                            line
+                            current
                         );
 
                     }
 
-                    line =
+                    current =
                         word;
 
                 }
@@ -2479,10 +2422,10 @@ function drawCaption(
         );
 
 
-        if(line){
+        if(current){
 
             lines.push(
-                line
+                current
             );
 
         }
@@ -2546,7 +2489,6 @@ function drawCaption(
        Background
     */
 
-
     ctx.fillStyle =
         "rgba(0,0,0,0.68)";
 
@@ -2574,7 +2516,6 @@ function drawCaption(
     /*
        Text
     */
-
 
     ctx.fillStyle =
         "#fff";
@@ -2609,9 +2550,139 @@ function drawCaption(
 
 
 /* =====================================================
-   SEEK
+   ROUND RECTANGLE
 ===================================================== */
 
+function roundRect(
+
+    ctx,
+
+    x,
+
+    y,
+
+    width,
+
+    height,
+
+    radius
+
+){
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+
+        x + radius,
+
+        y
+
+    );
+
+
+    ctx.lineTo(
+
+        x +
+        width -
+        radius,
+
+        y
+
+    );
+
+
+    ctx.quadraticCurveTo(
+
+        x + width,
+
+        y,
+
+        x + width,
+
+        y + radius
+
+    );
+
+
+    ctx.lineTo(
+
+        x + width,
+
+        y +
+        height -
+        radius
+
+    );
+
+
+    ctx.quadraticCurveTo(
+
+        x + width,
+
+        y + height,
+
+        x + width -
+        radius,
+
+        y + height
+
+    );
+
+
+    ctx.lineTo(
+
+        x + radius,
+
+        y + height
+
+    );
+
+
+    ctx.quadraticCurveTo(
+
+        x,
+
+        y + height,
+
+        x,
+
+        y + height -
+        radius
+
+    );
+
+
+    ctx.lineTo(
+
+        x,
+
+        y + radius
+
+    );
+
+
+    ctx.quadraticCurveTo(
+
+        x,
+
+        y,
+
+        x + radius,
+
+        y
+
+    );
+
+
+    ctx.closePath();
+
+}
+
+
+/* =====================================================
+   SEEK
+===================================================== */
 
 function waitForSeek(video){
 
@@ -2653,7 +2724,6 @@ function waitForSeek(video){
    SLEEP
 ===================================================== */
 
-
 function sleep(ms){
 
     return new Promise(
@@ -2672,7 +2742,6 @@ function sleep(ms){
 /* =====================================================
    ERROR
 ===================================================== */
-
 
 function showRenderError(message){
 
