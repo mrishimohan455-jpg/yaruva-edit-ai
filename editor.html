@@ -2,430 +2,452 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-<title>YARUVA Editor</title>
+<meta name="theme-color" content="#08080a">
+
+<title>YARUVA Editor AI</title>
 
 <style>
 
 *{
-box-sizing:border-box;
-margin:0;
-padding:0;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --bg:#08080a;
+  --panel:#111116;
+  --panel2:#17151f;
+  --border:#2b2933;
+  --text:#f7f7fa;
+  --muted:#9997a5;
+  --purple:#a78bfa;
+  --purple2:#7c5cff;
 }
 
 body{
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-background:#08080a;
-color:#f5f5f7;
-min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+  "Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+button,
+input,
+textarea{
+  font:inherit;
 }
 
 button{
-font-family:inherit;
-cursor:pointer;
+  cursor:pointer;
 }
 
 .app{
-width:min(1150px,100%);
-margin:auto;
-padding:22px;
+  width:100%;
+  max-width:760px;
+  margin:auto;
+  padding:22px 18px 120px;
 }
 
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:24px;
+/* HEADER */
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:32px;
 }
 
 .brand{
-display:flex;
-align-items:center;
-gap:12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
 .logo{
-width:44px;
-height:44px;
-border-radius:13px;
-background:#f5f5f7;
-color:#08080a;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:21px;
-font-weight:900;
+  width:48px;
+  height:48px;
+  border-radius:15px;
+  background:#f5f5f7;
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  font-weight:900;
 }
 
-.brand h1{
-font-size:20px;
+.brand-name{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:2px;
 }
 
-.brand p{
-color:#888892;
-font-size:13px;
-margin-top:3px;
+.avatar{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#aaa8b4;
+  font-weight:700;
 }
 
-.save{
-background:none;
-border:0;
-color:#a98cff;
-font-size:16px;
-font-weight:800;
+/* TOP */
+
+.eyebrow{
+  color:var(--purple);
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:3px;
+  margin-bottom:15px;
 }
 
-.workspace{
-display:grid;
-grid-template-columns:1.35fr .8fr;
-gap:18px;
+h1{
+  font-size:48px;
+  line-height:.98;
+  letter-spacing:-2.5px;
+  margin-bottom:18px;
 }
 
-.card{
-background:#111116;
-border:1px solid #292931;
-border-radius:24px;
-padding:20px;
+.gradient{
+  color:#aaa8b4;
 }
 
-.preview{
-min-height:470px;
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
+.description{
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.65;
+  margin-bottom:25px;
 }
 
-video{
-width:100%;
-max-height:500px;
-border-radius:17px;
-background:#050506;
-object-fit:contain;
-}
-
-.empty{
-text-align:center;
-padding:50px 20px;
-}
-
-.clapper{
-font-size:58px;
-margin-bottom:18px;
-}
-
-.empty h2{
-font-size:28px;
-margin-bottom:10px;
-}
-
-.empty p{
-color:#888892;
-line-height:1.6;
-margin-bottom:25px;
-}
-
-input[type=file]{
-display:none;
-}
-
-.primary{
-display:inline-block;
-background:#f5f5f7;
-color:#08080a;
-border:0;
-padding:15px 22px;
-border-radius:15px;
-font-size:16px;
-font-weight:800;
-cursor:pointer;
-}
-
-.section-title{
-font-size:13px;
-color:#9999a3;
-text-transform:uppercase;
-letter-spacing:1.5px;
-margin-bottom:14px;
-}
-
-/* TIMELINE */
-
-.timeline-card{
-margin-top:18px;
-}
-
-.timeline{
-position:relative;
-height:70px;
-background:#09090c;
-border:1px solid #292931;
-border-radius:14px;
-overflow:hidden;
-}
-
-.timeline-track{
-position:absolute;
-left:0;
-right:0;
-top:0;
-bottom:0;
-display:flex;
-align-items:center;
-gap:3px;
-padding:10px;
-}
-
-.timeline-block{
-height:45px;
-flex:1;
-border-radius:7px;
-background:#252530;
-}
-
-.timeline-block:nth-child(2n){
-background:#30303b;
-}
-
-.trim-overlay{
-position:absolute;
-top:0;
-bottom:0;
-background:rgba(169,140,255,.13);
-border-top:2px solid #a98cff;
-border-bottom:2px solid #a98cff;
-pointer-events:none;
-}
-
-.trim-label{
-font-size:12px;
-color:#9999a3;
-margin-top:10px;
-display:flex;
-justify-content:space-between;
-}
-
-.trim-controls{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
-margin-top:15px;
-}
-
-.trim-box{
-background:#09090c;
-border:1px solid #292931;
-border-radius:14px;
-padding:14px;
-}
-
-.trim-box label{
-display:flex;
-justify-content:space-between;
-font-size:13px;
-color:#aaaab3;
-margin-bottom:9px;
-}
-
-.trim-box input{
-width:100%;
-}
-
-.range-value{
-color:#c0aaff;
-font-weight:800;
-}
-
-/* CONTROLS */
-
-.controls{
-margin-top:18px;
-}
-
-.control{
-margin-bottom:17px;
-}
-
-.control label{
-display:flex;
-justify-content:space-between;
-color:#aaaab3;
-font-size:13px;
-margin-bottom:7px;
-}
-
-input[type=range]{
-width:100%;
-accent-color:#a98cff;
-}
+/* BUTTONS */
 
 .actions{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-margin-top:18px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:22px;
 }
 
-.action{
-padding:14px;
-border-radius:13px;
-border:1px solid #303038;
-background:#15151a;
-color:#fff;
-font-weight:700;
+.btn{
+  min-height:58px;
+  border-radius:18px;
+  border:1px solid var(--border);
+  background:#141419;
+  color:white;
+  font-weight:750;
+  font-size:16px;
 }
 
-.action:hover{
-border-color:#a98cff;
+.btn.primary{
+  background:#f5f5f7;
+  color:#111;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+}
+
+.btn:active{
+  transform:scale(.98);
+}
+
+/* CARDS */
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:26px;
+  padding:22px;
+  margin-bottom:18px;
+}
+
+.card.ai{
+  background:linear-gradient(
+    145deg,
+    #181321,
+    #0f0e13
+  );
+  border-color:#3b315b;
+}
+
+.card-title{
+  font-size:21px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.card-subtitle{
+  color:var(--muted);
+  line-height:1.5;
+  margin-bottom:18px;
 }
 
 /* AI */
 
-.ai-box{
-background:linear-gradient(145deg,#171321,#111116);
-border:1px solid #39304e;
-}
-
-.ai-title{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:14px;
-}
-
-.ai-title h2{
-font-size:19px;
-}
-
-.spark{
-width:40px;
-height:40px;
-border-radius:12px;
-background:#29213d;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:20px;
-}
-
-.ai-description{
-color:#92929c;
-font-size:14px;
-line-height:1.5;
-margin-bottom:14px;
-}
-
 textarea{
-width:100%;
-min-height:100px;
-resize:none;
-background:#09090c;
-color:#fff;
-border:1px solid #2b2b33;
-border-radius:14px;
-padding:14px;
-font:inherit;
-outline:none;
+  width:100%;
+  min-height:110px;
+  resize:vertical;
+  background:#08080a;
+  border:1px solid var(--border);
+  border-radius:18px;
+  color:white;
+  padding:17px;
+  outline:none;
 }
 
 textarea:focus{
-border-color:#8f72ff;
+  border-color:var(--purple);
 }
 
-.ai-button{
-width:100%;
-margin-top:10px;
-background:#a98cff;
-color:#09090c;
-border:0;
-padding:14px;
-border-radius:13px;
-font-weight:800;
-font-size:15px;
+.ai-generate{
+  width:100%;
+  margin-top:12px;
+  min-height:56px;
+  border:0;
+  border-radius:17px;
+  background:var(--purple);
+  color:#111;
+  font-weight:850;
 }
 
-.styles{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:8px;
-margin-top:12px;
+.presets{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:15px;
 }
 
-.style-btn{
-padding:12px 8px;
-border-radius:12px;
-border:1px solid #2b2b33;
-background:#15151a;
-color:#ddd;
-font-weight:700;
+.preset{
+  min-height:52px;
+  background:#15141a;
+  border:1px solid var(--border);
+  border-radius:16px;
+  color:#eee;
+  font-weight:700;
 }
 
-.style-btn:hover{
-border-color:#9b7cff;
+.preset.active{
+  border-color:var(--purple);
+  background:#211b30;
 }
 
 .plan{
-display:none;
-margin-top:15px;
-background:#0b0b0e;
-border:1px solid #292931;
-border-radius:14px;
-padding:15px;
-line-height:1.6;
-font-size:14px;
+  display:none;
+  margin-top:18px;
+  background:#09090b;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:18px;
 }
 
-.plan strong{
-color:#b69dff;
+.plan.show{
+  display:block;
 }
 
-/* PROJECT */
-
-.project-info{
-margin-top:18px;
+.plan h3{
+  color:var(--purple);
+  margin-bottom:12px;
 }
 
-.project-info h3{
-margin-bottom:8px;
+.plan ol{
+  padding-left:22px;
 }
 
-.project-info p{
-color:#888892;
-font-size:13px;
-line-height:1.6;
+.plan li{
+  margin-bottom:9px;
+  color:#ddd;
+  line-height:1.45;
 }
+
+/* VIDEO */
+
+.video-box{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  background:#050506;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+video{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:none;
+}
+
+.empty-video{
+  text-align:center;
+  color:var(--muted);
+}
+
+.empty-video .icon{
+  font-size:42px;
+  margin-bottom:10px;
+}
+
+.video-controls{
+  display:none;
+  margin-top:15px;
+}
+
+.control-row{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+
+input[type="range"]{
+  width:100%;
+  accent-color:var(--purple);
+}
+
+.control-group{
+  margin-bottom:18px;
+}
+
+/* STYLE */
+
+.style-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.style-btn{
+  min-height:52px;
+  border-radius:16px;
+  background:#15141a;
+  border:1px solid var(--border);
+  color:white;
+  font-weight:750;
+}
+
+.style-btn.active{
+  border-color:var(--purple);
+  background:#211b30;
+}
+
+/* STATUS */
 
 .status{
-margin-top:15px;
-color:#777781;
-font-size:12px;
-text-align:center;
+  padding:14px 16px;
+  background:#111116;
+  border:1px solid var(--border);
+  border-radius:15px;
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:18px;
+}
+
+/* CAPTION */
+
+.caption-preview{
+  background:#08080a;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  min-height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-weight:800;
+  font-size:20px;
+}
+
+.caption-input{
+  margin-top:12px;
+  width:100%;
+  min-height:50px;
+  border-radius:15px;
+  border:1px solid var(--border);
+  background:#08080a;
+  color:white;
+  padding:14px;
+  outline:none;
+}
+
+/* BOTTOM */
+
+.bottom{
+  position:fixed;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 24px);
+  max-width:700px;
+  background:rgba(20,20,25,.94);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:8px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  z-index:20;
+}
+
+.nav{
+  border:0;
+  background:transparent;
+  color:#777581;
+  min-height:54px;
+  border-radius:18px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.nav.active{
+  background:#24232a;
+  color:white;
+}
+
+.nav span{
+  display:block;
+  font-size:20px;
+  margin-bottom:3px;
 }
 
 /* MOBILE */
 
-@media(max-width:800px){
+@media(max-width:520px){
 
-.app{
-padding:16px;
-}
+  .app{
+    padding:18px 14px 115px;
+  }
 
-.workspace{
-grid-template-columns:1fr;
-}
+  h1{
+    font-size:42px;
+  }
 
-.preview{
-min-height:380px;
-}
+  .description{
+    font-size:16px;
+  }
 
-video{
-max-height:400px;
-}
+  .card{
+    padding:18px;
+    border-radius:22px;
+  }
 
-.trim-controls{
-grid-template-columns:1fr;
-}
+  .actions{
+    grid-template-columns:1fr;
+  }
 
 }
 
@@ -436,967 +458,1064 @@ grid-template-columns:1fr;
 
 <div class="app">
 
-<header>
+  <!-- HEADER -->
 
-<div class="brand">
+  <header class="header">
 
-<div class="logo">Y</div>
+    <div class="brand">
 
-<div>
-<h1>YARUVA EDITOR</h1>
-<p>Learn. Create. Edit.</p>
+      <div class="logo">Y</div>
+
+      <div class="brand-name">
+        YARUVA
+      </div>
+
+    </div>
+
+    <div class="avatar">
+      R
+    </div>
+
+  </header>
+
+
+  <!-- HERO -->
+
+  <section>
+
+    <div class="eyebrow">
+      AI-POWERED VIDEO EDITING
+    </div>
+
+    <h1>
+      Create with<br>
+      confidence.<br>
+      <span class="gradient">
+        Learn as you edit.
+      </span>
+    </h1>
+
+    <p class="description">
+      A beginner-first video editor that helps you
+      turn raw footage into better stories — while
+      teaching you why each edit works.
+    </p>
+
+    <div class="actions">
+
+      <button class="btn primary"
+              onclick="openVideoPicker()">
+        ＋ New project
+      </button>
+
+      <button class="btn"
+              onclick="scrollToAI()">
+        Learn editing
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- FILE INPUT -->
+
+  <input
+    id="videoInput"
+    type="file"
+    accept="video/*"
+    style="display:none"
+    onchange="loadVideo(event)"
+  >
+
+
+  <!-- STATUS -->
+
+  <div id="status"
+       class="status">
+    🎬 Choose a video to begin editing with YARUVA.
+  </div>
+
+
+  <!-- VIDEO -->
+
+  <section class="card">
+
+    <div class="card-title">
+      🎬 Your project
+    </div>
+
+    <div class="card-subtitle">
+      Upload a video and start experimenting.
+    </div>
+
+    <div class="video-box">
+
+      <video id="video"
+             playsinline
+             controls>
+      </video>
+
+      <div id="emptyVideo"
+           class="empty-video">
+
+        <div class="icon">
+          🎞️
+        </div>
+
+        <strong>
+          Start your project
+        </strong>
+
+        <p style="margin-top:8px">
+          Choose a video from your device.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- CONTROLS -->
+
+    <div id="videoControls"
+         class="video-controls">
+
+      <div class="control-group">
+
+        <div class="control-row">
+          <span>Start</span>
+          <span id="startValue">00:00</span>
+        </div>
+
+        <input
+          id="startRange"
+          type="range"
+          min="0"
+          value="0"
+          step="0.1"
+          oninput="updateTrim()"
+        >
+
+      </div>
+
+
+      <div class="control-group">
+
+        <div class="control-row">
+          <span>End</span>
+          <span id="endValue">00:00</span>
+        </div>
+
+        <input
+          id="endRange"
+          type="range"
+          min="0"
+          value="0"
+          step="0.1"
+          oninput="updateTrim()"
+        >
+
+      </div>
+
+
+      <div class="actions">
+
+        <button class="btn"
+                onclick="previewTrim()">
+          ▶ Preview trim
+        </button>
+
+        <button class="btn"
+                onclick="resetTrim()">
+          ↻ Reset
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- QUICK ADJUSTMENTS -->
+
+  <section class="card">
+
+    <div class="card-title">
+      Quick adjustments
+    </div>
+
+    <div class="card-subtitle">
+      Make professional-looking changes instantly.
+    </div>
+
+
+    <div class="control-group">
+
+      <div class="control-row">
+        <span>Brightness</span>
+        <span id="brightnessValue">100%</span>
+      </div>
+
+      <input
+        id="brightness"
+        type="range"
+        min="60"
+        max="140"
+        value="100"
+        oninput="updateFilters()"
+      >
+
+    </div>
+
+
+    <div class="control-group">
+
+      <div class="control-row">
+        <span>Contrast</span>
+        <span id="contrastValue">100%</span>
+      </div>
+
+      <input
+        id="contrast"
+        type="range"
+        min="70"
+        max="150"
+        value="100"
+        oninput="updateFilters()"
+      >
+
+    </div>
+
+
+    <div class="control-group">
+
+      <div class="control-row">
+        <span>Saturation</span>
+        <span id="saturationValue">100%</span>
+      </div>
+
+      <input
+        id="saturation"
+        type="range"
+        min="0"
+        max="160"
+        value="100"
+        oninput="updateFilters()"
+      >
+
+    </div>
+
+
+    <div class="style-buttons">
+
+      <button class="style-btn"
+              onclick="applyStyle('cinematic')">
+        🎬 Cinematic
+      </button>
+
+      <button class="style-btn"
+              onclick="applyStyle('motivation')">
+        🔥 Motivation
+      </button>
+
+      <button class="style-btn"
+              onclick="applyStyle('reel')">
+        📱 Instagram Reel
+      </button>
+
+      <button class="style-btn"
+              onclick="applyStyle('professional')">
+        💼 Professional
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- AI ASSISTANT -->
+
+  <section id="aiSection"
+           class="card ai">
+
+    <div class="card-title">
+      ✨ YARUVA AI
+    </div>
+
+    <div class="card-subtitle">
+      Describe your video and YARUVA will create
+      a free editing plan.
+    </div>
+
+
+    <textarea
+      id="aiPrompt"
+      placeholder="Example: Make my video feel like a cinematic motivational movie..."
+    ></textarea>
+
+
+    <button class="ai-generate"
+            onclick="generateAIPlan()">
+      ✨ Create editing plan
+    </button>
+
+
+    <div class="presets">
+
+      <button class="preset"
+              onclick="usePreset('cinematic')">
+        🎬 Cinematic
+      </button>
+
+      <button class="preset"
+              onclick="usePreset('motivation')">
+        🔥 Motivation
+      </button>
+
+      <button class="preset"
+              onclick="usePreset('reel')">
+        📱 Instagram Reel
+      </button>
+
+      <button class="preset"
+              onclick="usePreset('professional')">
+        💼 Professional
+      </button>
+
+    </div>
+
+
+    <div id="aiPlan"
+         class="plan">
+
+      <h3 id="planTitle">
+        YARUVA Editing Plan
+      </h3>
+
+      <ol id="planList">
+      </ol>
+
+    </div>
+
+  </section>
+
+
+  <!-- CAPTIONS -->
+
+  <section class="card">
+
+    <div class="card-title">
+      ✍️ Caption Studio
+    </div>
+
+    <div class="card-subtitle">
+      Create simple captions for your video.
+    </div>
+
+    <input
+      id="captionInput"
+      class="caption-input"
+      placeholder="Type your caption..."
+      oninput="updateCaption()"
+    >
+
+    <div
+      id="captionPreview"
+      class="caption-preview"
+      style="margin-top:12px"
+    >
+      Your caption appears here
+    </div>
+
+  </section>
+
+
+  <!-- LEARNING -->
+
+  <section class="card">
+
+    <div class="card-title">
+      🎓 Learn while editing
+    </div>
+
+    <div class="card-subtitle">
+      YARUVA doesn't just change your video.
+      It teaches you the reason behind each decision.
+    </div>
+
+    <div style="
+      display:grid;
+      gap:10px;
+    ">
+
+      <div style="
+        padding:15px;
+        background:#08080a;
+        border:1px solid var(--border);
+        border-radius:15px;
+      ">
+        <strong>01 — Trimming</strong>
+        <p style="
+          color:var(--muted);
+          margin-top:5px;
+          line-height:1.5;
+        ">
+          Remove unnecessary pauses and keep the
+          strongest moments.
+        </p>
+      </div>
+
+
+      <div style="
+        padding:15px;
+        background:#08080a;
+        border:1px solid var(--border);
+        border-radius:15px;
+      ">
+        <strong>02 — Colour</strong>
+        <p style="
+          color:var(--muted);
+          margin-top:5px;
+          line-height:1.5;
+        ">
+          Contrast and saturation can change the
+          emotional feeling of a scene.
+        </p>
+      </div>
+
+
+      <div style="
+        padding:15px;
+        background:#08080a;
+        border:1px solid var(--border);
+        border-radius:15px;
+      ">
+        <strong>03 — Story</strong>
+        <p style="
+          color:var(--muted);
+          margin-top:5px;
+          line-height:1.5;
+        ">
+          Good editing guides the viewer from one
+          important moment to the next.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
 </div>
 
-</div>
 
-<button class="save" onclick="saveProject()">Save</button>
-
-</header>
-
-
-<div class="workspace">
-
-
-<!-- LEFT SIDE -->
-
-<div>
-
-
-<div class="card preview">
-
-<div class="empty" id="emptyState">
-
-<div class="clapper">🎬</div>
-
-<h2>Start your project</h2>
-
-<p>
-Choose a video from your device and begin
-editing with YARUVA.
-</p>
-
-<label class="primary">
-
-＋ Choose video
-
-<input
-type="file"
-id="videoInput"
-accept="video/*"
->
-
-</label>
-
-</div>
-
-<video
-id="video"
-controls
-style="display:none;"
-></video>
-
-</div>
-
-
-<!-- TIMELINE -->
-
-<div class="card timeline-card">
-
-<div class="section-title">
-Timeline & Trim
-</div>
-
-<div class="timeline">
-
-<div class="timeline-track">
-
-<div class="timeline-block"></div>
-<div class="timeline-block"></div>
-<div class="timeline-block"></div>
-<div class="timeline-block"></div>
-<div class="timeline-block"></div>
-<div class="timeline-block"></div>
-<div class="timeline-block"></div>
-<div class="timeline-block"></div>
-<div class="timeline-block"></div>
-<div class="timeline-block"></div>
-
-</div>
-
-<div
-class="trim-overlay"
-id="trimOverlay"
-style="left:0%;right:0%;"
-></div>
-
-</div>
-
-
-<div class="trim-label">
-
-<span>00:00</span>
-
-<span id="durationLabel">
-No video loaded
-</span>
-
-</div>
-
-
-<div class="trim-controls">
-
-<div class="trim-box">
-
-<label>
-
-<span>Start</span>
-
-<span class="range-value"
-id="startValue">
-00:00
-</span>
-
-</label>
-
-<input
-type="range"
-id="startRange"
-min="0"
-max="0"
-step="0.1"
-value="0"
->
-
-</div>
-
-
-<div class="trim-box">
-
-<label>
-
-<span>End</span>
-
-<span class="range-value"
-id="endValue">
-00:00
-</span>
-
-</label>
-
-<input
-type="range"
-id="endRange"
-min="0"
-max="0"
-step="0.1"
-value="0"
->
-
-</div>
-
-</div>
-
-
-<div class="actions">
-
-<button
-class="action"
-onclick="previewTrim()"
->
-▶ Preview Trim
-</button>
-
-<button
-class="action"
-onclick="resetTrim()"
->
-↺ Reset Trim
-</button>
-
-</div>
-
-</div>
-
-
-<!-- VIDEO ADJUSTMENTS -->
-
-<div class="card controls">
-
-<div class="section-title">
-Quick adjustments
-</div>
-
-
-<div class="control">
-
-<label>
-
-Brightness
-
-<span id="brightnessValue">
-100%
-</span>
-
-</label>
-
-<input
-id="brightness"
-type="range"
-min="50"
-max="150"
-value="100"
->
-
-</div>
-
-
-<div class="control">
-
-<label>
-
-Contrast
-
-<span id="contrastValue">
-100%
-</span>
-
-</label>
-
-<input
-id="contrast"
-type="range"
-min="50"
-max="150"
-value="100"
->
-
-</div>
-
-
-<div class="control">
-
-<label>
-
-Saturation
-
-<span id="saturationValue">
-100%
-</span>
-
-</label>
-
-<input
-id="saturation"
-type="range"
-min="0"
-max="180"
-value="100"
->
-
-</div>
-
-
-<div class="actions">
-
-<button
-class="action"
-onclick="cinematic()"
->
-🎬 Cinematic
-</button>
-
-<button
-class="action"
-onclick="resetVideo()"
->
-↺ Reset
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- RIGHT SIDE -->
-
-<div>
-
-
-<div class="card ai-box">
-
-<div class="ai-title">
-
-<h2>✨ YARUVA AI</h2>
-
-<div class="spark">
-✦
-</div>
-
-</div>
-
-
-<p class="ai-description">
-
-Describe your video and YARUVA will create
-a free editing plan.
-
-</p>
-
-
-<textarea
-id="prompt"
-placeholder="Example: Make my video feel like a cinematic motivational film..."
-></textarea>
-
-
-<button
-class="ai-button"
-onclick="generatePlan()"
->
-Create editing plan
-</button>
-
-
-<div class="styles">
-
-<button
-class="style-btn"
-onclick="quickAI('cinematic')"
->
-🎬 Cinematic
-</button>
-
-<button
-class="style-btn"
-onclick="quickAI('motivational')"
->
-🔥 Motivation
-</button>
-
-<button
-class="style-btn"
-onclick="quickAI('reel')"
->
-📱 Instagram Reel
-</button>
-
-<button
-class="style-btn"
-onclick="quickAI('professional')"
->
-💼 Professional
-</button>
-
-</div>
-
-
-<div
-class="plan"
-id="plan"
-></div>
-
-</div>
-
-
-<div class="card project-info">
-
-<div class="section-title">
-Project
-</div>
-
-<h3>
-Local editing
-</h3>
-
-<p>
-
-Your video stays on your device while using
-this prototype. No AI API or paid service is
-required.
-
-</p>
-
-<div
-class="status"
-id="status"
->
-Ready to create.
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+<!-- BOTTOM NAV -->
+
+<nav class="bottom">
+
+  <button class="nav active"
+          onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <span>⌂</span>
+    Home
+  </button>
+
+  <button class="nav"
+          onclick="openVideoPicker()">
+    <span>＋</span>
+    Projects
+  </button>
+
+  <button class="nav"
+          onclick="document.querySelector('.card:last-of-type').scrollIntoView({behavior:'smooth'})">
+    <span>◇</span>
+    Learn
+  </button>
+
+  <button class="nav"
+          onclick="scrollToAI()">
+    <span>✦</span>
+    AI
+  </button>
+
+</nav>
 
 
 <script>
 
-const videoInput =
-document.getElementById("videoInput");
+/* =========================
+   GLOBALS
+========================= */
 
 const video =
-document.getElementById("video");
+  document.getElementById("video");
 
-const emptyState =
-document.getElementById("emptyState");
-
-const startRange =
-document.getElementById("startRange");
-
-const endRange =
-document.getElementById("endRange");
-
-let videoDuration = 0;
+let videoURL = null;
+let originalDuration = 0;
 
 
-/* VIDEO LOAD */
+/* =========================
+   OPEN VIDEO PICKER
+========================= */
 
-videoInput.addEventListener("change",function(){
+function openVideoPicker(){
 
-const file=this.files[0];
+  document
+    .getElementById("videoInput")
+    .click();
 
-if(!file) return;
-
-const url=URL.createObjectURL(file);
-
-video.src=url;
-
-video.style.display="block";
-
-emptyState.style.display="none";
-
-document.getElementById("status").textContent=
-"Video loaded locally — ready to edit.";
-
-});
+}
 
 
-/* VIDEO METADATA */
+/* =========================
+   LOAD VIDEO
+========================= */
 
-video.addEventListener("loadedmetadata",function(){
+function loadVideo(event){
 
-videoDuration=video.duration;
+  const file =
+    event.target.files[0];
 
-startRange.max=videoDuration;
+  if(!file) return;
 
-endRange.max=videoDuration;
+  if(videoURL){
+    URL.revokeObjectURL(videoURL);
+  }
 
-endRange.value=videoDuration;
+  videoURL =
+    URL.createObjectURL(file);
 
-document.getElementById("durationLabel").textContent=
-formatTime(videoDuration);
+  video.src = videoURL;
 
-updateTrimUI();
+  video.style.display = "block";
 
-});
+  document
+    .getElementById("emptyVideo")
+    .style.display = "none";
+
+  document
+    .getElementById("videoControls")
+    .style.display = "block";
+
+  document
+    .getElementById("status")
+    .textContent =
+    "✅ Video loaded. Your editing workspace is ready.";
+
+  video.onloadedmetadata = function(){
+
+    originalDuration =
+      video.duration;
+
+    const start =
+      document.getElementById("startRange");
+
+    const end =
+      document.getElementById("endRange");
+
+    start.max =
+      originalDuration;
+
+    end.max =
+      originalDuration;
+
+    end.value =
+      originalDuration;
+
+    updateTrim();
+
+  };
+
+}
 
 
-/* FORMAT TIME */
+/* =========================
+   TIME FORMAT
+========================= */
 
 function formatTime(seconds){
 
-if(!isFinite(seconds)) return "00:00";
+  if(!isFinite(seconds))
+    return "00:00";
 
-let minutes=Math.floor(seconds/60);
+  const mins =
+    Math.floor(seconds / 60);
 
-let secs=Math.floor(seconds%60);
+  const secs =
+    Math.floor(seconds % 60);
 
-return String(minutes).padStart(2,"0")
-+":"+
-String(secs).padStart(2,"0");
-
-}
-
-
-/* TRIM START */
-
-startRange.addEventListener("input",function(){
-
-let start=parseFloat(startRange.value);
-
-let end=parseFloat(endRange.value);
-
-if(start>=end){
-
-start=end-0.1;
-
-if(start<0) start=0;
-
-startRange.value=start;
-
-}
-
-updateTrimUI();
-
-});
-
-
-/* TRIM END */
-
-endRange.addEventListener("input",function(){
-
-let start=parseFloat(startRange.value);
-
-let end=parseFloat(endRange.value);
-
-if(end<=start){
-
-end=start+0.1;
-
-if(end>videoDuration)
-end=videoDuration;
-
-endRange.value=end;
-
-}
-
-updateTrimUI();
-
-});
-
-
-/* UPDATE TRIM UI */
-
-function updateTrimUI(){
-
-let start=parseFloat(startRange.value)||0;
-
-let end=parseFloat(endRange.value)||videoDuration;
-
-document.getElementById("startValue").textContent=
-formatTime(start);
-
-document.getElementById("endValue").textContent=
-formatTime(end);
-
-if(videoDuration>0){
-
-let left=(start/videoDuration)*100;
-
-let right=100-(end/videoDuration)*100;
-
-document.getElementById("trimOverlay").style.left=
-left+"%";
-
-document.getElementById("trimOverlay").style.right=
-right+"%";
-
-}
+  return String(mins).padStart(2,"0")
+    + ":" +
+    String(secs).padStart(2,"0");
 
 }
 
 
-/* PREVIEW TRIM */
+/* =========================
+   TRIM
+========================= */
+
+function updateTrim(){
+
+  const start =
+    parseFloat(
+      document.getElementById("startRange").value
+    );
+
+  let end =
+    parseFloat(
+      document.getElementById("endRange").value
+    );
+
+  if(end <= start){
+
+    end =
+      Math.min(
+        originalDuration,
+        start + 0.1
+      );
+
+    document.getElementById("endRange").value =
+      end;
+
+  }
+
+  document.getElementById("startValue")
+    .textContent =
+    formatTime(start);
+
+  document.getElementById("endValue")
+    .textContent =
+    formatTime(end);
+
+}
+
+
+/* =========================
+   PREVIEW TRIM
+========================= */
 
 function previewTrim(){
 
-if(!video.src){
+  if(!video.src){
 
-document.getElementById("status").textContent=
-"Choose a video first.";
+    setStatus(
+      "Choose a video first."
+    );
 
-return;
+    return;
+
+  }
+
+  const start =
+    parseFloat(
+      document.getElementById("startRange").value
+    );
+
+  const end =
+    parseFloat(
+      document.getElementById("endRange").value
+    );
+
+  video.currentTime =
+    start;
+
+  video.play();
+
+  setStatus(
+    "▶ Previewing your selected section."
+  );
+
+  video.ontimeupdate =
+    function(){
+
+      if(video.currentTime >= end){
+
+        video.pause();
+
+        video.ontimeupdate = null;
+
+      }
+
+    };
 
 }
 
-let start=parseFloat(startRange.value);
 
-let end=parseFloat(endRange.value);
-
-video.currentTime=start;
-
-video.play();
-
-document.getElementById("status").textContent=
-"Previewing selected section.";
-
-const stopAtEnd=setInterval(function(){
-
-if(video.currentTime>=end){
-
-video.pause();
-
-clearInterval(stopAtEnd);
-
-document.getElementById("status").textContent=
-"Trim preview finished.";
-
-}
-
-},100);
-
-}
-
-
-/* RESET TRIM */
+/* =========================
+   RESET TRIM
+========================= */
 
 function resetTrim(){
 
-if(!videoDuration) return;
+  document.getElementById("startRange")
+    .value = 0;
 
-startRange.value=0;
+  document.getElementById("endRange")
+    .value = originalDuration;
 
-endRange.value=videoDuration;
+  updateTrim();
 
-updateTrimUI();
-
-video.currentTime=0;
-
-document.getElementById("status").textContent=
-"Trim reset.";
+  setStatus(
+    "↻ Trim reset."
+  );
 
 }
 
 
-/* FILTERS */
+/* =========================
+   FILTERS
+========================= */
 
 function updateFilters(){
 
-const b=
-document.getElementById("brightness").value;
+  const brightness =
+    document.getElementById("brightness").value;
 
-const c=
-document.getElementById("contrast").value;
+  const contrast =
+    document.getElementById("contrast").value;
 
-const s=
-document.getElementById("saturation").value;
+  const saturation =
+    document.getElementById("saturation").value;
 
-video.style.filter=
-`brightness(${b}%)
-contrast(${c}%)
-saturate(${s}%)`;
+  document.getElementById("brightnessValue")
+    .textContent =
+    brightness + "%";
 
-document.getElementById("brightnessValue")
-.textContent=b+"%";
+  document.getElementById("contrastValue")
+    .textContent =
+    contrast + "%";
 
-document.getElementById("contrastValue")
-.textContent=c+"%";
+  document.getElementById("saturationValue")
+    .textContent =
+    saturation + "%";
 
-document.getElementById("saturationValue")
-.textContent=s+"%";
+
+  video.style.filter =
+    "brightness(" + brightness + "%) " +
+    "contrast(" + contrast + "%) " +
+    "saturate(" + saturation + "%)";
 
 }
 
 
-["brightness","contrast","saturation"]
-.forEach(id=>{
+/* =========================
+   STYLES
+========================= */
 
-document.getElementById(id)
-.addEventListener("input",updateFilters);
+function applyStyle(type){
 
-});
+  const brightness =
+    document.getElementById("brightness");
+
+  const contrast =
+    document.getElementById("contrast");
+
+  const saturation =
+    document.getElementById("saturation");
 
 
-/* CINEMATIC */
+  document
+    .querySelectorAll(".style-btn")
+    .forEach(btn =>
+      btn.classList.remove("active")
+    );
 
-function cinematic(){
 
-document.getElementById("brightness").value=92;
+  const map = {
 
-document.getElementById("contrast").value=120;
+    cinematic:{
+      b:92,
+      c:120,
+      s:82,
+      message:"🎬 Cinematic style applied."
+    },
 
-document.getElementById("saturation").value=82;
+    motivation:{
+      b:100,
+      c:130,
+      s:115,
+      message:"🔥 Motivation style applied."
+    },
+
+    reel:{
+      b:100,
+      c:112,
+      s:108,
+      message:"📱 Instagram Reel style applied."
+    },
+
+    professional:{
+      b:100,
+      c:108,
+      s:100,
+      message:"💼 Professional style applied."
+    }
+
+  };
+
+
+  const style =
+    map[type];
+
+  brightness.value =
+    style.b;
+
+  contrast.value =
+    style.c;
+
+  saturation.value =
+    style.s;
+
+
+  updateFilters();
+
+
+  setStatus(
+    style.message
+  );
+
+}
+
+
+/* =========================
+   AI PRESETS
+========================= */
+
+function usePreset(type){
+
+  const prompts = {
+
+    cinematic:
+      "Make my video feel like a cinematic short film.",
+
+    motivation:
+      "Make my video feel like a powerful motivational movie.",
+
+    reel:
+      "Turn my footage into an engaging Instagram Reel.",
+
+    professional:
+      "Make my video look clean, professional and polished."
+
+  };
+
+
+  document.getElementById("aiPrompt")
+    .value =
+    prompts[type];
+
+
+  applyStyle(type);
+
+  generateAIPlan();
+
+}
+
+
+/* =========================
+   LOCAL AI ENGINE
+========================= */
+
+function generateAIPlan(){
+
+  const prompt =
+    document
+      .getElementById("aiPrompt")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  if(!prompt){
+
+    setStatus(
+      "Tell YARUVA what kind of video you want."
+    );
+
+    return;
+
+  }
+
+
+  let type = "cinematic";
+
+
+  if(
+    prompt.includes("motivat") ||
+    prompt.includes("power") ||
+    prompt.includes("inspir")
+  ){
+
+    type = "motivation";
+
+  }
+
+  else if(
+    prompt.includes("reel") ||
+    prompt.includes("instagram") ||
+    prompt.includes("viral")
+  ){
+
+    type = "reel";
+
+  }
+
+  else if(
+    prompt.includes("professional") ||
+    prompt.includes("business") ||
+    prompt.includes("corporate")
+  ){
+
+    type = "professional";
+
+  }
+
+
+  const plans = {
+
+    cinematic:[
+      "Start with a strong 1–2 second establishing shot.",
+      "Remove unnecessary pauses and weak moments.",
+      "Increase contrast slightly for a cinematic look.",
+      "Reduce saturation for a film-like feeling.",
+      "Use slower transitions between important moments.",
+      "Keep text minimal and clean.",
+      "Finish with your strongest visual."
+    ],
+
+    motivation:[
+      "Open with the strongest visual or emotional moment.",
+      "Remove silence and unnecessary pauses.",
+      "Increase contrast to create visual energy.",
+      "Keep colours slightly richer.",
+      "Use short, powerful text moments.",
+      "Build toward the most inspiring scene.",
+      "End with a memorable final frame."
+    ],
+
+    reel:[
+      "Start with a strong hook in the first 1–2 seconds.",
+      "Remove dead space aggressively.",
+      "Keep the visual changes frequent enough to maintain attention.",
+      "Use readable short captions.",
+      "Keep the important subject centred.",
+      "Use a strong ending rather than a slow fade.",
+      "Design the final result for vertical viewing."
+    ],
+
+    professional:[
+      "Remove unnecessary pauses and mistakes.",
+      "Keep colour adjustments natural.",
+      "Use moderate contrast.",
+      "Avoid excessive transitions and effects.",
+      "Keep typography simple and readable.",
+      "Maintain consistent visual treatment.",
+      "End with a clean professional frame."
+    ]
+
+  };
+
+
+  applyStyle(type);
+
+
+  const plan =
+    document.getElementById("aiPlan");
+
+  const list =
+    document.getElementById("planList");
+
+  const title =
+    document.getElementById("planTitle");
+
+
+  title.textContent =
+    "✨ " +
+    type.charAt(0).toUpperCase() +
+    type.slice(1) +
+    " Editing Plan";
+
+
+  list.innerHTML = "";
+
+
+  plans[type].forEach(item => {
+
+    const li =
+      document.createElement("li");
+
+    li.textContent =
+      item;
+
+    list.appendChild(li);
+
+  });
+
+
+  plan.classList.add("show");
+
+
+  setStatus(
+    "✨ YARUVA AI created a free editing plan and applied the suggested style."
+  );
+
+}
+
+
+/* =========================
+   CAPTIONS
+========================= */
+
+function updateCaption(){
+
+  const value =
+    document.getElementById("captionInput")
+      .value
+      .trim();
+
+
+  document.getElementById("captionPreview")
+    .textContent =
+    value ||
+    "Your caption appears here";
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+function setStatus(message){
+
+  document.getElementById("status")
+    .textContent =
+    message;
+
+}
+
+
+/* =========================
+   SCROLL TO AI
+========================= */
+
+function scrollToAI(){
+
+  document
+    .getElementById("aiSection")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+
+}
+
+
+/* =========================
+   INITIAL FILTER
+========================= */
 
 updateFilters();
-
-document.getElementById("status").textContent=
-"Cinematic look applied.";
-
-}
-
-
-/* RESET VIDEO */
-
-function resetVideo(){
-
-document.getElementById("brightness").value=100;
-
-document.getElementById("contrast").value=100;
-
-document.getElementById("saturation").value=100;
-
-updateFilters();
-
-document.getElementById("status").textContent=
-"Adjustments reset.";
-
-}
-
-
-/* QUICK AI */
-
-function quickAI(type){
-
-const prompts={
-
-cinematic:
-"Make my video cinematic",
-
-motivational:
-"Make my video motivational",
-
-reel:
-"Make my video into an Instagram Reel",
-
-professional:
-"Make my video professional"
-
-};
-
-document.getElementById("prompt").value=
-prompts[type];
-
-generatePlan();
-
-}
-
-
-/* AI ENGINE */
-
-function generatePlan(){
-
-const text=
-document.getElementById("prompt")
-.value
-.toLowerCase()
-.trim();
-
-const plan=
-document.getElementById("plan");
-
-if(!text){
-
-plan.style.display="block";
-
-plan.innerHTML=
-"<strong>YARUVA AI:</strong><br><br>"+
-"Tell me what feeling you want — cinematic, "+
-"motivational, Instagram Reel, travel, "+
-"professional or something else.";
-
-return;
-
-}
-
-
-let content="";
-
-
-if(
-text.includes("cinematic") ||
-text.includes("movie") ||
-text.includes("film")
-){
-
-content=`
-
-<strong>🎬 Cinematic Style</strong><br><br>
-
-1. Start with a 1–2 second establishing shot.<br>
-
-2. Remove unnecessary pauses.<br>
-
-3. Use slightly higher contrast.<br>
-
-4. Reduce saturation for a film-like feel.<br>
-
-5. Use slower transitions between important moments.<br>
-
-6. Keep text minimal and cinematic.<br>
-
-7. End with a strong final shot.
-
-`;
-
-cinematic();
-
-}
-
-
-else if(
-text.includes("motiv") ||
-text.includes("success") ||
-text.includes("inspiration")
-){
-
-content=`
-
-<strong>🔥 Motivational Edit</strong><br><br>
-
-1. Begin with a powerful visual hook.<br>
-
-2. Remove empty pauses.<br>
-
-3. Use short bold text statements.<br>
-
-4. Build intensity toward the middle.<br>
-
-5. Keep the final message on screen for 2–3 seconds.<br>
-
-6. Finish with a memorable closing shot.
-
-`;
-
-}
-
-
-else if(
-text.includes("reel") ||
-text.includes("instagram") ||
-text.includes("short")
-){
-
-content=`
-
-<strong>📱 Instagram Reel Plan</strong><br><br>
-
-1. Use a vertical 9:16 composition.<br>
-
-2. Hook viewers within the first 2 seconds.<br>
-
-3. Keep cuts quick and purposeful.<br>
-
-4. Add readable captions.<br>
-
-5. Remove unnecessary silence.<br>
-
-6. Finish with a clear final message.
-
-`;
-
-}
-
-
-else if(
-text.includes("professional") ||
-text.includes("corporate") ||
-text.includes("business")
-){
-
-content=`
-
-<strong>💼 Professional Edit</strong><br><br>
-
-1. Keep the opening clean and simple.<br>
-
-2. Use precise cuts.<br>
-
-3. Keep colours natural.<br>
-
-4. Avoid excessive transitions.<br>
-
-5. Use clean typography.<br>
-
-6. Keep the ending concise.
-
-`;
-
-}
-
-
-else if(
-text.includes("travel") ||
-text.includes("trip") ||
-text.includes("vacation")
-){
-
-content=`
-
-<strong>🌍 Travel Edit</strong><br><br>
-
-1. Start with the best location shot.<br>
-
-2. Mix wide shots with close details.<br>
-
-3. Keep the pacing energetic.<br>
-
-4. Use location text sparingly.<br>
-
-5. Build toward the most beautiful moment.<br>
-
-6. End with a memorable destination shot.
-
-`;
-
-}
-
-
-else{
-
-content=`
-
-<strong>✨ YARUVA Smart Plan</strong><br><br>
-
-Based on your description, try this
-beginner-friendly workflow:<br><br>
-
-1. Remove unwanted footage.<br>
-
-2. Keep the strongest moments.<br>
-
-3. Create a clear beginning, middle and ending.<br>
-
-4. Adjust brightness and contrast.<br>
-
-5. Add simple text where necessary.<br>
-
-6. Keep transitions subtle.<br>
-
-7. Watch the complete video once before exporting.
-
-`;
-
-}
-
-
-plan.style.display="block";
-
-plan.innerHTML=content;
-
-document.getElementById("status").textContent=
-"YARUVA created your editing plan.";
-
-}
-
-
-/* SAVE */
-
-function saveProject(){
-
-localStorage.setItem(
-"yaruvaProject",
-JSON.stringify({
-
-brightness:
-document.getElementById("brightness").value,
-
-contrast:
-document.getElementById("contrast").value,
-
-saturation:
-document.getElementById("saturation").value,
-
-prompt:
-document.getElementById("prompt").value,
-
-start:
-document.getElementById("startRange").value,
-
-end:
-document.getElementById("endRange").value
-
-})
-);
-
-document.getElementById("status").textContent=
-"Project settings saved on this device.";
-
-}
 
 </script>
 
