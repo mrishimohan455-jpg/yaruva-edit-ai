@@ -5,7 +5,10 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>YARUVA Edit AI</title>
 
@@ -109,7 +112,7 @@ video{
 
 textarea{
     width:100%;
-    min-height:110px;
+    min-height:120px;
     resize:vertical;
     background:#181818;
     color:#fff;
@@ -128,13 +131,7 @@ textarea:focus{
     color:#777;
     font-size:12px;
     margin-top:9px;
-    line-height:1.5;
-}
-
-button{
-    border:none;
-    cursor:pointer;
-    font-weight:700;
+    line-height:1.6;
 }
 
 .primary{
@@ -145,11 +142,12 @@ button{
     background:#fff;
     color:#000;
     font-size:15px;
+    font-weight:800;
+    border:none;
 }
 
 .primary:disabled{
     opacity:.45;
-    cursor:not-allowed;
 }
 
 .progress-wrap{
@@ -187,27 +185,11 @@ button{
     display:none;
     background:#151515;
     border-radius:12px;
-    padding:13px;
+    padding:14px;
     margin-top:14px;
     color:#bbb;
     font-size:13px;
-    line-height:1.6;
-}
-
-.result{
-    display:none;
-}
-
-.download{
-    display:block;
-    text-decoration:none;
-    text-align:center;
-    background:#fff;
-    color:#000;
-    padding:15px;
-    border-radius:12px;
-    margin-top:14px;
-    font-weight:800;
+    line-height:1.7;
 }
 
 .settings{
@@ -234,10 +216,20 @@ button{
     font-size:14px;
 }
 
-.tip{
-    color:#777;
-    font-size:12px;
-    line-height:1.5;
+.result{
+    display:none;
+}
+
+.download{
+    display:block;
+    text-decoration:none;
+    text-align:center;
+    background:#fff;
+    color:#000;
+    padding:15px;
+    border-radius:12px;
+    margin-top:14px;
+    font-weight:800;
 }
 
 .error{
@@ -250,6 +242,12 @@ button{
     color:#ff9a9a;
     font-size:13px;
     line-height:1.5;
+}
+
+.tip{
+    color:#777;
+    font-size:12px;
+    line-height:1.6;
 }
 
 @media(max-width:600px){
@@ -303,9 +301,9 @@ button{
 </section>
 
 
-<!-- ==============================
+<!-- =================================================
      UPLOAD
-================================ -->
+================================================= -->
 
 <section class="card">
 
@@ -341,9 +339,9 @@ button{
 </section>
 
 
-<!-- ==============================
-     AI REQUEST
-================================ -->
+<!-- =================================================
+     REQUEST
+================================================= -->
 
 <section class="card">
 
@@ -351,22 +349,24 @@ button{
         02 • Tell YARUVA what you want
     </h2>
 
+
     <textarea
         id="aiPrompt"
-        placeholder='Example: Make this a cinematic motivational Reel. Make the colours darker, increase contrast and add caption "Never Give Up".'
+        placeholder='Example: Make this a cinematic motivational Reel. Remove the first 3 seconds, make it darker, add caption "Never Give Up" at the beginning and make it 15 seconds.'
     ></textarea>
+
 
     <div class="example">
 
         Try:
 
-        “Make it cinematic” •
-
-        “Make it brighter” •
-
-        “Make a motivational Reel” •
-
-        “Add caption Never Give Up”
+        "Make it cinematic" •
+        "Make it brighter" •
+        "Remove the first 3 seconds" •
+        "Remove the last 5 seconds" •
+        "Make it 15 seconds" •
+        "Slow it down" •
+        "Add caption Never Give Up"
 
     </div>
 
@@ -428,9 +428,9 @@ button{
 </section>
 
 
-<!-- ==============================
+<!-- =================================================
      SETTINGS
-================================ -->
+================================================= -->
 
 <section
     id="settingsCard"
@@ -503,10 +503,32 @@ button{
 
         <div class="setting">
 
+            <label>SPEED</label>
+
+            <strong id="speedValue">
+                1x
+            </strong>
+
+        </div>
+
+
+        <div class="setting">
+
             <label>CAPTION</label>
 
             <strong id="captionValue">
                 None
+            </strong>
+
+        </div>
+
+
+        <div class="setting">
+
+            <label>TRIM</label>
+
+            <strong id="trimValue">
+                Full video
             </strong>
 
         </div>
@@ -516,9 +538,9 @@ button{
 </section>
 
 
-<!-- ==============================
+<!-- =================================================
      RESULT
-================================ -->
+================================================= -->
 
 <section
     id="resultCard"
@@ -562,8 +584,9 @@ button{
 
         <br><br>
 
-        Visual edits and original audio are processed
-        locally in your browser.
+        YARUVA interprets supported editing instructions
+        locally and renders the result directly in your
+        browser.
 
     </div>
 
@@ -577,7 +600,7 @@ button{
 
 
 /* =====================================================
-   VARIABLES
+   GLOBAL VARIABLES
 ===================================================== */
 
 const videoInput =
@@ -605,7 +628,7 @@ let mediaSourceNode = null;
 
 
 /* =====================================================
-   UPLOAD VIDEO
+   UPLOAD
 ===================================================== */
 
 videoInput.addEventListener(
@@ -677,7 +700,7 @@ videoInput.addEventListener(
 
 
 /* =====================================================
-   WAIT FOR VIDEO
+   VIDEO READY
 ===================================================== */
 
 function waitForVideoReady(video){
@@ -705,7 +728,7 @@ function waitForVideoReady(video){
 
                         reject(
                             new Error(
-                                "Video loading timeout"
+                                "Video loading timeout."
                             )
                         );
 
@@ -736,7 +759,7 @@ function waitForVideoReady(video){
 
                 reject(
                     new Error(
-                        "Video could not be loaded"
+                        "Video could not be loaded."
                     )
                 );
 
@@ -789,7 +812,31 @@ function waitForVideoReady(video){
 
 
 /* =====================================================
-   YARUVA LOCAL INTERPRETER
+   NUMBER PARSER
+===================================================== */
+
+function numberFromText(text){
+
+    const match =
+        text.match(
+            /(\d+(?:\.\d+)?)/
+        );
+
+
+    if(!match){
+        return null;
+    }
+
+
+    return parseFloat(
+        match[1]
+    );
+
+}
+
+
+/* =====================================================
+   YARUVA LOCAL EDIT INTERPRETER
 ===================================================== */
 
 function interpretRequest(text){
@@ -813,12 +860,32 @@ function interpretRequest(text){
 
         aspect:"original",
 
-        caption:""
+        caption:"",
+
+        captionMode:"all",
+
+        captionDuration:3,
+
+        speed:1,
+
+        mute:false,
+
+        removeStart:0,
+
+        removeEnd:0,
+
+        cutStart:null,
+
+        cutEnd:null,
+
+        maxDuration:null
 
     };
 
 
-    /* CINEMATIC */
+    /* =================================================
+       CINEMATIC
+    ================================================= */
 
     if(
         lower.includes("cinematic") ||
@@ -841,7 +908,9 @@ function interpretRequest(text){
     }
 
 
-    /* MOTIVATIONAL */
+    /* =================================================
+       MOTIVATIONAL
+    ================================================= */
 
     if(
         lower.includes("motivational") ||
@@ -863,7 +932,9 @@ function interpretRequest(text){
     }
 
 
-    /* DARK */
+    /* =================================================
+       DARK
+    ================================================= */
 
     if(
         lower.includes("dark") ||
@@ -876,7 +947,9 @@ function interpretRequest(text){
     }
 
 
-    /* BRIGHT */
+    /* =================================================
+       BRIGHT
+    ================================================= */
 
     if(
         lower.includes("bright") ||
@@ -889,7 +962,9 @@ function interpretRequest(text){
     }
 
 
-    /* CONTRAST */
+    /* =================================================
+       CONTRAST
+    ================================================= */
 
     if(
         lower.includes("contrast") ||
@@ -902,12 +977,14 @@ function interpretRequest(text){
     }
 
 
-    /* COLOUR */
+    /* =================================================
+       SATURATION
+    ================================================= */
 
     if(
-        lower.includes("colour") ||
-        lower.includes("color") ||
-        lower.includes("vibrant")
+        lower.includes("vibrant") ||
+        lower.includes("colourful") ||
+        lower.includes("colorful")
     ){
 
         edit.saturation =
@@ -916,7 +993,9 @@ function interpretRequest(text){
     }
 
 
-    /* BLACK & WHITE */
+    /* =================================================
+       BLACK AND WHITE
+    ================================================= */
 
     if(
         lower.includes("black and white") ||
@@ -931,7 +1010,9 @@ function interpretRequest(text){
     }
 
 
-    /* REEL */
+    /* =================================================
+       REEL
+    ================================================= */
 
     if(
         lower.includes("reel") ||
@@ -947,17 +1028,181 @@ function interpretRequest(text){
 
 
     /* =================================================
+       SPEED
+    ================================================= */
+
+    if(
+        lower.includes("slow") ||
+        lower.includes("slower")
+    ){
+
+        edit.speed =
+            0.75;
+
+    }
+
+
+    if(
+        lower.includes("very slow")
+    ){
+
+        edit.speed =
+            0.5;
+
+    }
+
+
+    if(
+        lower.includes("fast") ||
+        lower.includes("faster") ||
+        lower.includes("speed up")
+    ){
+
+        edit.speed =
+            1.5;
+
+    }
+
+
+    /* =================================================
+       MUTE
+    ================================================= */
+
+    if(
+        lower.includes("mute") ||
+        lower.includes("remove audio") ||
+        lower.includes("no audio") ||
+        lower.includes("without audio")
+    ){
+
+        edit.mute =
+            true;
+
+    }
+
+
+    /* =================================================
+       FIRST X SECONDS
+    ================================================= */
+
+    let match =
+        lower.match(
+            /(?:remove|cut|skip|delete)\s+(?:the\s+)?first\s+(\d+(?:\.\d+)?)\s*(?:seconds?|secs?|s)\b/
+        );
+
+
+    if(match){
+
+        edit.removeStart =
+            parseFloat(
+                match[1]
+            );
+
+    }
+
+
+    /* =================================================
+       LAST X SECONDS
+    ================================================= */
+
+    match =
+        lower.match(
+            /(?:remove|cut|skip|delete)\s+(?:the\s+)?last\s+(\d+(?:\.\d+)?)\s*(?:seconds?|secs?|s)\b/
+        );
+
+
+    if(match){
+
+        edit.removeEnd =
+            parseFloat(
+                match[1]
+            );
+
+    }
+
+
+    /* =================================================
+       CUT FROM X TO Y
+    ================================================= */
+
+    match =
+        lower.match(
+            /(?:remove|cut|skip|delete)\s+(?:the\s+)?(?:part\s+)?(?:from|between)\s+(\d+(?:\.\d+)?)\s*(?:seconds?|secs?|s)?\s*(?:to|and|-)\s*(\d+(?:\.\d+)?)\s*(?:seconds?|secs?|s)?/
+        );
+
+
+    if(match){
+
+        edit.cutStart =
+            parseFloat(
+                match[1]
+            );
+
+        edit.cutEnd =
+            parseFloat(
+                match[2]
+            );
+
+    }
+
+
+    /* =================================================
+       "5 TO 8 SECONDS"
+       ================================================= */
+
+    if(
+        edit.cutStart === null
+    ){
+
+        match =
+            lower.match(
+                /(?:remove|cut|skip|delete).*?(\d+(?:\.\d+)?)\s*(?:to|-)\s*(\d+(?:\.\d+)?)\s*(?:seconds?|secs?|s)/
+            );
+
+
+        if(match){
+
+            edit.cutStart =
+                parseFloat(
+                    match[1]
+                );
+
+            edit.cutEnd =
+                parseFloat(
+                    match[2]
+                );
+
+        }
+
+    }
+
+
+    /* =================================================
+       MAKE IT X SECONDS
+    ================================================= */
+
+    match =
+        lower.match(
+            /(?:make|keep|create).*?(?:video|reel|clip)?.*?(\d+(?:\.\d+)?)\s*(?:seconds?|secs?|s)\b/
+        );
+
+
+    if(match){
+
+        edit.maxDuration =
+            parseFloat(
+                match[1]
+            );
+
+    }
+
+
+    /* =================================================
        CAPTION
     ================================================= */
 
     let caption = "";
 
-    let match;
-
-
-    /*
-       add caption "Never Give Up"
-    */
 
     match =
         original.match(
@@ -972,32 +1217,6 @@ function interpretRequest(text){
 
     }
 
-
-    /*
-       caption: Never Give Up
-    */
-
-    if(!caption){
-
-        match =
-            original.match(
-                /(?:add\s+(?:my\s+)?caption|caption)\s*[:\-]\s*(.+?)(?:\.|$)/i
-            );
-
-
-        if(match){
-
-            caption =
-                match[1].trim();
-
-        }
-
-    }
-
-
-    /*
-       Add caption Never Give Up
-    */
 
     if(!caption){
 
@@ -1017,10 +1236,6 @@ function interpretRequest(text){
     }
 
 
-    /*
-       put/write/show text
-    */
-
     if(!caption){
 
         match =
@@ -1038,10 +1253,6 @@ function interpretRequest(text){
 
     }
 
-
-    /*
-       add text
-    */
 
     if(!caption){
 
@@ -1072,16 +1283,191 @@ function interpretRequest(text){
     }
 
 
+    /* =================================================
+       CAPTION TIMING
+    ================================================= */
+
+    if(
+        lower.includes("caption at the beginning") ||
+        lower.includes("caption at beginning") ||
+        lower.includes("caption in the beginning")
+    ){
+
+        edit.captionMode =
+            "beginning";
+
+    }
+
+
+    if(
+        lower.includes("caption in the middle") ||
+        lower.includes("caption at the middle") ||
+        lower.includes("caption midway")
+    ){
+
+        edit.captionMode =
+            "middle";
+
+    }
+
+
+    if(
+        lower.includes("caption at the end") ||
+        lower.includes("caption in the end")
+    ){
+
+        edit.captionMode =
+            "end";
+
+    }
+
+
     return edit;
 
 }
 
 
 /* =====================================================
-   SETTINGS UI
+   BUILD SEGMENTS
 ===================================================== */
 
-function showSettings(edit){
+function buildSegments(
+    duration,
+    edit
+){
+
+    let start =
+        Math.max(
+            0,
+            edit.removeStart
+        );
+
+
+    let end =
+        Math.max(
+            start,
+            duration -
+            edit.removeEnd
+        );
+
+
+    if(
+        edit.maxDuration !== null
+    ){
+
+        end =
+            Math.min(
+                end,
+                start +
+                edit.maxDuration
+            );
+
+    }
+
+
+    if(
+        end <= start
+    ){
+
+        throw new Error(
+            "The requested trim leaves no video."
+        );
+
+    }
+
+
+    const segments = [];
+
+
+    /*
+       Specific cut
+    */
+
+    if(
+        edit.cutStart !== null &&
+        edit.cutEnd !== null
+    ){
+
+        const cutStart =
+            Math.max(
+                start,
+                edit.cutStart
+            );
+
+
+        const cutEnd =
+            Math.min(
+                end,
+                edit.cutEnd
+            );
+
+
+        if(
+            cutStart > start
+        ){
+
+            segments.push({
+
+                start:start,
+
+                end:cutStart
+
+            });
+
+        }
+
+
+        if(
+            cutEnd < end
+        ){
+
+            segments.push({
+
+                start:cutEnd,
+
+                end:end
+
+            });
+
+        }
+
+    }else{
+
+        segments.push({
+
+            start:start,
+
+            end:end
+
+        });
+
+    }
+
+
+    if(
+        !segments.length
+    ){
+
+        throw new Error(
+            "The requested cut removes the entire video."
+        );
+
+    }
+
+
+    return segments;
+
+}
+
+
+/* =====================================================
+   SETTINGS
+===================================================== */
+
+function showSettings(
+    edit,
+    segments
+){
 
     document.getElementById(
         "settingsCard"
@@ -1122,10 +1508,82 @@ function showSettings(edit){
 
 
     document.getElementById(
+        "speedValue"
+    ).textContent =
+        edit.speed + "x";
+
+
+    document.getElementById(
         "captionValue"
     ).textContent =
         edit.caption ||
         "None";
+
+
+    if(
+        segments.length === 1
+    ){
+
+        document.getElementById(
+            "trimValue"
+        ).textContent =
+            formatTime(
+                segments[0].start
+            ) +
+            " → " +
+            formatTime(
+                segments[0].end
+            );
+
+    }else{
+
+        document.getElementById(
+            "trimValue"
+        ).textContent =
+            "Smart cut";
+
+    }
+
+}
+
+
+/* =====================================================
+   FORMAT TIME
+===================================================== */
+
+function formatTime(seconds){
+
+    const value =
+        Math.max(
+            0,
+            Math.round(
+                seconds
+            )
+        );
+
+
+    const minutes =
+        Math.floor(
+            value / 60
+        );
+
+
+    const secs =
+        value % 60;
+
+
+    return (
+
+        minutes +
+        ":" +
+        String(
+            secs
+        ).padStart(
+            2,
+            "0"
+        )
+
+    );
 
 }
 
@@ -1173,9 +1631,42 @@ async function startEditing(){
         );
 
 
-    showSettings(
-        edit
+    await waitForVideoReady(
+        sourceVideo
     );
+
+
+    const segments =
+        buildSegments(
+            sourceVideo.duration,
+            edit
+        );
+
+
+    showSettings(
+        edit,
+        segments
+    );
+
+
+    const totalSourceDuration =
+        segments.reduce(
+            (
+                total,
+                segment
+            ) =>
+                total +
+                (
+                    segment.end -
+                    segment.start
+                ),
+            0
+        );
+
+
+    const estimatedOutput =
+        totalSourceDuration /
+        edit.speed;
 
 
     const plan =
@@ -1188,45 +1679,110 @@ async function startEditing(){
         "block";
 
 
+    let cutText =
+        "Full video";
+
+
+    if(
+        edit.removeStart > 0
+    ){
+
+        cutText =
+            "Remove first " +
+            edit.removeStart +
+            "s";
+
+    }
+
+
+    if(
+        edit.removeEnd > 0
+    ){
+
+        cutText +=
+            " • Remove last " +
+            edit.removeEnd +
+            "s";
+
+    }
+
+
+    if(
+        edit.cutStart !== null
+    ){
+
+        cutText +=
+            " • Cut " +
+            edit.cutStart +
+            "s–" +
+            edit.cutEnd +
+            "s";
+
+    }
+
+
     plan.innerHTML =
-        "✦ YARUVA understood your request." +
+
+        "✦ <strong>YARUVA understood your request.</strong>" +
 
         "<br><br>" +
 
-        "Applying <strong>" +
-
+        "Style: <strong>" +
         edit.style +
+        "</strong>" +
 
-        "</strong> styling, " +
+        "<br>" +
 
+        "Brightness: " +
         edit.brightness +
+        "%" +
 
-        "% brightness, " +
+        "<br>" +
 
+        "Contrast: " +
         edit.contrast +
+        "%" +
 
-        "% contrast, " +
+        "<br>" +
 
+        "Saturation: " +
         edit.saturation +
+        "%" +
 
-        "% saturation" +
+        "<br>" +
+
+        "Speed: " +
+        edit.speed +
+        "x" +
+
+        "<br>" +
+
+        "Trim: " +
+        cutText +
 
         (
-
             edit.caption
-
             ?
-
-            ', and caption <strong>"' +
-
+            "<br>Caption: <strong>\"" +
             edit.caption +
-
-            '"</strong>.'
-
+            "\"</strong>"
             :
+            ""
+        ) +
 
-            "."
+        (
+            edit.mute
+            ?
+            "<br>Audio: <strong>Muted</strong>"
+            :
+            "<br>Audio: <strong>Original</strong>"
+        ) +
 
+        "<br><br>" +
+
+        "Estimated output: " +
+        formatTime(
+            estimatedOutput
         );
 
 
@@ -1251,7 +1807,7 @@ async function startEditing(){
     document.getElementById(
         "status"
     ).textContent =
-        "Preparing video...";
+        "Preparing renderer...";
 
 
     document.getElementById(
@@ -1267,13 +1823,14 @@ async function startEditing(){
     try{
 
         await renderVideo(
-            edit
+            edit,
+            segments
         );
 
     }catch(error){
 
         console.error(
-            "YARUVA rendering error:",
+            "YARUVA:",
             error
         );
 
@@ -1409,7 +1966,9 @@ async function setupAudio(){
 
 
     /*
-       Silent speaker output
+       Silent speaker path.
+       Keeps audio from playing loudly
+       during rendering.
     */
 
     const silentGain =
@@ -1436,10 +1995,104 @@ async function setupAudio(){
 
 
 /* =====================================================
-   MAIN RENDER ENGINE
+   SEEK
 ===================================================== */
 
-async function renderVideo(edit){
+async function seekTo(
+    video,
+    time
+){
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            const target =
+                Math.max(
+                    0,
+                    Math.min(
+                        time,
+                        video.duration
+                    )
+                );
+
+
+            if(
+                Math.abs(
+                    video.currentTime -
+                    target
+                ) < 0.03
+            ){
+
+                resolve();
+
+                return;
+
+            }
+
+
+            const timeout =
+                setTimeout(
+                    ()=>{
+
+                        cleanup();
+
+                        reject(
+                            new Error(
+                                "Video seeking timed out."
+                            )
+                        );
+
+                    },
+                    5000
+                );
+
+
+            function done(){
+
+                cleanup();
+
+                resolve();
+
+            }
+
+
+            function cleanup(){
+
+                clearTimeout(
+                    timeout
+                );
+
+                video.removeEventListener(
+                    "seeked",
+                    done
+                );
+
+            }
+
+
+            video.addEventListener(
+                "seeked",
+                done
+            );
+
+
+            video.currentTime =
+                target;
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   RENDER VIDEO
+===================================================== */
+
+async function renderVideo(
+    edit,
+    segments
+){
 
     const video =
         sourceVideo;
@@ -1458,35 +2111,47 @@ async function renderVideo(edit){
         null;
 
 
-    try{
+    if(
+        !edit.mute
+    ){
 
-        audioStream =
-            await setupAudio();
+        try{
 
+            audioStream =
+                await setupAudio();
+
+
+            document.getElementById(
+                "audioStatus"
+            ).textContent =
+                "✓ Original audio connected";
+
+        }catch(error){
+
+            console.warn(
+                error
+            );
+
+
+            document.getElementById(
+                "audioStatus"
+            ).textContent =
+                "Audio unavailable • visual export will continue";
+
+        }
+
+    }else{
 
         document.getElementById(
             "audioStatus"
         ).textContent =
-            "✓ Original audio connected";
-
-    }catch(error){
-
-        console.warn(
-            "Audio unavailable:",
-            error
-        );
-
-
-        document.getElementById(
-            "audioStatus"
-        ).textContent =
-            "Visual rendering active • audio unavailable";
+            "Audio muted by request";
 
     }
 
 
     /*
-       VIDEO DIMENSIONS
+       DIMENSIONS
     */
 
     const originalWidth =
@@ -1505,10 +2170,6 @@ async function renderVideo(edit){
         originalHeight;
 
 
-    /*
-       9:16
-    */
-
     if(
         edit.aspect === "9:16"
     ){
@@ -1516,18 +2177,10 @@ async function renderVideo(edit){
         canvasWidth =
             720;
 
-
         canvasHeight =
             1280;
 
-    }
-
-
-    /*
-       NORMAL FORMAT
-    */
-
-    else{
+    }else{
 
         const maximum =
             1280;
@@ -1595,6 +2248,15 @@ async function renderVideo(edit){
         );
 
 
+    if(!videoStream){
+
+        throw new Error(
+            "Canvas video capture is unavailable."
+        );
+
+    }
+
+
     /*
        COMBINED STREAM
     */
@@ -1622,13 +2284,13 @@ async function renderVideo(edit){
                     combinedStream.addTrack(
                         track
                     )
-            );
+        );
 
     }
 
 
     /*
-       RECORDING FORMAT
+       FORMAT
     */
 
     const mimeType =
@@ -1638,7 +2300,7 @@ async function renderVideo(edit){
     if(!mimeType){
 
         throw new Error(
-            "No supported recording format was found."
+            "This browser does not support a suitable recording format."
         );
 
     }
@@ -1697,15 +2359,11 @@ async function renderVideo(edit){
             recorderError =
                 event.error ||
                 new Error(
-                    "MediaRecorder error"
+                    "MediaRecorder error."
                 );
 
         };
 
-
-    /*
-       STOP PROMISE
-    */
 
     const stopped =
         new Promise(
@@ -1751,17 +2409,47 @@ async function renderVideo(edit){
 
 
     /*
+       TOTAL OUTPUT DURATION
+    */
+
+    const totalSourceDuration =
+        segments.reduce(
+            (
+                total,
+                segment
+            ) =>
+                total +
+                (
+                    segment.end -
+                    segment.start
+                ),
+            0
+        );
+
+
+    const totalOutputDuration =
+        totalSourceDuration /
+        edit.speed;
+
+
+    let outputElapsed =
+        0;
+
+
+    /*
        RESET
     */
 
     video.pause();
 
-    video.currentTime =
-        0;
+
+    video.playbackRate =
+        edit.speed;
 
 
-    await waitForSeek(
-        video
+    await seekTo(
+        video,
+        segments[0].start
     );
 
 
@@ -1774,10 +2462,6 @@ async function renderVideo(edit){
     );
 
 
-    /*
-       START VIDEO
-    */
-
     try{
 
         await video.play();
@@ -1787,7 +2471,7 @@ async function renderVideo(edit){
         recorder.stop();
 
         throw new Error(
-            "iPhone could not start rendering playback."
+            "iPhone could not start video rendering."
         );
 
     }
@@ -1800,121 +2484,71 @@ async function renderVideo(edit){
 
 
     /*
-       RENDER LOOP
+       EACH SEGMENT
     */
 
-    await new Promise(
-        (resolve,reject)=>{
+    for(
+        let segmentIndex = 0;
+        segmentIndex < segments.length;
+        segmentIndex++
+    ){
 
-            function frame(){
-
-                if(
-                    recorderError
-                ){
-
-                    reject(
-                        recorderError
-                    );
-
-                    return;
-
-                }
+        const segment =
+            segments[
+                segmentIndex
+            ];
 
 
-                /*
-                   Finished
-                */
+        if(
+            segmentIndex > 0
+        ){
 
-                if(
-                    video.ended
-                ){
-
-                    resolve();
-
-                    return;
-
-                }
+            video.pause();
 
 
-                /*
-                   Draw
-                */
-
-                drawVideoFrame(
-
-                    ctx,
-
-                    video,
-
-                    edit,
-
-                    canvasWidth,
-
-                    canvasHeight
-
-                );
+            await seekTo(
+                video,
+                segment.start
+            );
 
 
-                /*
-                   Progress
-                */
-
-                const duration =
-                    video.duration;
-
-
-                if(
-                    duration &&
-                    isFinite(duration)
-                ){
-
-                    const percent =
-                        Math.min(
-
-                            99,
-
-                            Math.round(
-
-                                (
-                                    video.currentTime /
-                                    duration
-                                ) * 100
-
-                            )
-
-                        );
-
-
-                    document.getElementById(
-                        "progress"
-                    ).style.width =
-                        percent + "%";
-
-
-                    document.getElementById(
-                        "status"
-                    ).textContent =
-
-                        "Rendering video + audio... " +
-
-                        percent +
-
-                        "%";
-
-                }
-
-
-                requestAnimationFrame(
-                    frame
-                );
-
-            }
-
-
-            frame();
+            await video.play();
 
         }
-    );
+
+
+        await renderSegment(
+
+            ctx,
+
+            video,
+
+            edit,
+
+            canvasWidth,
+
+            canvasHeight,
+
+            segment.start,
+
+            segment.end,
+
+            totalOutputDuration,
+
+            {
+                get elapsed(){
+                    return outputElapsed;
+                },
+
+                set elapsed(value){
+                    outputElapsed =
+                        value;
+                }
+            }
+
+        );
+
+    }
 
 
     /*
@@ -1931,7 +2565,11 @@ async function renderVideo(edit){
 
         canvasWidth,
 
-        canvasHeight
+        canvasHeight,
+
+        outputElapsed,
+
+        totalOutputDuration
 
     );
 
@@ -1948,10 +2586,6 @@ async function renderVideo(edit){
         "Finishing video...";
 
 
-    /*
-       Encoder delay
-    */
-
     await sleep(
         1200
     );
@@ -1965,7 +2599,7 @@ async function renderVideo(edit){
 
 
     /*
-       Stop tracks
+       STOP TRACKS
     */
 
     combinedStream
@@ -1977,7 +2611,17 @@ async function renderVideo(edit){
 
 
     /*
-       OUTPUT URL
+       RESET SPEED
+    */
+
+    video.pause();
+
+    video.playbackRate =
+        1;
+
+
+    /*
+       OUTPUT
     */
 
     if(outputURL){
@@ -1994,10 +2638,6 @@ async function renderVideo(edit){
             outputBlob
         );
 
-
-    /*
-       RESULT
-    */
 
     const resultVideo =
         document.getElementById(
@@ -2071,7 +2711,7 @@ async function renderVideo(edit){
     document.getElementById(
         "status"
     ).textContent =
-        "✓ Video + audio editing complete";
+        "✓ YARUVA editing complete";
 
 
     document.getElementById(
@@ -2087,7 +2727,205 @@ async function renderVideo(edit){
 
 
 /* =====================================================
-   DRAW VIDEO FRAME
+   RENDER ONE SEGMENT
+===================================================== */
+
+async function renderSegment(
+
+    ctx,
+
+    video,
+
+    edit,
+
+    canvasWidth,
+
+    canvasHeight,
+
+    segmentStart,
+
+    segmentEnd,
+
+    totalOutputDuration,
+
+    progressState
+
+){
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            function frame(){
+
+                if(
+                    video.currentTime >=
+                    segmentEnd -
+                    0.03
+                ){
+
+                    video.pause();
+
+
+                    /*
+                       Account for final
+                       tiny part of segment.
+                    */
+
+                    const segmentSourceDuration =
+                        segmentEnd -
+                        segmentStart;
+
+
+                    progressState.elapsed +=
+                        segmentSourceDuration /
+                        edit.speed;
+
+
+                    updateProgress(
+                        progressState.elapsed,
+                        totalOutputDuration
+                    );
+
+
+                    resolve();
+
+                    return;
+
+                }
+
+
+                if(
+                    video.ended
+                ){
+
+                    resolve();
+
+                    return;
+
+                }
+
+
+                drawVideoFrame(
+
+                    ctx,
+
+                    video,
+
+                    edit,
+
+                    canvasWidth,
+
+                    canvasHeight,
+
+                    progressState.elapsed +
+                    (
+                        (
+                            video.currentTime -
+                            segmentStart
+                        ) /
+                        edit.speed
+                    ),
+
+                    totalOutputDuration
+
+                );
+
+
+                const currentOutput =
+                    progressState.elapsed +
+
+                    (
+                        (
+                            video.currentTime -
+                            segmentStart
+                        ) /
+                        edit.speed
+                    );
+
+
+                updateProgress(
+                    currentOutput,
+                    totalOutputDuration
+                );
+
+
+                requestAnimationFrame(
+                    frame
+                );
+
+            }
+
+
+            frame();
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   PROGRESS
+===================================================== */
+
+function updateProgress(
+    elapsed,
+    total
+){
+
+    if(
+        !total ||
+        !isFinite(total)
+    ){
+
+        return;
+
+    }
+
+
+    const percent =
+        Math.min(
+
+            99,
+
+            Math.max(
+
+                0,
+
+                Math.round(
+                    (
+                        elapsed /
+                        total
+                    ) *
+                    100
+                )
+
+            )
+
+        );
+
+
+    document.getElementById(
+        "progress"
+    ).style.width =
+        percent + "%";
+
+
+    document.getElementById(
+        "status"
+    ).textContent =
+
+        "Rendering video + audio... " +
+
+        percent +
+
+        "%";
+
+}
+
+
+/* =====================================================
+   DRAW FRAME
 ===================================================== */
 
 function drawVideoFrame(
@@ -2100,12 +2938,16 @@ function drawVideoFrame(
 
     canvasWidth,
 
-    canvasHeight
+    canvasHeight,
+
+    outputTime = 0,
+
+    totalOutputDuration = 0
 
 ){
 
     /*
-       Background
+       BACKGROUND
     */
 
     ctx.fillStyle =
@@ -2126,7 +2968,7 @@ function drawVideoFrame(
 
 
     /*
-       Colour effects
+       COLOUR
     */
 
     ctx.filter =
@@ -2151,7 +2993,7 @@ function drawVideoFrame(
 
 
     /*
-       9:16
+       REEL
     */
 
     if(
@@ -2239,10 +3081,7 @@ function drawVideoFrame(
 
         );
 
-    }
-
-
-    else{
+    }else{
 
         ctx.drawImage(
 
@@ -2261,10 +3100,6 @@ function drawVideoFrame(
     }
 
 
-    /*
-       Reset filter
-    */
-
     ctx.filter =
         "none";
 
@@ -2274,7 +3109,16 @@ function drawVideoFrame(
     */
 
     if(
-        edit.caption
+        edit.caption &&
+        shouldShowCaption(
+
+            edit.captionMode,
+
+            outputTime,
+
+            totalOutputDuration
+
+        )
     ){
 
         drawCaption(
@@ -2295,7 +3139,71 @@ function drawVideoFrame(
 
 
 /* =====================================================
-   CAPTION
+   CAPTION TIMING
+===================================================== */
+
+function shouldShowCaption(
+
+    mode,
+
+    time,
+
+    total
+
+){
+
+    const duration =
+        3;
+
+
+    if(
+        mode === "beginning"
+    ){
+
+        return (
+            time <= duration
+        );
+
+    }
+
+
+    if(
+        mode === "middle"
+    ){
+
+        const middle =
+            total / 2;
+
+
+        return (
+            time >= middle -
+            duration / 2 &&
+            time <= middle +
+            duration / 2
+        );
+
+    }
+
+
+    if(
+        mode === "end"
+    ){
+
+        return (
+            time >= total -
+            duration
+        );
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =====================================================
+   DRAW CAPTION
 ===================================================== */
 
 function drawCaption(
@@ -2326,9 +3234,7 @@ function drawCaption(
     ctx.font =
 
         "800 " +
-
         fontSize +
-
         "px Arial";
 
 
@@ -2358,7 +3264,7 @@ function drawCaption(
 
 
     /*
-       Wrap text
+       TEXT WRAPPING
     */
 
     if(
@@ -2486,7 +3392,7 @@ function drawCaption(
 
 
     /*
-       Background
+       BACKGROUND
     */
 
     ctx.fillStyle =
@@ -2514,7 +3420,7 @@ function drawCaption(
 
 
     /*
-       Text
+       TEXT
     */
 
     ctx.fillStyle =
@@ -2550,7 +3456,7 @@ function drawCaption(
 
 
 /* =====================================================
-   ROUND RECTANGLE
+   ROUNDED RECTANGLE
 ===================================================== */
 
 function roundRect(
@@ -2573,149 +3479,68 @@ function roundRect(
 
 
     ctx.moveTo(
-
         x + radius,
-
         y
-
     );
 
 
     ctx.lineTo(
-
-        x +
-        width -
-        radius,
-
+        x + width - radius,
         y
-
     );
 
 
     ctx.quadraticCurveTo(
-
         x + width,
-
         y,
-
         x + width,
-
         y + radius
-
     );
 
 
     ctx.lineTo(
-
         x + width,
-
-        y +
-        height -
-        radius
-
+        y + height - radius
     );
 
 
     ctx.quadraticCurveTo(
-
         x + width,
-
         y + height,
-
-        x + width -
-        radius,
-
+        x + width - radius,
         y + height
-
     );
 
 
     ctx.lineTo(
-
         x + radius,
-
         y + height
-
     );
 
 
     ctx.quadraticCurveTo(
-
         x,
-
         y + height,
-
         x,
-
-        y + height -
-        radius
-
+        y + height - radius
     );
 
 
     ctx.lineTo(
-
         x,
-
         y + radius
-
     );
 
 
     ctx.quadraticCurveTo(
-
         x,
-
         y,
-
         x + radius,
-
         y
-
     );
 
 
     ctx.closePath();
-
-}
-
-
-/* =====================================================
-   SEEK
-===================================================== */
-
-function waitForSeek(video){
-
-    return new Promise(
-        resolve=>{
-
-            if(
-                Math.abs(
-                    video.currentTime
-                ) < 0.01
-            ){
-
-                resolve();
-
-                return;
-
-            }
-
-
-            video.addEventListener(
-
-                "seeked",
-
-                resolve,
-
-                {
-                    once:true
-                }
-
-            );
-
-        }
-    );
 
 }
 
@@ -2727,13 +3552,11 @@ function waitForSeek(video){
 function sleep(ms){
 
     return new Promise(
-
         resolve =>
             setTimeout(
                 resolve,
                 ms
             )
-
     );
 
 }
@@ -2743,7 +3566,9 @@ function sleep(ms){
    ERROR
 ===================================================== */
 
-function showRenderError(message){
+function showRenderError(
+    message
+){
 
     const box =
         document.getElementById(
@@ -2761,7 +3586,7 @@ function showRenderError(message){
 
         (
             message ||
-            "Unknown rendering error"
+            "Unknown rendering error."
         );
 
 
