@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -21,10 +20,7 @@
 body{
     background:#090909;
     color:#fff;
-    font-family:-apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     min-height:100vh;
 }
 
@@ -133,6 +129,22 @@ textarea:focus{
     font-size:12px;
     margin-top:9px;
     line-height:1.7;
+}
+
+.chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:10px;
+}
+
+.chip{
+    background:#181818;
+    border:1px solid #2c2c2c;
+    color:#aaa;
+    border-radius:20px;
+    padding:7px 10px;
+    font-size:11px;
 }
 
 .primary{
@@ -257,22 +269,6 @@ textarea:focus{
     margin-bottom:8px;
 }
 
-.chips{
-    display:flex;
-    flex-wrap:wrap;
-    gap:7px;
-    margin-top:10px;
-}
-
-.chip{
-    background:#181818;
-    border:1px solid #2c2c2c;
-    color:#aaa;
-    border-radius:20px;
-    padding:7px 10px;
-    font-size:11px;
-}
-
 .confidence{
     display:inline-block;
     border:1px solid #333;
@@ -297,12 +293,10 @@ textarea:focus{
 }
 
 </style>
-
 </head>
 
 
 <body>
-
 
 <header class="header">
 
@@ -335,9 +329,9 @@ textarea:focus{
 </section>
 
 
-<!-- =================================================
+<!-- ================================
      UPLOAD
-================================================= -->
+================================ -->
 
 <section class="card">
 
@@ -373,9 +367,9 @@ textarea:focus{
 </section>
 
 
-<!-- =================================================
-     REQUEST
-================================================= -->
+<!-- ================================
+     AI REQUEST
+================================ -->
 
 <section class="card">
 
@@ -388,7 +382,6 @@ textarea:focus{
         placeholder='Example: Make this a professional motivational Instagram Reel. Give it a cinematic look, add an animated caption "Never Give Up" in the middle, make the text slide up, and remove the boring intro.'
     ></textarea>
 
-
     <div class="example">
 
         Try phrases like:
@@ -399,7 +392,6 @@ textarea:focus{
         remove intro • remove outro • slow • fast
 
     </div>
-
 
     <div class="chips">
 
@@ -480,9 +472,9 @@ textarea:focus{
 </section>
 
 
-<!-- =================================================
+<!-- ================================
      SETTINGS
-================================================= -->
+================================ -->
 
 <section
     id="settingsCard"
@@ -495,7 +487,6 @@ textarea:focus{
     </h2>
 
     <div class="settings">
-
 
         <div class="setting">
 
@@ -600,9 +591,9 @@ textarea:focus{
 </section>
 
 
-<!-- =================================================
+<!-- ================================
      RESULT
-================================================= -->
+================================ -->
 
 <section
     id="resultCard"
@@ -621,6 +612,7 @@ textarea:focus{
             controls
             playsinline
             webkit-playsinline
+            preload="metadata"
         ></video>
 
     </div>
@@ -631,7 +623,7 @@ textarea:focus{
         class="download"
     >
 
-        ⬇ Download Edited Video
+        ⬇ Download Edited MP4
 
     </a>
 
@@ -664,7 +656,7 @@ textarea:focus{
 
 
 /* =====================================================
-   GLOBALS
+   GLOBAL VARIABLES
 ===================================================== */
 
 const videoInput =
@@ -787,6 +779,7 @@ videoInput.addEventListener(
 function waitForVideoReady(video){
 
     return new Promise(
+
         (
             resolve,
             reject
@@ -894,13 +887,14 @@ function waitForVideoReady(video){
             );
 
         }
+
     );
 
 }
 
 
 /* =====================================================
-   ESCAPE
+   ESCAPE HTML
 ===================================================== */
 
 function escapeHTML(text){
@@ -937,8 +931,6 @@ function extractCaption(text){
     let match;
 
 
-    /* QUOTED */
-
     match =
         original.match(
 
@@ -954,8 +946,6 @@ function extractCaption(text){
     }
 
 
-    /* COLON */
-
     match =
         original.match(
 
@@ -970,8 +960,6 @@ function extractCaption(text){
 
     }
 
-
-    /* ADD CAPTION */
 
     match =
         original.match(
@@ -1023,8 +1011,6 @@ function extractCaption(text){
     }
 
 
-    /* CAPTION WORD */
-
     match =
         original.match(
 
@@ -1054,8 +1040,6 @@ function extractCaption(text){
     }
 
 
-    /* PUT TEXT ON VIDEO */
-
     match =
         original.match(
 
@@ -1083,7 +1067,7 @@ function extractCaption(text){
 
 
 /* =====================================================
-   INTERPRETER
+   INTERPRET REQUEST
 ===================================================== */
 
 function interpretRequest(text){
@@ -1097,62 +1081,43 @@ function interpretRequest(text){
 
     const edit = {
 
-        style:
-            "Original",
+        style:"Original",
 
-        brightness:
-            100,
+        brightness:100,
 
-        contrast:
-            100,
+        contrast:100,
 
-        saturation:
-            100,
+        saturation:100,
 
-        aspect:
-            "original",
+        aspect:"original",
 
-        caption:
-            "",
+        caption:"",
 
-        captionMode:
-            "all",
+        captionMode:"all",
 
-        captionAnimation:
-            "none",
+        captionAnimation:"none",
 
-        speed:
-            1,
+        speed:1,
 
-        mute:
-            false,
+        mute:false,
 
-        removeStart:
-            0,
+        removeStart:0,
 
-        removeEnd:
-            0,
+        removeEnd:0,
 
-        cutStart:
-            null,
+        cutStart:null,
 
-        cutEnd:
-            null,
+        cutEnd:null,
 
-        maxDuration:
-            null,
+        maxDuration:null,
 
-        vignette:
-            false,
+        vignette:false,
 
-        fade:
-            false,
+        fade:false,
 
-        notes:
-            [],
+        notes:[],
 
-        confidence:
-            100
+        confidence:100
 
     };
 
@@ -1161,17 +1126,13 @@ function interpretRequest(text){
 
         return words.some(
             word =>
-                lower.includes(
-                    word
-                )
+                lower.includes(word)
         );
 
     }
 
 
-    /* =================================================
-       STYLE
-    ================================================= */
+    /* STYLE */
 
     if(
         has(
@@ -1290,9 +1251,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       DARK
-    ================================================= */
+    /* DARK */
 
     if(
         has(
@@ -1308,9 +1267,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       BRIGHT
-    ================================================= */
+    /* BRIGHT */
 
     if(
         has(
@@ -1327,9 +1284,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       CONTRAST
-    ================================================= */
+    /* CONTRAST */
 
     if(
         has(
@@ -1359,9 +1314,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       SATURATION
-    ================================================= */
+    /* SATURATION */
 
     if(
         has(
@@ -1411,9 +1364,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       FORMAT
-    ================================================= */
+    /* FORMAT */
 
     if(
         has(
@@ -1431,9 +1382,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       SPEED
-    ================================================= */
+    /* SPEED */
 
     if(
         has(
@@ -1488,9 +1437,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       AUDIO
-    ================================================= */
+    /* AUDIO */
 
     if(
         has(
@@ -1508,9 +1455,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       FIRST X SECONDS
-    ================================================= */
+    /* FIRST X SECONDS */
 
     let match =
         lower.match(
@@ -1530,9 +1475,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       INTRO
-    ================================================= */
+    /* INTRO */
 
     if(
         !edit.removeStart &&
@@ -1559,9 +1502,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       LAST X SECONDS
-    ================================================= */
+    /* LAST X SECONDS */
 
     match =
         lower.match(
@@ -1581,9 +1522,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       OUTRO
-    ================================================= */
+    /* OUTRO */
 
     if(
         !edit.removeEnd &&
@@ -1609,9 +1548,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       CUT X TO Y
-    ================================================= */
+    /* CUT X TO Y */
 
     match =
         lower.match(
@@ -1636,9 +1573,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       MAKE X SECONDS
-    ================================================= */
+    /* MAKE X SECONDS */
 
     match =
         lower.match(
@@ -1658,9 +1593,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       CAPTION
-    ================================================= */
+    /* CAPTION */
 
     edit.caption =
         extractCaption(
@@ -1668,13 +1601,9 @@ function interpretRequest(text){
         );
 
 
-    /* =================================================
-       CAPTION POSITION
-    ================================================= */
+    /* CAPTION POSITION */
 
-    if(
-        edit.caption
-    ){
+    if(edit.caption){
 
         if(
             has(
@@ -1728,9 +1657,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       CAPTION ANIMATION
-    ================================================= */
+    /* CAPTION ANIMATION */
 
     if(
         has(
@@ -1797,8 +1724,7 @@ function interpretRequest(text){
     }
 
 
-    /* If caption exists but user asks for cinematic /
-       motivational style, use subtle fade automatically */
+    /* AUTO CAPTION ANIMATION */
 
     if(
         edit.caption &&
@@ -1816,9 +1742,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       VIGNETTE
-    ================================================= */
+    /* VIGNETTE */
 
     if(
         has(
@@ -1834,9 +1758,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       FADE
-    ================================================= */
+    /* FADE */
 
     if(
         has(
@@ -1853,9 +1775,7 @@ function interpretRequest(text){
     }
 
 
-    /* =================================================
-       CONFIDENCE
-    ================================================= */
+    /* CONFIDENCE */
 
     const recognized =
 
@@ -1902,7 +1822,7 @@ function interpretRequest(text){
 
 
 /* =====================================================
-   SEGMENTS
+   BUILD SEGMENTS
 ===================================================== */
 
 function buildSegments(
@@ -2045,7 +1965,7 @@ function buildSegments(
 
 
 /* =====================================================
-   TIME
+   FORMAT TIME
 ===================================================== */
 
 function formatTime(seconds){
@@ -2053,9 +1973,7 @@ function formatTime(seconds){
     const value =
         Math.max(
             0,
-            Math.round(
-                seconds
-            )
+            Math.round(seconds)
         );
 
 
@@ -2111,9 +2029,7 @@ function showSettings(
     ).textContent =
 
         edit.aspect === "9:16"
-
             ? "9:16 Reel"
-
             : "Original";
 
 
@@ -2157,19 +2073,16 @@ function showSettings(
     ).textContent =
 
         edit.captionAnimation === "slide"
-
             ? "Slide Up"
 
             :
 
         edit.captionAnimation === "fade"
-
             ? "Fade In"
 
             :
 
         edit.captionAnimation === "pop"
-
             ? "Pop"
 
             :
@@ -2221,7 +2134,6 @@ function renderPlan(
             ) =>
 
                 total +
-
                 (
                     segment.end -
                     segment.start
@@ -2230,7 +2142,6 @@ function renderPlan(
             0
 
         ) /
-
         edit.speed;
 
 
@@ -2238,9 +2149,7 @@ function renderPlan(
         "Full video";
 
 
-    if(
-        edit.removeStart
-    ){
+    if(edit.removeStart){
 
         cutText =
             "Remove first " +
@@ -2250,20 +2159,15 @@ function renderPlan(
     }
 
 
-    if(
-        edit.removeEnd
-    ){
+    if(edit.removeEnd){
 
         cutText +=
 
             (
                 cutText ===
                 "Full video"
-
                     ? ""
-
                     : " • "
-
             ) +
 
             "Remove last " +
@@ -2273,20 +2177,15 @@ function renderPlan(
     }
 
 
-    if(
-        edit.cutStart !== null
-    ){
+    if(edit.cutStart !== null){
 
         cutText +=
 
             (
                 cutText ===
                 "Full video"
-
                     ? ""
-
                     : " • "
-
             ) +
 
             "Cut " +
@@ -2301,9 +2200,7 @@ function renderPlan(
     let notes = "";
 
 
-    if(
-        edit.vignette
-    ){
+    if(edit.vignette){
 
         notes +=
             "<br>Vignette: <strong>Enabled</strong>";
@@ -2311,9 +2208,7 @@ function renderPlan(
     }
 
 
-    if(
-        edit.fade
-    ){
+    if(edit.fade){
 
         notes +=
             "<br>Video fade: <strong>Enabled</strong>";
@@ -2321,9 +2216,7 @@ function renderPlan(
     }
 
 
-    if(
-        edit.notes.length
-    ){
+    if(edit.notes.length){
 
         notes +=
 
@@ -2363,11 +2256,7 @@ function renderPlan(
         "<br><br>" +
 
         "Style: <strong>" +
-
-        escapeHTML(
-            edit.style
-        ) +
-
+        escapeHTML(edit.style) +
         "</strong>" +
 
         "<br>" +
@@ -2397,9 +2286,7 @@ function renderPlan(
         "<br>" +
 
         "Trim: " +
-        escapeHTML(
-            cutText
-        ) +
+        escapeHTML(cutText) +
 
         (
 
@@ -2471,7 +2358,7 @@ function renderPlan(
 
 
 /* =====================================================
-   START
+   START EDITING
 ===================================================== */
 
 async function startEditing(){
@@ -2601,7 +2488,7 @@ async function startEditing(){
 
 
 /* =====================================================
-   MIME
+   RECORDING FORMAT
 ===================================================== */
 
 function getRecordingFormat(){
@@ -2751,6 +2638,7 @@ function seekTo(
 ){
 
     return new Promise(
+
         (
             resolve,
             reject
@@ -2831,6 +2719,7 @@ function seekTo(
                 target;
 
         }
+
     );
 
 }
@@ -2858,9 +2747,7 @@ async function renderVideo(
         null;
 
 
-    if(
-        !edit.mute
-    ){
+    if(!edit.mute){
 
         try{
 
@@ -2877,9 +2764,7 @@ async function renderVideo(
 
         catch(error){
 
-            console.warn(
-                error
-            );
+            console.warn(error);
 
 
             document.getElementById(
@@ -2896,7 +2781,7 @@ async function renderVideo(
         document.getElementById(
             "audioStatus"
         ).textContent =
-            "Audio muted by request";
+        "Audio muted by request";
 
     }
 
@@ -2918,8 +2803,7 @@ async function renderVideo(
 
 
     if(
-        edit.aspect ===
-        "9:16"
+        edit.aspect === "9:16"
     ){
 
         canvasWidth =
@@ -2931,8 +2815,7 @@ async function renderVideo(
     }
 
     else if(
-        originalWidth >
-        1280
+        originalWidth > 1280
     ){
 
         canvasWidth =
@@ -3087,6 +2970,7 @@ async function renderVideo(
 
     const stopped =
         new Promise(
+
             (
                 resolve,
                 reject
@@ -3121,6 +3005,7 @@ async function renderVideo(
                     };
 
             }
+
         );
 
 
@@ -3134,7 +3019,6 @@ async function renderVideo(
             ) =>
 
                 total +
-
                 (
                     segment.end -
                     segment.start
@@ -3208,9 +3092,7 @@ async function renderVideo(
             segments[i];
 
 
-        if(
-            i > 0
-        ){
+        if(i > 0){
 
             video.pause();
 
@@ -3266,23 +3148,17 @@ async function renderVideo(
     }
 
 
-    drawVideoFrame(
+    /*
+       IMPORTANT FIX:
+       Do NOT draw another final frame here.
 
-        ctx,
+       Previously the final draw could capture
+       the strongest fade-to-black frame and leave
+       the result looking completely black.
 
-        video,
-
-        edit,
-
-        canvasWidth,
-
-        canvasHeight,
-
-        elapsed,
-
-        totalOutput
-
-    );
+       The recorder has already captured the
+       rendered frames correctly.
+    */
 
 
     document.getElementById(
@@ -3344,11 +3220,79 @@ async function renderVideo(
         );
 
 
+    /*
+       IMPORTANT PREVIEW FIX:
+       Safari/iPhone can leave the
+       result player on the final frame.
+
+       If the final frame contains
+       cinematic fade-out, it looks black.
+
+       We load the video and deliberately
+       move the preview to a safe early
+       frame instead.
+    */
+
+    resultVideo.pause();
+
     resultVideo.src =
         outputURL;
 
-
     resultVideo.load();
+
+
+    resultVideo.addEventListener(
+
+        "loadedmetadata",
+
+        function resetPreviewPosition(){
+
+            resultVideo.removeEventListener(
+
+                "loadedmetadata",
+
+                resetPreviewPosition
+
+            );
+
+
+            try{
+
+                const safePreviewTime =
+
+                    Math.min(
+
+                        0.65,
+
+                        Math.max(
+
+                            0.05,
+
+                            resultVideo.duration *
+                            0.15
+
+                        )
+
+                    );
+
+
+                resultVideo.currentTime =
+                    safePreviewTime;
+
+            }
+
+            catch(error){
+
+                console.warn(
+                    "Preview positioning:",
+                    error
+                );
+
+            }
+
+        }
+
+    );
 
 
     const isMP4 =
@@ -3466,7 +3410,6 @@ function renderSegment(
                             0,
                             end - start
                         ) /
-
                         edit.speed;
 
 
@@ -3488,14 +3431,11 @@ function renderSegment(
                     state.elapsed +
 
                     (
-
                         (
                             video.currentTime -
                             start
                         ) /
-
                         edit.speed
-
                     );
 
 
@@ -3661,8 +3601,7 @@ function drawVideoFrame(
 
 
     if(
-        edit.aspect ===
-        "9:16"
+        edit.aspect === "9:16"
     ){
 
         const sourceRatio =
@@ -3794,7 +3733,7 @@ function drawVideoFrame(
     }
 
 
-    /* VIDEO FADE */
+    /* FADE */
 
     if(
         edit.fade
@@ -3844,7 +3783,6 @@ function drawVideoFrame(
             edit.captionAnimation,
 
             outputTime,
-
             total
 
         );
@@ -3872,6 +3810,7 @@ function drawVignette(
 
             width / 2,
             height / 2,
+
             Math.min(
                 width,
                 height
@@ -3879,6 +3818,7 @@ function drawVignette(
 
             width / 2,
             height / 2,
+
             Math.max(
                 width,
                 height
@@ -3939,6 +3879,11 @@ function drawVideoFade(
         0;
 
 
+    /*
+       Fade IN
+       Only the first 0.45 seconds.
+    */
+
     if(
         time < fadeDuration
     ){
@@ -3952,6 +3897,11 @@ function drawVideoFade(
 
     }
 
+
+    /*
+       Fade OUT
+       Only during the final 0.45 seconds.
+    */
 
     if(
         total > 0 &&
@@ -3986,10 +3936,12 @@ function drawVideoFade(
         ctx.fillStyle =
 
             "rgba(0,0,0," +
+
             Math.min(
                 1,
                 alpha
             ) +
+
             ")";
 
 
@@ -4166,9 +4118,7 @@ function drawAnimatedCaption(
 
 
         text
-            .split(
-                /\s+/
-            )
+            .split(/\s+/)
             .forEach(
                 word => {
 
@@ -4289,7 +4239,7 @@ function drawAnimatedCaption(
         1;
 
 
-    /* ANIMATION */
+    /* SLIDE */
 
     if(
         animation ===
@@ -4337,11 +4287,14 @@ function drawAnimatedCaption(
                 eased
             );
 
+
         alpha =
             eased;
 
     }
 
+
+    /* FADE */
 
     else if(
         animation ===
@@ -4378,6 +4331,8 @@ function drawAnimatedCaption(
 
     }
 
+
+    /* POP */
 
     else if(
         animation ===
@@ -4463,6 +4418,12 @@ function drawAnimatedCaption(
         boxWidth / 2;
 
 
+    const boxY =
+
+        y -
+        boxHeight / 2;
+
+
     ctx.fillStyle =
         "rgba(0,0,0,0.72)";
 
@@ -4473,7 +4434,7 @@ function drawAnimatedCaption(
 
         boxX,
 
-        y,
+        boxY,
 
         boxWidth,
 
@@ -4504,7 +4465,7 @@ function drawAnimatedCaption(
 
                 x,
 
-                y +
+                boxY +
 
                 paddingY +
 
@@ -4723,5 +4684,4 @@ function showRenderError(
 </script>
 
 </body>
-
 </html>
