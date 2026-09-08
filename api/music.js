@@ -1,9 +1,10 @@
 const JAMENDO_CLIENT_ID =
   process.env.JAMENDO_CLIENT_ID || "709fa152";
 
-const JAMENDO_TIMEOUT = 6000;
+const SEARCH_TIMEOUT = 6000;
+const STREAM_TIMEOUT = 12000;
 
-function headers(type = "application/json") {
+function corsHeaders(type = "application/json; charset=utf-8") {
   return {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
@@ -13,35 +14,29 @@ function headers(type = "application/json") {
   };
 }
 
-function responseJSON(data, status = 200) {
-  return new Response(
-    JSON.stringify(data),
-    {
-      status,
-      headers: headers()
-    }
-  );
-}
-
-function timeoutFetch(url, options = {}, ms = JAMENDO_TIMEOUT) {
-  const controller = new AbortController();
-
-  const timer = setTimeout(
-    () => controller.abort(),
-    ms
-  );
-
-  return fetch(url, {
-    ...options,
-    signal: controller.signal
-  }).finally(() => {
-    clearTimeout(timer);
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: corsHeaders()
   });
 }
 
-/* =========================
-   SEARCH MUSIC
-========================= */
+async function fetchWithTimeout(url, options = {}, ms = 6000) {
+  const controller = new AbortController();
+
+  const timer = setTimeout(() => {
+    controller.abort();
+  }, ms);
+
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 async function searchMusic(request) {
   const url = new URL(request.url);
@@ -51,48 +46,43 @@ async function searchMusic(request) {
       .trim()
       .slice(0, 100);
 
-  const jamendoURL = new URL(
-    "https://api.jamendo.com/v3.0/tracks/"
-  );
+  const jamendo =
+    new URL(
+      "https://api.jamendo.com/v3.0/tracks/"
+    );
 
-  jamendoURL.searchParams.set(
+  jamendo.searchParams.set(
     "client_id",
     JAMENDO_CLIENT_ID
   );
 
-  jamendoURL.searchParams.set(
+  jamendo.searchParams.set(
     "format",
     "json"
   );
 
-  jamendoURL.searchParams.set(
+  jamendo.searchParams.set(
     "limit",
     "8"
   );
 
-  jamendoURL.searchParams.set(
+  jamendo.searchParams.set(
     "audioformat",
     "mp32"
   );
 
-  jamendoURL.searchParams.set(
+  jamendo.searchParams.set(
     "type",
     "single albumtrack"
   );
 
-  /*
-   * Use one search only.
-   * This prevents the API from hanging
-   * while trying many Jamendo searches.
-   */
-
   if (query) {
-    jamendoURL.searchParams.set(
+    jamendo.searchParams.set(
       "search",
       query
     );
   } else {
-    jamendoURL.searchParams.set(
+    jamendo.searchParams.set(
       "featured",
       "1"
     );
@@ -101,28 +91,27 @@ async function searchMusic(request) {
   let upstream;
 
   try {
-    upstream = await timeoutFetch(
-      jamendoURL,
-      {
-        method: "GET"
-      },
-      JAMENDO_TIMEOUT
-    );
+    upstream =
+      await fetchWithTimeout(
+        jamendo,
+        {},
+        SEARCH_TIMEOUT
+      );
   } catch (error) {
-    return responseJSON(
+    return json(
       {
         ok: false,
         error:
           error?.name === "AbortError"
-            ? "Music search timed out."
-            : "Music search failed."
+            ? "Jamendo search timed out."
+            : "Jamendo search failed."
       },
       504
     );
   }
 
   if (!upstream.ok) {
-    return responseJSON(
+    return json(
       {
         ok: false,
         error:
@@ -137,11 +126,11 @@ async function searchMusic(request) {
   try {
     data = await upstream.json();
   } catch {
-    return responseJSON(
+    return json(
       {
         ok: false,
         error:
-          "Invalid response from music service."
+          "Jamendo returned invalid JSON."
       },
       502
     );
@@ -152,18 +141,11 @@ async function searchMusic(request) {
       ? data.results
       : [];
 
-  /*
-   * Only keep tracks that can actually
-   * be downloaded/streamed.
-   */
-
   const seen = new Set();
-
   const tracks = [];
 
   for (const track of results) {
     if (!track?.id) continue;
-
     if (!track?.audio) continue;
 
     if (
@@ -181,30 +163,25 @@ async function searchMusic(request) {
 
     tracks.push({
       id,
-
       name:
         track.name ||
         "Untitled",
-
       artist_name:
         track.artist_name ||
         "Unknown artist",
-
       duration:
         Number(track.duration) ||
         0,
-
       license_ccurl:
         track.license_ccurl ||
         "",
-
       audiodownload_allowed:
         true
     });
   }
 
   if (!tracks.length) {
-    return responseJSON(
+    return json(
       {
         ok: false,
         error:
@@ -214,25 +191,22 @@ async function searchMusic(request) {
     );
   }
 
-  return responseJSON({
+  return json({
     ok: true,
     tracks
   });
 }
 
-/* =========================
-   STREAM MUSIC
-========================= */
-
 async function streamMusic(request) {
-  const url = new URL(request.url);
+  const url =
+    new URL(request.url);
 
   const id =
     (url.searchParams.get("id") || "")
       .trim();
 
   if (!/^\d+$/.test(id)) {
-    return responseJSON(
+    return json(
       {
         ok: false,
         error:
@@ -242,26 +216,27 @@ async function streamMusic(request) {
     );
   }
 
-  const jamendoURL = new URL(
-    "https://api.jamendo.com/v3.0/tracks/file/"
-  );
+  const jamendo =
+    new URL(
+      "https://api.jamendo.com/v3.0/tracks/file/"
+    );
 
-  jamendoURL.searchParams.set(
+  jamendo.searchParams.set(
     "client_id",
     JAMENDO_CLIENT_ID
   );
 
-  jamendoURL.searchParams.set(
+  jamendo.searchParams.set(
     "id",
     id
   );
 
-  jamendoURL.searchParams.set(
+  jamendo.searchParams.set(
     "audioformat",
     "mp32"
   );
 
-  jamendoURL.searchParams.set(
+  jamendo.searchParams.set(
     "action",
     "stream"
   );
@@ -269,16 +244,16 @@ async function streamMusic(request) {
   let upstream;
 
   try {
-    upstream = await timeoutFetch(
-      jamendoURL,
-      {
-        method: "GET",
-        redirect: "follow"
-      },
-      12000
-    );
+    upstream =
+      await fetchWithTimeout(
+        jamendo,
+        {
+          redirect: "follow"
+        },
+        STREAM_TIMEOUT
+      );
   } catch (error) {
-    return responseJSON(
+    return json(
       {
         ok: false,
         error:
@@ -294,7 +269,7 @@ async function streamMusic(request) {
     !upstream.ok ||
     !upstream.body
   ) {
-    return responseJSON(
+    return json(
       {
         ok: false,
         error:
@@ -306,25 +281,17 @@ async function streamMusic(request) {
 
   const responseHeaders =
     new Headers(
-      headers("audio/mpeg")
+      corsHeaders(
+        upstream.headers.get(
+          "content-type"
+        ) || "audio/mpeg"
+      )
     );
 
   responseHeaders.set(
     "Content-Disposition",
     "inline"
   );
-
-  const contentLength =
-    upstream.headers.get(
-      "content-length"
-    );
-
-  if (contentLength) {
-    responseHeaders.set(
-      "Content-Length",
-      contentLength
-    );
-  }
 
   return new Response(
     upstream.body,
@@ -335,46 +302,29 @@ async function streamMusic(request) {
   );
 }
 
-/* =========================
-   MAIN HANDLER
-========================= */
-
-export default async function handler(
-  request
-) {
-  if (
-    request.method === "OPTIONS"
-  ) {
-    return new Response(
-      null,
-      {
-        status: 204,
-        headers: headers()
-      }
-    );
-  }
-
-  if (
-    request.method !== "GET"
-  ) {
-    return responseJSON(
-      {
-        ok: false,
-        error:
-          "Method not allowed."
-      },
-      405
-    );
-  }
-
+async function handleGET(request) {
   try {
     const url =
       new URL(request.url);
 
     const mode =
-      url.searchParams.get(
-        "mode"
-      );
+      url.searchParams.get("mode");
+
+    /*
+     * IMPORTANT:
+     * This responds instantly.
+     * It does NOT contact Jamendo.
+     */
+
+    if (mode === "health") {
+      return json({
+        ok: true,
+        service:
+          "YARUVA Music API",
+        status:
+          "online"
+      });
+    }
 
     if (mode === "stream") {
       return await streamMusic(
@@ -388,11 +338,11 @@ export default async function handler(
 
   } catch (error) {
     console.error(
-      "YARUVA Music API Error:",
+      "YARUVA Music API error",
       error
     );
 
-    return responseJSON(
+    return json(
       {
         ok: false,
         error:
@@ -402,4 +352,18 @@ export default async function handler(
       500
     );
   }
+}
+
+export function GET(request) {
+  return handleGET(request);
+}
+
+export function OPTIONS() {
+  return new Response(
+    null,
+    {
+      status: 204,
+      headers: corsHeaders()
+    }
+  );
 }
