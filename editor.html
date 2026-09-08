@@ -4,24 +4,40 @@
 <meta charset="UTF-8">
 <meta name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
 <meta name="theme-color" content="#080808">
-<title>YARUVA Edit AI · V5 Music</title>
+
+<title>YARUVA Edit AI · V6 Music</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
+
 html,body{
   margin:0;
   padding:0;
   background:#080808;
   color:#f5f5f5;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
 }
-body{min-height:100vh}
+
+body{
+  min-height:100vh;
+}
+
 .wrap{
   width:min(100%,920px);
   margin:auto;
   padding:28px 18px 80px;
 }
+
 header{
   display:flex;
   justify-content:space-between;
@@ -29,11 +45,13 @@ header{
   gap:16px;
   margin-bottom:30px;
 }
+
 .logo{
   font-size:34px;
   font-weight:900;
   letter-spacing:3px;
 }
+
 .badge{
   border:1px solid #333;
   border-radius:30px;
@@ -42,6 +60,7 @@ header{
   font-size:14px;
   white-space:nowrap;
 }
+
 .card{
   background:#111;
   border:1px solid #292929;
@@ -49,14 +68,22 @@ header{
   padding:24px;
   margin-bottom:20px;
 }
-h1,h2,h3{margin-top:0}
-h2{font-size:25px}
+
+h1,h2,h3{
+  margin-top:0;
+}
+
+h2{
+  font-size:25px;
+}
+
 label{
   display:block;
   color:#aaa;
   font-size:14px;
   margin:18px 0 8px;
 }
+
 input[type=file],
 textarea,
 select,
@@ -71,13 +98,18 @@ input[type=number]{
   font-size:16px;
   outline:none;
 }
+
 textarea{
   min-height:130px;
   resize:vertical;
 }
-input:focus,textarea:focus,select:focus{
+
+input:focus,
+textarea:focus,
+select:focus{
   border-color:#777;
 }
+
 button{
   border:0;
   border-radius:16px;
@@ -86,6 +118,11 @@ button{
   font-weight:700;
   cursor:pointer;
 }
+
+button:disabled{
+  cursor:not-allowed;
+}
+
 .primary{
   width:100%;
   background:#fff;
@@ -94,42 +131,59 @@ button{
   padding:19px;
   margin-top:18px;
 }
+
 .secondary{
   background:#202020;
   color:#fff;
   border:1px solid #333;
 }
-.danger{
-  background:#2b1111;
-  color:#ff9b9b;
-  border:1px solid #6a2929;
-}
+
 .chips{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   margin-top:14px;
 }
+
 .chip{
   background:#171717;
   border:1px solid #333;
   color:#aaa;
   border-radius:30px;
   padding:11px 15px;
-  cursor:pointer;
 }
-.chip:hover{border-color:#777;color:#fff}
+
+.chip:hover{
+  border-color:#777;
+  color:#fff;
+}
+
 .row{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:14px;
 }
+
 @media(max-width:650px){
-  .row{grid-template-columns:1fr}
-  .logo{font-size:28px}
-  .badge{font-size:12px;padding:10px 13px}
-  .card{padding:18px}
+
+  .row{
+    grid-template-columns:1fr;
+  }
+
+  .logo{
+    font-size:28px;
+  }
+
+  .badge{
+    font-size:12px;
+    padding:10px 13px;
+  }
+
+  .card{
+    padding:18px;
+  }
 }
+
 .plan{
   background:#151515;
   border-radius:22px;
@@ -137,7 +191,11 @@ button{
   line-height:1.7;
   color:#ccc;
 }
-.plan strong{color:#fff}
+
+.plan strong{
+  color:#fff;
+}
+
 .progress{
   height:12px;
   background:#292929;
@@ -145,16 +203,19 @@ button{
   overflow:hidden;
   margin:20px 0 12px;
 }
+
 .progress>div{
   height:100%;
   width:0%;
   background:#fff;
   transition:width .15s linear;
 }
+
 .status{
   color:#aaa;
   min-height:25px;
 }
+
 .error{
   margin-top:15px;
   padding:18px;
@@ -164,6 +225,7 @@ button{
   color:#ff9b9b;
   line-height:1.6;
 }
+
 .warning{
   margin-top:15px;
   padding:16px;
@@ -173,6 +235,7 @@ button{
   color:#e8d58c;
   line-height:1.6;
 }
+
 .success{
   margin-top:15px;
   padding:16px;
@@ -180,7 +243,9 @@ button{
   background:#102016;
   border:1px solid #294e35;
   color:#a7e6b7;
+  line-height:1.6;
 }
+
 video{
   width:100%;
   max-height:620px;
@@ -188,12 +253,17 @@ video{
   background:#000;
   display:block;
 }
-.hidden{display:none!important}
+
+.hidden{
+  display:none!important;
+}
+
 .small{
   font-size:13px;
   color:#777;
   line-height:1.5;
 }
+
 .music-box{
   border:1px solid #292929;
   background:#151515;
@@ -201,20 +271,24 @@ video{
   padding:18px;
   margin-top:12px;
 }
+
 .music-title{
   font-weight:800;
   font-size:17px;
 }
+
 .music-meta{
   color:#888;
   font-size:13px;
   margin-top:6px;
 }
+
 .toggle-row{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
 }
+
 .toggle{
   flex:1;
   min-width:180px;
@@ -222,28 +296,19 @@ video{
   border:1px solid #333;
   color:#aaa;
 }
+
 .toggle.active{
   background:#fff;
   color:#000;
   border-color:#fff;
 }
-.download{
-  display:block;
-  width:100%;
-  text-align:center;
-  text-decoration:none;
-  background:#fff;
-  color:#000;
-  border-radius:16px;
-  padding:17px;
-  font-weight:800;
-  margin-top:15px;
-}
+
 details{
   border-top:1px solid #292929;
   margin-top:20px;
   padding-top:15px;
 }
+
 summary{
   color:#aaa;
   cursor:pointer;
@@ -252,195 +317,446 @@ summary{
 </head>
 
 <body>
+
 <div class="wrap">
 
 <header>
-  <div class="logo">YARUVA</div>
-  <div class="badge">EDIT AI · V5 MUSIC</div>
+
+  <div class="logo">
+    YARUVA
+  </div>
+
+  <div class="badge">
+    EDIT AI · V6 MUSIC
+  </div>
+
 </header>
+
+
+<!-- =====================================================
+     MAIN EDITOR
+     ===================================================== -->
 
 <section class="card">
 
-<h2>🎬 Create your edited video</h2>
+<h2>
+  🎬 Create your edited video
+</h2>
 
-<label>1. Upload your video</label>
-<input id="videoInput" type="file"
-       accept="video/*,.mov,.mp4,.m4v,.webm">
 
-<div id="videoInfo" class="small" style="margin-top:8px"></div>
+<label>
+  1. Upload your video
+</label>
 
-<label>2. Tell YARUVA what you want</label>
+<input
+  id="videoInput"
+  type="file"
+  accept="video/*,.mov,.mp4,.m4v,.webm"
+>
 
-<textarea id="prompt"
-placeholder="Example:
+<div
+  id="videoInfo"
+  class="small"
+  style="margin-top:8px"
+></div>
+
+
+<label>
+  2. Tell YARUVA what you want
+</label>
+
+<textarea
+  id="prompt"
+  placeholder="Example:
+
 Make this a cinematic motivational Reel.
 Remove the first 2 seconds.
 Make the colours darker.
-Add caption Never Give Up.
+Add caption "Never Give Up".
 Use slide up caption.
 Add cinematic motivational music.
 Keep original audio at 40%.
-Music volume 25%."></textarea>
+Music volume 25%."
+></textarea>
+
 
 <div class="chips">
-  <button class="chip" data-prompt="Make this a cinematic Reel">Cinematic Reel</button>
-  <button class="chip" data-prompt="Add an animated caption">Animated Caption</button>
-  <button class="chip" data-prompt="Use slide up text">Slide Up Text</button>
-  <button class="chip" data-prompt="Add motivational background music">Auto Music</button>
-  <button class="chip" data-prompt="Remove intro">Remove Intro</button>
+
+  <button
+    class="chip"
+    data-prompt="Make this a cinematic Reel"
+  >
+    Cinematic Reel
+  </button>
+
+  <button
+    class="chip"
+    data-prompt="Add an animated caption"
+  >
+    Animated Caption
+  </button>
+
+  <button
+    class="chip"
+    data-prompt="Use slide up text"
+  >
+    Slide Up Text
+  </button>
+
+  <button
+    class="chip"
+    data-prompt="Add motivational background music"
+  >
+    Auto Music
+  </button>
+
+  <button
+    class="chip"
+    data-prompt="Remove intro"
+  >
+    Remove Intro
+  </button>
+
 </div>
 
-<label>3. Music</label>
+
+<!-- =====================================================
+     MUSIC
+     ===================================================== -->
+
+<label>
+  3. Music
+</label>
+
 
 <div class="toggle-row">
-  <button id="musicUploadMode"
-          class="toggle active"
-          type="button">
+
+  <button
+    id="musicUploadMode"
+    class="toggle active"
+    type="button"
+  >
     🎵 Upload my music
   </button>
 
-  <button id="musicAiMode"
-          class="toggle"
-          type="button">
+  <button
+    id="musicAiMode"
+    class="toggle"
+    type="button"
+  >
     🤖 Let YARUVA choose
   </button>
+
 </div>
 
-<div id="musicUploadPanel" class="music-box">
-  <div class="music-title">Upload background music</div>
+
+<!-- UPLOAD MUSIC -->
+
+<div
+  id="musicUploadPanel"
+  class="music-box"
+>
+
+  <div class="music-title">
+    Upload background music
+  </div>
+
   <div class="music-meta">
     MP3, WAV, M4A, AAC or OGG only
   </div>
 
-  <input id="musicInput"
-         type="file"
-         accept=".mp3,.wav,.m4a,.aac,.ogg,audio/*"
-         style="margin-top:12px">
+  <input
+    id="musicInput"
+    type="file"
+    accept=".mp3,.wav,.m4a,.aac,.ogg,audio/*"
+    style="margin-top:12px"
+  >
 
-  <div id="musicFileInfo"
-       class="small"
-       style="margin-top:8px">
+  <div
+    id="musicFileInfo"
+    class="small"
+    style="margin-top:8px"
+  >
     No music selected.
   </div>
+
 </div>
 
-<div id="musicAiPanel" class="music-box hidden">
-  <div class="music-title">🤖 Describe the music</div>
 
-  <input id="musicRequest"
-         type="text"
-         placeholder="cinematic motivational music">
+<!-- AI MUSIC -->
+
+<div
+  id="musicAiPanel"
+  class="music-box hidden"
+>
+
+  <div class="music-title">
+    🤖 Describe the music
+  </div>
+
+  <input
+    id="musicRequest"
+    type="text"
+    placeholder="cinematic motivational music"
+  >
 
   <div class="small" style="margin-top:8px">
-    Examples: cinematic, motivational, calm piano,
-    energetic workout, romantic acoustic.
+
+    Examples:
+
+    cinematic · motivational · calm piano ·
+    energetic workout · romantic acoustic
+
   </div>
+
 </div>
+
+
+<!-- SETTINGS -->
 
 <div class="row">
 
   <div>
-    <label>Style</label>
+
+    <label>
+      Style
+    </label>
+
     <select id="style">
-      <option value="original">Original</option>
-      <option value="cinematic">Cinematic</option>
-      <option value="motivational">Motivational</option>
-      <option value="professional">Professional</option>
-      <option value="moody">Moody</option>
+
+      <option value="original">
+        Original
+      </option>
+
+      <option value="cinematic">
+        Cinematic
+      </option>
+
+      <option value="motivational">
+        Motivational
+      </option>
+
+      <option value="professional">
+        Professional
+      </option>
+
+      <option value="moody">
+        Moody
+      </option>
+
     </select>
+
   </div>
 
+
   <div>
-    <label>Format</label>
+
+    <label>
+      Format
+    </label>
+
     <select id="format">
-      <option value="original">Original</option>
-      <option value="reel">9:16 Reel</option>
-      <option value="square">1:1 Square</option>
-      <option value="landscape">16:9 Landscape</option>
+
+      <option value="original">
+        Original
+      </option>
+
+      <option value="reel">
+        9:16 Reel
+      </option>
+
+      <option value="square">
+        1:1 Square
+      </option>
+
+      <option value="landscape">
+        16:9 Landscape
+      </option>
+
     </select>
+
   </div>
 
 </div>
+
 
 <div class="row">
 
   <div>
-    <label>Music volume</label>
+
+    <label>
+      Music volume
+    </label>
+
     <select id="musicVolume">
-      <option value="0.15">15%</option>
-      <option value="0.25" selected>25%</option>
-      <option value="0.35">35%</option>
-      <option value="0.50">50%</option>
-      <option value="0.70">70%</option>
-      <option value="1">100%</option>
+
+      <option value="0.15">
+        15%
+      </option>
+
+      <option value="0.25" selected>
+        25%
+      </option>
+
+      <option value="0.35">
+        35%
+      </option>
+
+      <option value="0.50">
+        50%
+      </option>
+
+      <option value="0.70">
+        70%
+      </option>
+
+      <option value="1">
+        100%
+      </option>
+
     </select>
+
   </div>
 
+
   <div>
-    <label>Original audio</label>
+
+    <label>
+      Original audio
+    </label>
+
     <select id="originalVolume">
-      <option value="0">Mute</option>
-      <option value="0.25">25%</option>
-      <option value="0.40" selected>40%</option>
-      <option value="0.60">60%</option>
-      <option value="0.80">80%</option>
-      <option value="1">100%</option>
+
+      <option value="0">
+        Mute
+      </option>
+
+      <option value="0.25">
+        25%
+      </option>
+
+      <option value="0.40" selected>
+        40%
+      </option>
+
+      <option value="0.60">
+        60%
+      </option>
+
+      <option value="0.80">
+        80%
+      </option>
+
+      <option value="1">
+        100%
+      </option>
+
     </select>
+
   </div>
 
 </div>
 
-<button id="createBtn" class="primary">
+
+<button
+  id="createBtn"
+  class="primary"
+>
   ✦ Create Edited Video
 </button>
 
 </section>
 
 
+
+<!-- =====================================================
+     PLAN
+     ===================================================== -->
+
 <section class="card">
 
-<h2>YARUVA plan</h2>
+<h2>
+  YARUVA plan
+</h2>
 
-<div id="plan" class="plan">
-  <strong>Waiting for your request...</strong>
+<div
+  id="plan"
+  class="plan"
+>
+  <strong>
+    Waiting for your request...
+  </strong>
 </div>
+
 
 <div class="progress">
+
   <div id="progressBar"></div>
+
 </div>
 
-<div id="status" class="status">
+
+<div
+  id="status"
+  class="status"
+>
   Ready.
 </div>
+
 
 <div id="message"></div>
 
 </section>
 
 
-<section id="resultCard" class="card hidden">
 
-<h2>🎥 Your edited video</h2>
+<!-- =====================================================
+     RESULT
+     ===================================================== -->
 
-<video id="resultVideo"
-       controls
-       playsinline
-       webkit-playsinline></video>
+<section
+  id="resultCard"
+  class="card hidden"
+>
 
-<a id="downloadBtn"
-   class="download"
-   download="yaruva-edited-video.mp4">
-   ⬇️ Download Edited Video
+<h2>
+  🎥 Your edited video
+</h2>
+
+<video
+  id="resultVideo"
+  controls
+  playsinline
+  webkit-playsinline
+></video>
+
+
+<a
+  id="downloadBtn"
+  class="download"
+  download="yaruva-edited-video.mp4"
+>
+  ⬇️ Download Edited Video
 </a>
 
 </section>
 
 
+
+<!-- =====================================================
+     SETTINGS SUMMARY
+     ===================================================== -->
+
 <section class="card">
 
-<h2>YARUVA Edit Settings</h2>
+<h2>
+  YARUVA Edit Settings
+</h2>
 
-<div class="plan" id="settingsSummary">
+<div
+  class="plan"
+  id="settingsSummary"
+>
   Style: Original<br>
   Format: Original<br>
   Brightness: 100%<br>
@@ -451,20 +767,25 @@ Music volume 25%."></textarea>
   Music: None
 </div>
 
+
 <details>
-<summary>Supported commands</summary>
+
+<summary>
+  Supported commands
+</summary>
 
 <p class="small">
+
 Try natural language such as:
-</p>
 
-<p class="small">
+<br><br>
+
 • Make this cinematic<br>
 • Make it motivational<br>
 • Make it darker<br>
 • Make it colourful<br>
 • Make it a Reel<br>
-• Add caption Never Give Up<br>
+• Add caption "Never Give Up"<br>
 • Put caption at beginning<br>
 • Put caption in middle<br>
 • Put caption at end<br>
@@ -482,7 +803,9 @@ Try natural language such as:
 • Add cinematic music<br>
 • Add motivational music<br>
 • Add calm piano music<br>
-• Use a song called ...
+• Add energetic workout music<br>
+• Use a song called "..."
+
 </p>
 
 </details>
@@ -492,70 +815,124 @@ Try natural language such as:
 </div>
 
 
+
 <script>
+
 "use strict";
 
+
 /* =========================================================
-   YARUVA EDIT AI V5
-   Actual browser video renderer
+   YARUVA V6
    ========================================================= */
 
-const JAMENDO_CLIENT_ID = "709fa152";
+const JAMENDO_CLIENT_ID =
+  "709fa152";
 
-const videoInput = document.getElementById("videoInput");
-const musicInput = document.getElementById("musicInput");
-const promptInput = document.getElementById("prompt");
-const musicRequestInput = document.getElementById("musicRequest");
+
+const videoInput =
+  document.getElementById(
+    "videoInput"
+  );
+
+const musicInput =
+  document.getElementById(
+    "musicInput"
+  );
+
+const promptInput =
+  document.getElementById(
+    "prompt"
+  );
+
+const musicRequestInput =
+  document.getElementById(
+    "musicRequest"
+  );
 
 const musicUploadMode =
-  document.getElementById("musicUploadMode");
+  document.getElementById(
+    "musicUploadMode"
+  );
 
 const musicAiMode =
-  document.getElementById("musicAiMode");
+  document.getElementById(
+    "musicAiMode"
+  );
 
 const musicUploadPanel =
-  document.getElementById("musicUploadPanel");
+  document.getElementById(
+    "musicUploadPanel"
+  );
 
 const musicAiPanel =
-  document.getElementById("musicAiPanel");
+  document.getElementById(
+    "musicAiPanel"
+  );
 
 const musicFileInfo =
-  document.getElementById("musicFileInfo");
+  document.getElementById(
+    "musicFileInfo"
+  );
 
 const videoInfo =
-  document.getElementById("videoInfo");
+  document.getElementById(
+    "videoInfo"
+  );
 
 const createBtn =
-  document.getElementById("createBtn");
+  document.getElementById(
+    "createBtn"
+  );
 
 const planEl =
-  document.getElementById("plan");
+  document.getElementById(
+    "plan"
+  );
 
 const statusEl =
-  document.getElementById("status");
+  document.getElementById(
+    "status"
+  );
 
 const messageEl =
-  document.getElementById("message");
+  document.getElementById(
+    "message"
+  );
 
 const progressBar =
-  document.getElementById("progressBar");
+  document.getElementById(
+    "progressBar"
+  );
 
 const resultCard =
-  document.getElementById("resultCard");
+  document.getElementById(
+    "resultCard"
+  );
 
 const resultVideo =
-  document.getElementById("resultVideo");
+  document.getElementById(
+    "resultVideo"
+  );
 
 const downloadBtn =
-  document.getElementById("downloadBtn");
+  document.getElementById(
+    "downloadBtn"
+  );
 
 const settingsSummary =
-  document.getElementById("settingsSummary");
+  document.getElementById(
+    "settingsSummary"
+  );
+
 
 let selectedVideoFile = null;
+
 let selectedMusicFile = null;
+
 let musicMode = "upload";
+
 let resultURL = null;
+
 
 
 /* =========================================================
@@ -563,6 +940,7 @@ let resultURL = null;
    ========================================================= */
 
 function esc(value){
+
   return String(value ?? "")
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
@@ -571,49 +949,110 @@ function esc(value){
     .replaceAll("'","&#039;");
 }
 
-function clamp(n,min,max){
-  return Math.max(min,Math.min(max,n));
+
+function clamp(
+  n,
+  min,
+  max
+){
+
+  return Math.max(
+    min,
+    Math.min(max,n)
+  );
 }
 
-function setProgress(value){
+
+function setProgress(
+  value
+){
+
   progressBar.style.width =
-    clamp(Number(value)||0,0,100) + "%";
+    clamp(
+      Number(value) || 0,
+      0,
+      100
+    ) + "%";
 }
 
-function setStatus(text){
-  statusEl.textContent = text;
+
+function setStatus(
+  text
+){
+
+  statusEl.textContent =
+    text;
 }
+
 
 function clearMessage(){
+
   messageEl.innerHTML = "";
 }
 
-function showError(text){
+
+function showError(
+  text
+){
+
   messageEl.innerHTML =
-    '<div class="error">' + esc(text) + '</div>';
+    '<div class="error">' +
+    esc(text) +
+    '</div>';
 }
 
-function showWarning(text){
+
+function showWarning(
+  text
+){
+
   messageEl.innerHTML =
-    '<div class="warning">' + esc(text) + '</div>';
+    '<div class="warning">' +
+    esc(text) +
+    '</div>';
 }
 
-function showSuccess(text){
+
+function showSuccess(
+  text
+){
+
   messageEl.innerHTML =
-    '<div class="success">' + esc(text) + '</div>';
+    '<div class="success">' +
+    esc(text) +
+    '</div>';
 }
 
-function getExt(file){
-  if(!file) return "";
-  const name = file.name || "";
-  const parts = name.toLowerCase().split(".");
-  return parts.length > 1 ? parts.pop() : "";
+
+function getExt(
+  file
+){
+
+  if(!file){
+    return "";
+  }
+
+  const name =
+    file.name || "";
+
+  const parts =
+    name
+      .toLowerCase()
+      .split(".");
+
+  return parts.length > 1
+    ? parts.pop()
+    : "";
 }
 
-function isAudioFile(file){
-  if(!file) return false;
 
-  const ext = getExt(file);
+function isAudioFile(
+  file
+){
+
+  if(!file){
+    return false;
+  }
 
   const allowed = [
     "mp3",
@@ -623,46 +1062,89 @@ function isAudioFile(file){
     "ogg"
   ];
 
-  return allowed.includes(ext);
+  return allowed.includes(
+    getExt(file)
+  );
 }
 
-function formatTime(seconds){
-  if(!Number.isFinite(seconds)) return "0.0s";
 
-  return seconds.toFixed(1) + "s";
+function formatTime(
+  seconds
+){
+
+  if(
+    !Number.isFinite(seconds)
+  ){
+    return "0.0s";
+  }
+
+  return (
+    seconds.toFixed(1)
+    + "s"
+  );
 }
+
 
 
 /* =========================================================
    MUSIC MODE
    ========================================================= */
 
-function setMusicMode(mode){
+function setMusicMode(
+  mode
+){
 
-  musicMode = mode;
+  musicMode =
+    mode;
 
-  if(mode === "upload"){
+  if(
+    mode === "upload"
+  ){
 
-    musicUploadMode.classList.add("active");
-    musicAiMode.classList.remove("active");
+    musicUploadMode
+      .classList
+      .add("active");
 
-    musicUploadPanel.classList.remove("hidden");
-    musicAiPanel.classList.add("hidden");
+    musicAiMode
+      .classList
+      .remove("active");
+
+    musicUploadPanel
+      .classList
+      .remove("hidden");
+
+    musicAiPanel
+      .classList
+      .add("hidden");
 
   }else{
 
-    musicUploadMode.classList.remove("active");
-    musicAiMode.classList.add("active");
+    musicUploadMode
+      .classList
+      .remove("active");
 
-    musicUploadPanel.classList.add("hidden");
-    musicAiPanel.classList.remove("hidden");
+    musicAiMode
+      .classList
+      .add("active");
+
+    musicUploadPanel
+      .classList
+      .add("hidden");
+
+    musicAiPanel
+      .classList
+      .remove("hidden");
   }
+
+  updatePlanPreview();
 }
+
 
 musicUploadMode.addEventListener(
   "click",
   () => setMusicMode("upload")
 );
+
 
 musicAiMode.addEventListener(
   "click",
@@ -670,289 +1152,504 @@ musicAiMode.addEventListener(
 );
 
 
-/* =========================================================
-   VIDEO FILE
-   ========================================================= */
-
-videoInput.addEventListener("change", () => {
-
-  selectedVideoFile =
-    videoInput.files && videoInput.files[0]
-      ? videoInput.files[0]
-      : null;
-
-  if(!selectedVideoFile){
-    videoInfo.textContent = "";
-    return;
-  }
-
-  const url =
-    URL.createObjectURL(selectedVideoFile);
-
-  const testVideo =
-    document.createElement("video");
-
-  testVideo.preload = "metadata";
-  testVideo.playsInline = true;
-
-  testVideo.onloadedmetadata = () => {
-
-    videoInfo.textContent =
-      selectedVideoFile.name +
-      " · " +
-      formatTime(testVideo.duration);
-
-    URL.revokeObjectURL(url);
-  };
-
-  testVideo.onerror = () => {
-
-    videoInfo.textContent =
-      selectedVideoFile.name;
-
-    URL.revokeObjectURL(url);
-  };
-
-  testVideo.src = url;
-});
-
 
 /* =========================================================
-   MUSIC FILE VALIDATION
+   VIDEO INPUT
    ========================================================= */
 
-musicInput.addEventListener("change", () => {
+videoInput.addEventListener(
+  "change",
+  () => {
 
-  selectedMusicFile =
-    musicInput.files && musicInput.files[0]
-      ? musicInput.files[0]
-      : null;
-
-  if(!selectedMusicFile){
-
-    musicFileInfo.textContent =
-      "No music selected.";
-
-    return;
-  }
-
-  if(!isAudioFile(selectedMusicFile)){
-
-    selectedMusicFile = null;
-    musicInput.value = "";
-
-    musicFileInfo.textContent =
-      "Invalid music file.";
-
-    showError(
-      "That file is a video file or unsupported format. " +
-      "Please choose MP3, WAV, M4A, AAC or OGG as background music."
-    );
-
-    return;
-  }
-
-  clearMessage();
-
-  musicFileInfo.textContent =
-    "✓ " +
-    selectedMusicFile.name +
-    " · " +
-    Math.round(
-      selectedMusicFile.size / 1024
-    ) +
-    " KB";
-});
+    selectedVideoFile =
+      videoInput.files &&
+      videoInput.files[0]
+        ? videoInput.files[0]
+        : null;
 
 
-/* =========================================================
-   QUICK PROMPT BUTTONS
-   ========================================================= */
+    if(!selectedVideoFile){
 
-document.querySelectorAll("[data-prompt]")
-.forEach(button => {
+      videoInfo.textContent =
+        "";
 
-  button.addEventListener("click", () => {
-
-    const text =
-      button.getAttribute("data-prompt");
-
-    if(promptInput.value.trim()){
-      promptInput.value +=
-        " " + text + ".";
-    }else{
-      promptInput.value = text + ".";
+      return;
     }
 
-    updatePlanPreview();
-  });
-});
+
+    const url =
+      URL.createObjectURL(
+        selectedVideoFile
+      );
+
+
+    const testVideo =
+      document.createElement(
+        "video"
+      );
+
+
+    testVideo.preload =
+      "metadata";
+
+    testVideo.playsInline =
+      true;
+
+
+    testVideo.onloadedmetadata =
+      () => {
+
+        videoInfo.textContent =
+          selectedVideoFile.name +
+          " · " +
+          formatTime(
+            testVideo.duration
+          );
+
+        URL.revokeObjectURL(
+          url
+        );
+      };
+
+
+    testVideo.onerror =
+      () => {
+
+        videoInfo.textContent =
+          selectedVideoFile.name;
+
+        URL.revokeObjectURL(
+          url
+        );
+      };
+
+
+    testVideo.src =
+      url;
+  }
+);
+
+
+
+/* =========================================================
+   MUSIC INPUT
+   ========================================================= */
+
+musicInput.addEventListener(
+  "change",
+  () => {
+
+    selectedMusicFile =
+      musicInput.files &&
+      musicInput.files[0]
+        ? musicInput.files[0]
+        : null;
+
+
+    if(!selectedMusicFile){
+
+      musicFileInfo.textContent =
+        "No music selected.";
+
+      return;
+    }
+
+
+    if(
+      !isAudioFile(
+        selectedMusicFile
+      )
+    ){
+
+      selectedMusicFile =
+        null;
+
+      musicInput.value =
+        "";
+
+      musicFileInfo.textContent =
+        "Invalid music file.";
+
+
+      showError(
+        "That file is not supported as background music. " +
+        "Please choose MP3, WAV, M4A, AAC or OGG."
+      );
+
+      return;
+    }
+
+
+    clearMessage();
+
+
+    musicFileInfo.textContent =
+      "✓ " +
+      selectedMusicFile.name +
+      " · " +
+      Math.round(
+        selectedMusicFile.size /
+        1024
+      ) +
+      " KB";
+
+  }
+);
+
+
+
+/* =========================================================
+   QUICK BUTTONS
+   ========================================================= */
+
+document
+  .querySelectorAll(
+    "[data-prompt]"
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const text =
+            button.getAttribute(
+              "data-prompt"
+            );
+
+
+          if(
+            promptInput.value.trim()
+          ){
+
+            promptInput.value +=
+              " " +
+              text +
+              ".";
+
+          }else{
+
+            promptInput.value =
+              text +
+              ".";
+          }
+
+
+          updatePlanPreview();
+        }
+      );
+    }
+  );
+
 
 
 /* =========================================================
    PROMPT PARSER
    ========================================================= */
 
-function parsePrompt(raw){
+function parsePrompt(
+  raw
+){
 
   const p =
-    String(raw || "").trim();
+    String(raw || "")
+      .trim();
 
   const lower =
     p.toLowerCase();
 
+
   const cfg = {
 
-    style:"original",
+    style:
+      "original",
 
-    format:"original",
+    format:
+      "original",
 
-    brightness:100,
-    contrast:100,
-    saturation:100,
+    brightness:
+      100,
 
-    speed:1,
+    contrast:
+      100,
 
-    caption:"",
+    saturation:
+      100,
 
-    captionPosition:"middle",
+    speed:
+      1,
 
-    captionAnimation:"none",
+    caption:
+      "",
 
-    removeIntro:0,
+    captionPosition:
+      "middle",
 
-    removeOutro:0,
+    captionAnimation:
+      "none",
 
-    cutStart:null,
-    cutEnd:null,
+    removeIntro:
+      0,
 
-    maxDuration:null,
+    removeOutro:
+      0,
 
-    originalVolume:0.40,
+    cutStart:
+      null,
 
-    musicVolume:0.25,
+    cutEnd:
+      null,
 
-    wantsMusic:false,
+    maxDuration:
+      null,
 
-    musicRequest:""
+    originalVolume:
+      0.40,
+
+    musicVolume:
+      0.25,
+
+    wantsMusic:
+      false,
+
+    musicRequest:
+      ""
   };
+
 
 
   /* STYLE */
 
   if(
-    lower.includes("cinematic")
+    lower.includes(
+      "cinematic"
+    )
   ){
-    cfg.style = "cinematic";
-    cfg.brightness = 82;
-    cfg.contrast = 120;
-    cfg.saturation = 120;
+
+    cfg.style =
+      "cinematic";
+
+    cfg.brightness =
+      82;
+
+    cfg.contrast =
+      120;
+
+    cfg.saturation =
+      120;
   }
 
-  if(
-    lower.includes("motivational")
-  ){
-    cfg.style = "motivational";
-    cfg.brightness = 90;
-    cfg.contrast = 115;
-    cfg.saturation = 125;
-  }
 
   if(
-    lower.includes("professional")
+    lower.includes(
+      "motivational"
+    )
   ){
-    cfg.style = "professional";
-    cfg.brightness = 100;
-    cfg.contrast = 108;
-    cfg.saturation = 105;
+
+    cfg.style =
+      "motivational";
+
+    cfg.brightness =
+      90;
+
+    cfg.contrast =
+      115;
+
+    cfg.saturation =
+      125;
   }
 
+
   if(
-    lower.includes("moody") ||
-    lower.includes("dark")
+    lower.includes(
+      "professional"
+    )
   ){
-    cfg.style = "moody";
-    cfg.brightness = 78;
-    cfg.contrast = 125;
-    cfg.saturation = 90;
+
+    cfg.style =
+      "professional";
+
+    cfg.brightness =
+      100;
+
+    cfg.contrast =
+      108;
+
+    cfg.saturation =
+      105;
   }
+
+
+  if(
+    lower.includes(
+      "moody"
+    ) ||
+    lower.includes(
+      "dark"
+    )
+  ){
+
+    cfg.style =
+      "moody";
+
+    cfg.brightness =
+      78;
+
+    cfg.contrast =
+      125;
+
+    cfg.saturation =
+      90;
+  }
+
 
 
   /* FORMAT */
 
   if(
-    lower.includes("reel") ||
-    lower.includes("9:16") ||
-    lower.includes("vertical")
+    lower.includes(
+      "reel"
+    ) ||
+    lower.includes(
+      "9:16"
+    ) ||
+    lower.includes(
+      "vertical"
+    )
   ){
-    cfg.format = "reel";
+
+    cfg.format =
+      "reel";
   }
 
-  if(
-    lower.includes("square") ||
-    lower.includes("1:1")
-  ){
-    cfg.format = "square";
-  }
 
   if(
-    lower.includes("landscape") ||
-    lower.includes("16:9")
+    lower.includes(
+      "square"
+    ) ||
+    lower.includes(
+      "1:1"
+    )
   ){
-    cfg.format = "landscape";
+
+    cfg.format =
+      "square";
   }
+
+
+  if(
+    lower.includes(
+      "landscape"
+    ) ||
+    lower.includes(
+      "16:9"
+    )
+  ){
+
+    cfg.format =
+      "landscape";
+  }
+
 
 
   /* COLOUR */
 
-  if(lower.includes("darker")){
+  if(
+    lower.includes(
+      "darker"
+    )
+  ){
+
     cfg.brightness =
-      Math.min(cfg.brightness,82);
+      Math.min(
+        cfg.brightness,
+        82
+      );
   }
 
-  if(
-    lower.includes("brighter") ||
-    lower.includes("bright")
-  ){
-    cfg.brightness = 115;
-  }
 
   if(
-    lower.includes("colourful") ||
-    lower.includes("colorful") ||
-    lower.includes("vibrant")
+    lower.includes(
+      "brighter"
+    ) ||
+    lower.includes(
+      "bright"
+    )
   ){
-    cfg.saturation = 130;
+
+    cfg.brightness =
+      115;
   }
+
+
+  if(
+    lower.includes(
+      "colourful"
+    ) ||
+    lower.includes(
+      "colorful"
+    ) ||
+    lower.includes(
+      "vibrant"
+    )
+  ){
+
+    cfg.saturation =
+      130;
+  }
+
 
 
   /* SPEED */
 
   if(
-    lower.includes("slow")
+    lower.includes(
+      "very slow"
+    )
   ){
-    cfg.speed = 0.75;
+
+    cfg.speed =
+      0.5;
+
+  }else if(
+    lower.includes(
+      "slow"
+    )
+  ){
+
+    cfg.speed =
+      0.75;
   }
 
-  if(
-    lower.includes("very slow")
-  ){
-    cfg.speed = 0.5;
-  }
 
   if(
-    lower.includes("2x") ||
-    lower.includes("twice as fast") ||
-    lower.includes("double speed")
+    lower.includes(
+      "2x"
+    ) ||
+    lower.includes(
+      "twice as fast"
+    ) ||
+    lower.includes(
+      "double speed"
+    )
   ){
-    cfg.speed = 2;
+
+    cfg.speed =
+      2;
   }
 
+
   if(
-    lower.includes("1.5x")
+    lower.includes(
+      "1.5x"
+    )
   ){
-    cfg.speed = 1.5;
+
+    cfg.speed =
+      1.5;
   }
+
 
 
   /* ORIGINAL AUDIO */
@@ -962,22 +1659,36 @@ function parsePrompt(raw){
       /(?:original audio|original sound|video audio)\s*(?:at|to)?\s*(\d{1,3})\s*%/
     );
 
+
   if(originalMatch){
+
     cfg.originalVolume =
       clamp(
-        Number(originalMatch[1]) / 100,
+        Number(
+          originalMatch[1]
+        ) / 100,
         0,
         1
       );
   }
 
+
   if(
-    lower.includes("mute original") ||
-    lower.includes("remove original audio") ||
-    lower.includes("remove original sound")
+    lower.includes(
+      "mute original"
+    ) ||
+    lower.includes(
+      "remove original audio"
+    ) ||
+    lower.includes(
+      "remove original sound"
+    )
   ){
-    cfg.originalVolume = 0;
+
+    cfg.originalVolume =
+      0;
   }
+
 
 
   /* MUSIC VOLUME */
@@ -987,15 +1698,19 @@ function parsePrompt(raw){
       /(?:music volume|background music volume|bgm volume)\s*(?:at|to)?\s*(\d{1,3})\s*%/
     );
 
+
   if(musicVolMatch){
 
     cfg.musicVolume =
       clamp(
-        Number(musicVolMatch[1]) / 100,
+        Number(
+          musicVolMatch[1]
+        ) / 100,
         0,
         1
       );
   }
+
 
 
   /* CAPTION */
@@ -1005,9 +1720,12 @@ function parsePrompt(raw){
       /(?:caption|text|title)\s*(?:is|:)?\s*[“"']([^“”"']+)[”"']/i
     );
 
+
   if(captionMatch){
+
     cfg.caption =
       captionMatch[1].trim();
+
   }else{
 
     const simpleCaption =
@@ -1015,77 +1733,133 @@ function parsePrompt(raw){
         /(?:caption|text|title)\s+(?:saying\s+)?(.+?)(?=\s+(?:at the beginning|in the beginning|in the middle|at the end|slide up|fade|pop|animated)|$)/i
       );
 
-    if(simpleCaption){
-      let value =
-        simpleCaption[1].trim();
 
-      value =
-        value.replace(/[.,]+$/,"");
+    if(simpleCaption){
+
+      let value =
+        simpleCaption[1]
+          .trim()
+          .replace(/[.,]+$/,"");
+
 
       if(
         value &&
         value.length < 100
       ){
-        cfg.caption = value;
+
+        cfg.caption =
+          value;
       }
     }
   }
 
 
+
   /* CAPTION POSITION */
 
   if(
-    lower.includes("beginning") ||
-    lower.includes("start")
+    lower.includes(
+      "beginning"
+    ) ||
+    lower.includes(
+      "start"
+    )
   ){
-    cfg.captionPosition = "beginning";
+
+    cfg.captionPosition =
+      "beginning";
   }
 
-  if(
-    lower.includes("middle") ||
-    lower.includes("centre") ||
-    lower.includes("center")
-  ){
-    cfg.captionPosition = "middle";
-  }
 
   if(
-    lower.includes("end") ||
-    lower.includes("ending")
+    lower.includes(
+      "middle"
+    ) ||
+    lower.includes(
+      "centre"
+    ) ||
+    lower.includes(
+      "center"
+    )
   ){
-    cfg.captionPosition = "end";
+
+    cfg.captionPosition =
+      "middle";
   }
+
+
+  if(
+    lower.includes(
+      "end"
+    ) ||
+    lower.includes(
+      "ending"
+    )
+  ){
+
+    cfg.captionPosition =
+      "end";
+  }
+
 
 
   /* CAPTION ANIMATION */
 
   if(
-    lower.includes("slide up") ||
-    lower.includes("slide-up")
+    lower.includes(
+      "slide up"
+    ) ||
+    lower.includes(
+      "slide-up"
+    )
   ){
-    cfg.captionAnimation = "slide";
+
+    cfg.captionAnimation =
+      "slide";
   }
 
-  if(
-    lower.includes("fade")
-  ){
-    cfg.captionAnimation = "fade";
-  }
 
   if(
-    lower.includes("pop")
+    lower.includes(
+      "fade"
+    )
   ){
-    cfg.captionAnimation = "pop";
+
+    cfg.captionAnimation =
+      "fade";
   }
 
+
   if(
-    lower.includes("animated caption") ||
-    lower.includes("animate caption")
+    lower.includes(
+      "pop"
+    )
   ){
-    if(cfg.captionAnimation === "none"){
-      cfg.captionAnimation = "slide";
+
+    cfg.captionAnimation =
+      "pop";
+  }
+
+
+  if(
+    lower.includes(
+      "animated caption"
+    ) ||
+    lower.includes(
+      "animate caption"
+    )
+  ){
+
+    if(
+      cfg.captionAnimation ===
+      "none"
+    ){
+
+      cfg.captionAnimation =
+        "slide";
     }
   }
+
 
 
   /* INTRO */
@@ -1095,13 +1869,17 @@ function parsePrompt(raw){
       /(?:remove|cut|delete)\s+(?:the\s+)?(?:first|intro)\s*(\d+(?:\.\d+)?)?\s*(?:seconds?|secs?)?/
     );
 
+
   if(introMatch){
 
     cfg.removeIntro =
       introMatch[1]
-        ? Number(introMatch[1])
+        ? Number(
+            introMatch[1]
+          )
         : 2;
   }
+
 
 
   /* OUTRO */
@@ -1111,30 +1889,40 @@ function parsePrompt(raw){
       /(?:remove|cut|delete)\s+(?:the\s+)?(?:last|outro)\s*(\d+(?:\.\d+)?)?\s*(?:seconds?|secs?)?/
     );
 
+
   if(outroMatch){
 
     cfg.removeOutro =
       outroMatch[1]
-        ? Number(outroMatch[1])
+        ? Number(
+            outroMatch[1]
+          )
         : 2;
   }
 
 
-  /* CUT FROM X TO Y */
+
+  /* CUT */
 
   const cutMatch =
     lower.match(
       /(?:cut|remove|delete)\s+(?:from\s+)?(\d+(?:\.\d+)?)\s*(?:s|sec|secs|seconds)?\s*(?:to|-)\s*(\d+(?:\.\d+)?)\s*(?:s|sec|secs|seconds)?/
     );
 
+
   if(cutMatch){
 
     cfg.cutStart =
-      Number(cutMatch[1]);
+      Number(
+        cutMatch[1]
+      );
 
     cfg.cutEnd =
-      Number(cutMatch[2]);
+      Number(
+        cutMatch[2]
+      );
   }
+
 
 
   /* DURATION */
@@ -1144,14 +1932,20 @@ function parsePrompt(raw){
       /(?:make|keep|create|shorten|limit)\s+(?:this\s+)?(?:video\s+)?(?:to|at)\s*(\d+(?:\.\d+)?)\s*(?:s|sec|secs|seconds)/
     );
 
+
   if(durationMatch){
 
     cfg.maxDuration =
-      Number(durationMatch[1]);
+      Number(
+        durationMatch[1]
+      );
   }
 
 
-  /* MUSIC */
+
+  /* =====================================================
+     MUSIC REQUEST
+     ===================================================== */
 
   const musicWords = [
     "music",
@@ -1162,24 +1956,35 @@ function parsePrompt(raw){
     "background music"
   ];
 
+
   if(
-    musicWords.some(word =>
-      lower.includes(word)
+    musicWords.some(
+      word =>
+        lower.includes(word)
     )
   ){
-    cfg.wantsMusic = true;
+
+    cfg.wantsMusic =
+      true;
   }
+
+
+  /* EXACT SONG */
 
   const namedSong =
     p.match(
       /(?:song|music|track|bgm)\s*(?:called|named|is|:)?\s*[“"']([^“”"']+)[”"']/i
     );
 
+
   if(namedSong){
 
-    cfg.wantsMusic = true;
+    cfg.wantsMusic =
+      true;
+
     cfg.musicRequest =
       namedSong[1].trim();
+
   }else{
 
     const musicPhrase =
@@ -1187,433 +1992,804 @@ function parsePrompt(raw){
         /(?:add|use|want|give me|put)\s+(?:some\s+)?(.{2,80}?)\s+(?:music|song|track|bgm)\b/i
       );
 
+
     if(musicPhrase){
 
-      cfg.wantsMusic = true;
+      cfg.wantsMusic =
+        true;
+
       cfg.musicRequest =
         musicPhrase[1].trim();
     }
   }
 
 
-  if(
-    lower.includes("cinematic music")
-  ){
-    cfg.musicRequest =
-      "cinematic soundtrack";
-    cfg.wantsMusic = true;
-  }
+
+  /* SMART MUSIC */
 
   if(
-    lower.includes("motivational music")
+    lower.includes(
+      "cinematic music"
+    )
   ){
+
+    cfg.musicRequest =
+      "cinematic motivational soundtrack";
+
+    cfg.wantsMusic =
+      true;
+  }
+
+
+  if(
+    lower.includes(
+      "motivational music"
+    )
+  ){
+
     cfg.musicRequest =
       "motivational rock soundtrack";
-    cfg.wantsMusic = true;
+
+    cfg.wantsMusic =
+      true;
   }
 
+
   if(
-    lower.includes("calm music") ||
-    lower.includes("calm piano")
+    lower.includes(
+      "calm music"
+    ) ||
+    lower.includes(
+      "calm piano"
+    )
   ){
+
     cfg.musicRequest =
       "calm piano relaxation";
-    cfg.wantsMusic = true;
+
+    cfg.wantsMusic =
+      true;
   }
 
+
   if(
-    lower.includes("energetic music") ||
-    lower.includes("workout music")
+    lower.includes(
+      "energetic music"
+    ) ||
+    lower.includes(
+      "workout music"
+    )
   ){
+
     cfg.musicRequest =
       "energetic electronic";
-    cfg.wantsMusic = true;
+
+    cfg.wantsMusic =
+      true;
   }
 
+
   if(
-    lower.includes("romantic music")
+    lower.includes(
+      "romantic music"
+    )
   ){
+
     cfg.musicRequest =
       "romantic acoustic";
-    cfg.wantsMusic = true;
+
+    cfg.wantsMusic =
+      true;
   }
 
 
   return cfg;
 }
+
+
+
+/* =========================================================
+   BUILD CONFIG
+   ========================================================= */
+
+function buildConfig(){
+
+  const cfg =
+    parsePrompt(
+      promptInput.value
+    );
+
+
+  const selectedStyle =
+    document.getElementById(
+      "style"
+    ).value;
+
+
+  const selectedFormat =
+    document.getElementById(
+      "format"
+    ).value;
+
+
+  if(
+    selectedStyle !==
+    "original"
+  ){
+
+    cfg.style =
+      selectedStyle;
+
+
+    if(
+      selectedStyle ===
+      "cinematic"
+    ){
+
+      cfg.brightness =
+        82;
+
+      cfg.contrast =
+        120;
+
+      cfg.saturation =
+        120;
+    }
+
+
+    if(
+      selectedStyle ===
+      "motivational"
+    ){
+
+      cfg.brightness =
+        90;
+
+      cfg.contrast =
+        115;
+
+      cfg.saturation =
+        125;
+    }
+
+
+    if(
+      selectedStyle ===
+      "professional"
+    ){
+
+      cfg.brightness =
+        100;
+
+      cfg.contrast =
+        108;
+
+      cfg.saturation =
+        105;
+    }
+
+
+    if(
+      selectedStyle ===
+      "moody"
+    ){
+
+      cfg.brightness =
+        78;
+
+      cfg.contrast =
+        125;
+
+      cfg.saturation =
+        90;
+    }
+  }
+
+
+  if(
+    selectedFormat !==
+    "original"
+  ){
+
+    cfg.format =
+      selectedFormat;
+  }
+
+
+  cfg.musicVolume =
+    Number(
+      document.getElementById(
+        "musicVolume"
+      ).value
+    );
+
+
+  cfg.originalVolume =
+    Number(
+      document.getElementById(
+        "originalVolume"
+      ).value
+    );
+
+
+  if(
+    musicMode ===
+    "ai"
+  ){
+
+    cfg.wantsMusic =
+      true;
+
+
+    if(
+      musicRequestInput.value.trim()
+    ){
+
+      cfg.musicRequest =
+        musicRequestInput
+          .value
+          .trim();
+    }
+  }
+
+
+  return cfg;
+}
+
 
 
 /* =========================================================
    PLAN
    ========================================================= */
 
-function getStyleFromSelect(){
-
-  return document.getElementById("style").value;
-}
-
-function getFormatFromSelect(){
-
-  return document.getElementById("format").value;
-}
-
-function buildConfig(){
-
-  const cfg =
-    parsePrompt(promptInput.value);
-
-  const style =
-    getStyleFromSelect();
-
-  const format =
-    getFormatFromSelect();
-
-  if(style !== "original"){
-
-    cfg.style = style;
-
-    if(style === "cinematic"){
-      cfg.brightness = 82;
-      cfg.contrast = 120;
-      cfg.saturation = 120;
-    }
-
-    if(style === "motivational"){
-      cfg.brightness = 90;
-      cfg.contrast = 115;
-      cfg.saturation = 125;
-    }
-
-    if(style === "professional"){
-      cfg.brightness = 100;
-      cfg.contrast = 108;
-      cfg.saturation = 105;
-    }
-
-    if(style === "moody"){
-      cfg.brightness = 78;
-      cfg.contrast = 125;
-      cfg.saturation = 90;
-    }
-  }
-
-  if(format !== "original"){
-    cfg.format = format;
-  }
-
-  cfg.musicVolume =
-    Number(
-      document.getElementById("musicVolume").value
-    );
-
-  cfg.originalVolume =
-    Number(
-      document.getElementById("originalVolume").value
-    );
-
-  if(musicMode === "ai"){
-
-    cfg.wantsMusic = true;
-
-    if(
-      musicRequestInput.value.trim()
-    ){
-      cfg.musicRequest =
-        musicRequestInput.value.trim();
-    }
-  }
-
-  return cfg;
-}
-
-
 function updatePlanPreview(){
 
-  const cfg = buildConfig();
+  const cfg =
+    buildConfig();
 
-  const duration =
-    selectedVideoFile
-      ? "loading..."
-      : "not loaded";
 
   planEl.innerHTML = `
-    <strong>YARUVA plan</strong><br>
-    Style: ${esc(cfg.style)}<br>
-    Format: ${esc(cfg.format)}<br>
-    Colour: ${cfg.brightness}% brightness ·
+
+    <strong>
+      YARUVA plan
+    </strong><br>
+
+    Style:
+    ${esc(cfg.style)}<br>
+
+    Format:
+    ${esc(cfg.format)}<br>
+
+    Colour:
+    ${cfg.brightness}% brightness ·
     ${cfg.contrast}% contrast ·
     ${cfg.saturation}% saturation<br>
-    Speed: ${cfg.speed}x<br>
-    Caption: ${cfg.caption
-      ? esc(cfg.caption)
-      : "None"}<br>
+
+    Speed:
+    ${cfg.speed}x<br>
+
+    Caption:
+    ${
+      cfg.caption
+        ? esc(cfg.caption)
+        : "None"
+    }<br>
+
     Trim:
-    ${cfg.removeIntro
-      ? "remove first " + cfg.removeIntro + "s · "
-      : ""}
-    ${cfg.removeOutro
-      ? "remove last " + cfg.removeOutro + "s"
-      : "normal"}<br>
+    ${
+      cfg.removeIntro
+        ? "remove first " +
+          cfg.removeIntro +
+          "s"
+        : "normal"
+    }<br>
+
     Music:
-    ${cfg.wantsMusic
-      ? esc(cfg.musicRequest || "AI selection")
-      : "None"}
+    ${
+      cfg.wantsMusic
+        ? esc(
+            cfg.musicRequest ||
+            "AI selection"
+          )
+        : "None"
+    }
+
   `;
 
+
   settingsSummary.innerHTML = `
-    Style: ${esc(cfg.style)}<br>
-    Format: ${esc(cfg.format)}<br>
-    Brightness: ${cfg.brightness}%<br>
-    Contrast: ${cfg.contrast}%<br>
-    Saturation: ${cfg.saturation}%<br>
-    Speed: ${cfg.speed}x<br>
+
+    Style:
+    ${esc(cfg.style)}<br>
+
+    Format:
+    ${esc(cfg.format)}<br>
+
+    Brightness:
+    ${cfg.brightness}%<br>
+
+    Contrast:
+    ${cfg.contrast}%<br>
+
+    Saturation:
+    ${cfg.saturation}%<br>
+
+    Speed:
+    ${cfg.speed}x<br>
+
     Caption:
-    ${cfg.caption
-      ? esc(cfg.caption)
-      : "None"}<br>
+    ${
+      cfg.caption
+        ? esc(cfg.caption)
+        : "None"
+    }<br>
+
     Music:
-    ${cfg.wantsMusic
-      ? esc(cfg.musicRequest || "AI selection")
-      : "None"}
+    ${
+      cfg.wantsMusic
+        ? esc(
+            cfg.musicRequest ||
+            "AI selection"
+          )
+        : "None"
+    }
+
   `;
 }
+
 
 
 [
   promptInput,
-  document.getElementById("style"),
-  document.getElementById("format"),
-  document.getElementById("musicVolume"),
-  document.getElementById("originalVolume"),
+
+  document.getElementById(
+    "style"
+  ),
+
+  document.getElementById(
+    "format"
+  ),
+
+  document.getElementById(
+    "musicVolume"
+  ),
+
+  document.getElementById(
+    "originalVolume"
+  ),
+
   musicRequestInput
-].forEach(el => {
 
-  el.addEventListener(
-    "input",
-    updatePlanPreview
-  );
+].forEach(
+  element => {
 
-  el.addEventListener(
-    "change",
-    updatePlanPreview
-  );
-});
+    element.addEventListener(
+      "input",
+      updatePlanPreview
+    );
+
+    element.addEventListener(
+      "change",
+      updatePlanPreview
+    );
+  }
+);
+
 
 
 /* =========================================================
-   JAMENDO MUSIC SEARCH
+   V6 SMART MUSIC SEARCH
    ========================================================= */
 
-function moodSearches(request){
+function buildMusicSearches(
+  request
+){
 
   const text =
-    String(request || "")
-      .toLowerCase()
-      .trim();
+    String(
+      request || ""
+    )
+    .toLowerCase()
+    .trim();
 
-  const list = [];
+
+  const searches = [];
+
+
+  /* Exact request */
 
   if(text){
-    list.push({
-      search:text
+
+    searches.push({
+      search:
+        text
     });
   }
 
-  if(text.includes("cinematic")){
-    list.push({
-      fuzzytags:"soundtrack cinematic"
-    });
-  }
 
-  if(
-    text.includes("motivational") ||
-    text.includes("motivation")
-  ){
-    list.push({
-      fuzzytags:"rock motivational"
-    });
-  }
+
+  /* CINEMATIC */
 
   if(
-    text.includes("calm") ||
-    text.includes("piano") ||
-    text.includes("relax")
+    text.includes(
+      "cinematic"
+    ) ||
+    text.includes(
+      "movie"
+    ) ||
+    text.includes(
+      "film"
+    ) ||
+    text.includes(
+      "dramatic"
+    )
   ){
-    list.push({
-      fuzzytags:"relaxation piano"
+
+    searches.push({
+      fuzzytags:
+        "cinematic soundtrack"
+    });
+
+    searches.push({
+      fuzzytags:
+        "soundtrack dramatic"
+    });
+
+    searches.push({
+      tags:
+        "soundtrack"
     });
   }
+
+
+
+  /* MOTIVATIONAL */
 
   if(
-    text.includes("energetic") ||
-    text.includes("workout") ||
-    text.includes("gym")
+    text.includes(
+      "motivational"
+    ) ||
+    text.includes(
+      "motivation"
+    ) ||
+    text.includes(
+      "inspiring"
+    ) ||
+    text.includes(
+      "inspiration"
+    )
   ){
-    list.push({
-      fuzzytags:"electronic energetic"
+
+    searches.push({
+      fuzzytags:
+        "rock motivational"
+    });
+
+    searches.push({
+      fuzzytags:
+        "rock energetic"
+    });
+
+    searches.push({
+      fuzzytags:
+        "soundtrack"
     });
   }
 
-  if(text.includes("romantic")){
-    list.push({
-      fuzzytags:"romantic acoustic"
+
+
+  /* CALM */
+
+  if(
+    text.includes(
+      "calm"
+    ) ||
+    text.includes(
+      "relax"
+    ) ||
+    text.includes(
+      "peaceful"
+    ) ||
+    text.includes(
+      "piano"
+    )
+  ){
+
+    searches.push({
+      fuzzytags:
+        "relaxation piano"
+    });
+
+    searches.push({
+      fuzzytags:
+        "ambient calm"
+    });
+
+    searches.push({
+      tags:
+        "relaxation"
     });
   }
 
-  list.push({
-    fuzzytags:"soundtrack"
+
+
+  /* ENERGETIC */
+
+  if(
+    text.includes(
+      "energetic"
+    ) ||
+    text.includes(
+      "energy"
+    ) ||
+    text.includes(
+      "workout"
+    ) ||
+    text.includes(
+      "gym"
+    ) ||
+    text.includes(
+      "fast"
+    )
+  ){
+
+    searches.push({
+      fuzzytags:
+        "electronic energetic"
+    });
+
+    searches.push({
+      fuzzytags:
+        "rock energetic"
+    });
+
+    searches.push({
+      tags:
+        "electronic"
+    });
+  }
+
+
+
+  /* ROMANTIC */
+
+  if(
+    text.includes(
+      "romantic"
+    ) ||
+    text.includes(
+      "love"
+    )
+  ){
+
+    searches.push({
+      fuzzytags:
+        "romantic acoustic"
+    });
+
+    searches.push({
+      fuzzytags:
+        "romantic piano"
+    });
+  }
+
+
+
+  /* GENERAL FALLBACK */
+
+  searches.push({
+    fuzzytags:
+      "soundtrack"
   });
 
-  return list;
+  searches.push({
+    tags:
+      "instrumental"
+  });
+
+
+  return searches;
 }
 
 
-async function jamendoRequest(params){
+
+/* =========================================================
+   JAMENDO REQUEST
+   ========================================================= */
+
+async function jamendoSearch(
+  params
+){
 
   const url =
     new URL(
       "https://api.jamendo.com/v3.0/tracks/"
     );
 
+
   url.searchParams.set(
     "client_id",
     JAMENDO_CLIENT_ID
   );
+
 
   url.searchParams.set(
     "format",
     "json"
   );
 
+
   url.searchParams.set(
     "limit",
-    "10"
+    "15"
   );
+
 
   url.searchParams.set(
     "audioformat",
     "mp32"
   );
 
-  url.searchParams.set(
-    "include",
-    "licenses"
-  );
 
   url.searchParams.set(
     "type",
     "single albumtrack"
   );
 
-  Object.entries(params)
-  .forEach(([key,value]) => {
 
-    if(value){
-      url.searchParams.set(
-        key,
-        value
-      );
+  Object.entries(
+    params
+  ).forEach(
+    ([key,value]) => {
+
+      if(
+        value !== undefined &&
+        value !== null &&
+        value !== ""
+      ){
+
+        url.searchParams.set(
+          key,
+          value
+        );
+      }
     }
-  });
+  );
+
 
   const response =
     await fetch(
       url.toString(),
       {
-        method:"GET",
-        cache:"no-store"
+        method:
+          "GET",
+
+        mode:
+          "cors",
+
+        cache:
+          "no-store"
       }
     );
 
+
   if(!response.ok){
+
     throw new Error(
-      "Music catalogue request failed."
+      "Music catalogue request failed: HTTP " +
+      response.status
     );
   }
+
 
   const data =
     await response.json();
 
+
   if(
     !data ||
-    !Array.isArray(data.results)
+    !Array.isArray(
+      data.results
+    )
   ){
+
     throw new Error(
-      "Music catalogue returned no usable results."
+      "Music catalogue returned no tracks."
     );
   }
+
 
   return data.results;
 }
 
 
-async function searchJamendo(request){
-
-  const searches =
-    moodSearches(request);
-
-  for(
-    const search of searches
-  ){
-
-    try{
-
-      const tracks =
-        await jamendoRequest(search);
-
-      const usable =
-        tracks.filter(track => {
-
-          return Boolean(
-            track &&
-            track.audio
-          );
-        });
-
-      if(usable.length){
-
-        return usable[0];
-      }
-
-    }catch(error){
-
-      console.warn(
-        "Music search attempt failed:",
-        error
-      );
-    }
-  }
-
-  return null;
-}
-
 
 /* =========================================================
-   AUDIO BUFFER
+   FILTER MUSIC
    ========================================================= */
 
-async function decodeMusicFile(
-  file,
-  audioContext
+function filterMusicCandidates(
+  tracks
 ){
 
-  if(!isAudioFile(file)){
+  return tracks.filter(
+    track => {
 
-    throw new Error(
-      "Only MP3, WAV, M4A, AAC or OGG files can be used as music."
-    );
-  }
+      if(!track){
+        return false;
+      }
 
-  const arrayBuffer =
-    await file.arrayBuffer();
+      if(!track.audio){
+        return false;
+      }
 
-  return await audioContext.decodeAudioData(
-    arrayBuffer.slice(0)
+
+      /*
+        Prefer tracks explicitly permitted
+        by Jamendo's API.
+      */
+
+      if(
+        track.audiodownload_allowed ===
+        false
+      ){
+
+        return false;
+      }
+
+
+      return true;
+    }
   );
 }
 
 
-async function decodeRemoteMusic(
+
+/* =========================================================
+   REMOVE DUPLICATES
+   ========================================================= */
+
+function uniqueTracks(
+  tracks
+){
+
+  const seen =
+    new Set();
+
+
+  return tracks.filter(
+    track => {
+
+      const id =
+        String(
+          track.id ||
+          track.audio ||
+          track.name
+        );
+
+
+      if(
+        seen.has(id)
+      ){
+
+        return false;
+      }
+
+
+      seen.add(id);
+
+      return true;
+    }
+  );
+}
+
+
+
+/* =========================================================
+   DECODE MUSIC CANDIDATE
+   ========================================================= */
+
+async function tryDecodeMusicTrack(
   track,
   audioContext
 ){
@@ -1622,37 +2798,268 @@ async function decodeRemoteMusic(
     !track ||
     !track.audio
   ){
+
     throw new Error(
-      "The selected music track has no playable audio."
+      "Track has no audio stream."
     );
   }
+
 
   const response =
     await fetch(
       track.audio,
       {
-        mode:"cors",
-        cache:"no-store"
+        method:
+          "GET",
+
+        mode:
+          "cors",
+
+        cache:
+          "no-store"
       }
     );
 
+
   if(!response.ok){
+
     throw new Error(
-      "Music audio could not be downloaded."
+      "Music stream returned HTTP " +
+      response.status
     );
   }
+
 
   const arrayBuffer =
     await response.arrayBuffer();
 
-  return await audioContext.decodeAudioData(
-    arrayBuffer.slice(0)
-  );
+
+  if(
+    !arrayBuffer ||
+    arrayBuffer.byteLength <
+    1000
+  ){
+
+    throw new Error(
+      "Music file was empty."
+    );
+  }
+
+
+  const audioBuffer =
+    await audioContext
+      .decodeAudioData(
+        arrayBuffer.slice(0)
+      );
+
+
+  if(
+    !audioBuffer ||
+    !audioBuffer.duration
+  ){
+
+    throw new Error(
+      "Browser could not decode this music."
+    );
+  }
+
+
+  return audioBuffer;
 }
 
 
+
 /* =========================================================
-   VIDEO DRAWING
+   MAIN MUSIC SELECTOR
+   ========================================================= */
+
+async function searchJamendo(
+  request
+){
+
+  const searches =
+    buildMusicSearches(
+      request
+    );
+
+
+  const allCandidates = [];
+
+
+  for(
+    const search of searches
+  ){
+
+    try{
+
+      const tracks =
+        await jamendoSearch(
+          search
+        );
+
+
+      const usable =
+        filterMusicCandidates(
+          tracks
+        );
+
+
+      allCandidates.push(
+        ...usable
+      );
+
+
+      if(
+        allCandidates.length >=
+        20
+      ){
+
+        break;
+      }
+
+    }catch(error){
+
+      console.warn(
+        "Music search failed:",
+        search,
+        error
+      );
+    }
+  }
+
+
+  const candidates =
+    uniqueTracks(
+      allCandidates
+    );
+
+
+  if(
+    !candidates.length
+  ){
+
+    throw new Error(
+      "No usable music candidates were found."
+    );
+  }
+
+
+  const AudioCtx =
+    window.AudioContext ||
+    window.webkitAudioContext;
+
+
+  if(!AudioCtx){
+
+    throw new Error(
+      "Web Audio is not supported."
+    );
+  }
+
+
+  const testContext =
+    new AudioCtx();
+
+
+  try{
+
+    if(
+      testContext.state ===
+      "suspended"
+    ){
+
+      await testContext.resume();
+    }
+
+
+    /*
+      V6:
+      Test tracks one by one.
+    */
+
+    for(
+      let i = 0;
+      i < candidates.length;
+      i++
+    ){
+
+      const track =
+        candidates[i];
+
+
+      try{
+
+        setStatus(
+          "Testing music " +
+          (i + 1) +
+          " of " +
+          candidates.length +
+          "..."
+        );
+
+
+        console.log(
+          "YARUVA V6 testing:",
+          track.name,
+          track.artist_name
+        );
+
+
+        const buffer =
+          await tryDecodeMusicTrack(
+            track,
+            testContext
+          );
+
+
+        console.log(
+          "YARUVA V6 selected:",
+          track.name,
+          track.artist_name
+        );
+
+
+        return {
+
+          track:
+            track,
+
+          buffer:
+            buffer
+
+        };
+
+
+      }catch(error){
+
+        console.warn(
+          "Music candidate failed:",
+          track.name,
+          error
+        );
+      }
+    }
+
+
+    throw new Error(
+      "All music candidates failed to load."
+    );
+
+
+  }finally{
+
+    try{
+
+      await testContext.close();
+
+    }catch(error){}
+  }
+}
+
+
+
+/* =========================================================
+   CANVAS SIZE
    ========================================================= */
 
 function getCanvasSize(
@@ -1660,36 +3067,72 @@ function getCanvasSize(
   video
 ){
 
-  const w = video.videoWidth || 1280;
-  const h = video.videoHeight || 720;
+  const w =
+    video.videoWidth ||
+    1280;
 
-  if(format === "reel"){
+  const h =
+    video.videoHeight ||
+    720;
+
+
+  if(
+    format === "reel"
+  ){
+
     return {
-      width:720,
-      height:1280
+      width:
+        720,
+
+      height:
+        1280
     };
   }
 
-  if(format === "square"){
+
+  if(
+    format === "square"
+  ){
+
     return {
-      width:1080,
-      height:1080
+      width:
+        1080,
+
+      height:
+        1080
     };
   }
 
-  if(format === "landscape"){
+
+  if(
+    format === "landscape"
+  ){
+
     return {
-      width:1280,
-      height:720
+      width:
+        1280,
+
+      height:
+        720
     };
   }
+
 
   return {
-    width:w,
-    height:h
+
+    width:
+      w,
+
+    height:
+      h
   };
 }
 
+
+
+/* =========================================================
+   DRAW VIDEO
+   ========================================================= */
 
 function drawCover(
   ctx,
@@ -1699,10 +3142,13 @@ function drawCover(
 ){
 
   const vw =
-    video.videoWidth || canvasWidth;
+    video.videoWidth ||
+    canvasWidth;
 
   const vh =
-    video.videoHeight || canvasHeight;
+    video.videoHeight ||
+    canvasHeight;
+
 
   const scale =
     Math.max(
@@ -1710,14 +3156,27 @@ function drawCover(
       canvasHeight / vh
     );
 
-  const dw = vw * scale;
-  const dh = vh * scale;
+
+  const dw =
+    vw * scale;
+
+  const dh =
+    vh * scale;
+
 
   const dx =
-    (canvasWidth - dw) / 2;
+    (
+      canvasWidth -
+      dw
+    ) / 2;
+
 
   const dy =
-    (canvasHeight - dh) / 2;
+    (
+      canvasHeight -
+      dh
+    ) / 2;
+
 
   ctx.drawImage(
     video,
@@ -1729,6 +3188,11 @@ function drawCover(
 }
 
 
+
+/* =========================================================
+   CAPTION
+   ========================================================= */
+
 function drawCaption(
   ctx,
   text,
@@ -1739,83 +3203,139 @@ function drawCaption(
   animation
 ){
 
-  if(!text) return;
+  if(!text){
+    return;
+  }
 
-  let alpha = 1;
+
+  let alpha =
+    1;
+
 
   let y =
-    canvasHeight * 0.78;
+    canvasHeight *
+    0.78;
 
-  if(animation === "fade"){
 
-    const fadeTime = 0.45;
+  if(
+    animation ===
+    "fade"
+  ){
 
-    if(currentTime < fadeTime){
-      alpha =
-        currentTime / fadeTime;
-    }
+    const fadeTime =
+      0.45;
+
 
     if(
-      duration - currentTime <
+      currentTime <
       fadeTime
     ){
+
+      alpha =
+        currentTime /
+        fadeTime;
+    }
+
+
+    if(
+      duration -
+      currentTime <
+      fadeTime
+    ){
+
       alpha =
         Math.min(
           alpha,
-          (duration - currentTime) /
+
+          (
+            duration -
+            currentTime
+          ) /
           fadeTime
         );
     }
   }
 
-  if(animation === "slide"){
 
-    const start = 0.5;
 
-    if(currentTime < start){
+  if(
+    animation ===
+    "slide"
+  ){
+
+    const start =
+      0.5;
+
+
+    if(
+      currentTime <
+      start
+    ){
 
       const progress =
         clamp(
-          currentTime / start,
+          currentTime /
+          start,
           0,
           1
         );
 
+
       y +=
-        (1-progress) *
+        (
+          1 -
+          progress
+        ) *
         canvasHeight *
         0.08;
     }
   }
 
-  if(animation === "pop"){
 
-    const start = 0.35;
 
-    if(currentTime < start){
+  if(
+    animation ===
+    "pop"
+  ){
+
+    const start =
+      0.35;
+
+
+    if(
+      currentTime <
+      start
+    ){
 
       const progress =
         clamp(
-          currentTime / start,
+          currentTime /
+          start,
           0,
           1
         );
 
+
       const scale =
         0.85 +
-        progress * 0.15;
+        progress *
+        0.15;
+
 
       ctx.save();
+
 
       ctx.translate(
         canvasWidth / 2,
         y
       );
 
+
       ctx.scale(
         scale,
         scale
       );
+
 
       ctx.translate(
         -canvasWidth / 2,
@@ -1824,196 +3344,150 @@ function drawCaption(
     }
   }
 
+
   ctx.save();
 
+
   ctx.globalAlpha =
-    clamp(alpha,0,1);
+    clamp(
+      alpha,
+      0,
+      1
+    );
+
 
   const fontSize =
     Math.max(
       28,
-      Math.round(canvasWidth * 0.055)
+      Math.round(
+        canvasWidth *
+        0.055
+      )
     );
+
 
   ctx.font =
     "800 " +
     fontSize +
     "px -apple-system,BlinkMacSystemFont,Arial,sans-serif";
 
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+
+  ctx.textAlign =
+    "center";
+
+
+  ctx.textBaseline =
+    "middle";
+
 
   const maxWidth =
-    canvasWidth * 0.84;
+    canvasWidth *
+    0.84;
 
-  let finalText = text;
+
+  let finalText =
+    text;
+
 
   while(
-    ctx.measureText(finalText).width >
+    ctx.measureText(
+      finalText
+    ).width >
     maxWidth &&
-    finalText.length > 5
+    finalText.length >
+    5
   ){
 
     finalText =
       finalText.slice(
         0,
-        finalText.length - 1
+        -1
       );
   }
 
-  const metrics =
-    ctx.measureText(finalText);
 
-  const padX = 26;
-  const padY = 18;
+  const metrics =
+    ctx.measureText(
+      finalText
+    );
+
+
+  const padX =
+    26;
+
+  const padY =
+    18;
+
 
   const boxWidth =
     Math.min(
       maxWidth + 20,
-      metrics.width + padX * 2
+      metrics.width +
+      padX * 2
     );
 
+
   const boxHeight =
-    fontSize + padY * 2;
+    fontSize +
+    padY * 2;
+
 
   ctx.fillStyle =
     "rgba(0,0,0,.52)";
 
+
   ctx.beginPath();
 
+
   ctx.roundRect(
-    (canvasWidth-boxWidth)/2,
-    y-boxHeight/2,
+    (canvasWidth -
+      boxWidth) / 2,
+
+    y -
+      boxHeight / 2,
+
     boxWidth,
+
     boxHeight,
+
     20
   );
 
+
   ctx.fill();
 
-  ctx.fillStyle = "#fff";
+
+  ctx.fillStyle =
+    "#fff";
+
 
   ctx.shadowColor =
     "rgba(0,0,0,.65)";
 
-  ctx.shadowBlur = 12;
+
+  ctx.shadowBlur =
+    12;
+
 
   ctx.fillText(
     finalText,
-    canvasWidth/2,
+    canvasWidth / 2,
     y
   );
 
+
   ctx.restore();
 
-  if(animation === "pop"){
+
+  if(
+    animation ===
+    "pop"
+  ){
+
     ctx.restore();
   }
 }
 
-
-function applyColour(
-  ctx,
-  canvas,
-  cfg
-){
-
-  const brightness =
-    cfg.brightness / 100;
-
-  const contrast =
-    cfg.contrast / 100;
-
-  const saturation =
-    cfg.saturation / 100;
-
-  if(
-    brightness === 1 &&
-    contrast === 1 &&
-    saturation === 1
-  ){
-    return;
-  }
-
-  ctx.save();
-
-  ctx.globalCompositeOperation =
-    "source-over";
-
-  if(brightness < 1){
-
-    ctx.fillStyle =
-      `rgba(0,0,0,${clamp(
-        1-brightness,
-        0,
-        0.45
-      )})`;
-
-    ctx.fillRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-  }
-
-  if(brightness > 1){
-
-    ctx.fillStyle =
-      `rgba(255,255,255,${clamp(
-        brightness-1,
-        0,
-        0.35
-      )})`;
-
-    ctx.fillRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-  }
-
-  if(
-    cfg.style === "cinematic" ||
-    cfg.style === "moody"
-  ){
-
-    const gradient =
-      ctx.createLinearGradient(
-        0,
-        0,
-        0,
-        canvas.height
-      );
-
-    gradient.addColorStop(
-      0,
-      "rgba(0,0,0,.08)"
-    );
-
-    gradient.addColorStop(
-      0.5,
-      "rgba(0,0,0,0)"
-    );
-
-    gradient.addColorStop(
-      1,
-      "rgba(0,0,0,.18)"
-    );
-
-    ctx.fillStyle = gradient;
-
-    ctx.fillRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-  }
-
-  ctx.restore();
-}
 
 
 /* =========================================================
@@ -2023,31 +3497,45 @@ function applyColour(
 function chooseMime(){
 
   const candidates = [
+
     "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+
     "video/mp4",
+
     "video/webm;codecs=h264,opus",
+
     "video/webm"
+
   ];
+
 
   for(
     const mime of candidates
   ){
 
     if(
-      typeof MediaRecorder !== "undefined" &&
+      typeof MediaRecorder !==
+      "undefined" &&
+
       MediaRecorder.isTypeSupported &&
-      MediaRecorder.isTypeSupported(mime)
+
+      MediaRecorder.isTypeSupported(
+        mime
+      )
     ){
+
       return mime;
     }
   }
+
 
   return "";
 }
 
 
+
 /* =========================================================
-   RENDER
+   VIDEO RENDERER
    ========================================================= */
 
 async function renderVideo(
@@ -2058,22 +3546,37 @@ async function renderVideo(
 ){
 
   const renderVideo =
-    document.createElement("video");
+    document.createElement(
+      "video"
+    );
 
-  renderVideo.preload = "auto";
-  renderVideo.playsInline = true;
-  renderVideo.muted = false;
+
+  renderVideo.preload =
+    "auto";
+
+  renderVideo.playsInline =
+    true;
+
+  renderVideo.muted =
+    false;
+
 
   const videoURL =
-    URL.createObjectURL(videoFile);
+    URL.createObjectURL(
+      videoFile
+    );
 
-  renderVideo.src = videoURL;
+
+  renderVideo.src =
+    videoURL;
+
 
   await new Promise(
     (resolve,reject) => {
 
       renderVideo.onloadedmetadata =
         resolve;
+
 
       renderVideo.onerror =
         () =>
@@ -2085,20 +3588,37 @@ async function renderVideo(
     }
   );
 
+
   const sourceDuration =
     renderVideo.duration;
 
+
   if(
-    !Number.isFinite(sourceDuration) ||
+    !Number.isFinite(
+      sourceDuration
+    ) ||
     sourceDuration <= 0
   ){
+
+    URL.revokeObjectURL(
+      videoURL
+    );
+
     throw new Error(
       "Video duration could not be read."
     );
   }
 
-  let startTime = 0;
-  let endTime = sourceDuration;
+
+  let startTime =
+    0;
+
+  let endTime =
+    sourceDuration;
+
+
+
+  /* CUT */
 
   if(
     cfg.cutStart !== null &&
@@ -2112,12 +3632,14 @@ async function renderVideo(
         sourceDuration
       );
 
+
     endTime =
       clamp(
         cfg.cutEnd,
         startTime + 0.05,
         sourceDuration
       );
+
   }else{
 
     startTime =
@@ -2127,6 +3649,7 @@ async function renderVideo(
         sourceDuration
       );
 
+
     endTime =
       sourceDuration -
       clamp(
@@ -2134,32 +3657,58 @@ async function renderVideo(
         0,
         Math.max(
           0,
-          sourceDuration-startTime-0.05
+          sourceDuration -
+          startTime -
+          0.05
         )
       );
   }
 
-  if(cfg.maxDuration !== null){
+
+
+  /* MAX DURATION */
+
+  if(
+    cfg.maxDuration !== null
+  ){
 
     endTime =
       Math.min(
         endTime,
-        startTime + cfg.maxDuration
+
+        startTime +
+        cfg.maxDuration
       );
   }
 
-  if(endTime <= startTime){
 
-    URL.revokeObjectURL(videoURL);
+
+  if(
+    endTime <=
+    startTime
+  ){
+
+    URL.revokeObjectURL(
+      videoURL
+    );
 
     throw new Error(
       "The requested trim leaves no video."
     );
   }
 
+
+
   const outputDuration =
-    (endTime - startTime) /
+    (
+      endTime -
+      startTime
+    ) /
     cfg.speed;
+
+
+
+  /* CANVAS */
 
   const size =
     getCanvasSize(
@@ -2167,22 +3716,38 @@ async function renderVideo(
       renderVideo
     );
 
-  const canvas =
-    document.createElement("canvas");
 
-  canvas.width = size.width;
-  canvas.height = size.height;
+  const canvas =
+    document.createElement(
+      "canvas"
+    );
+
+
+  canvas.width =
+    size.width;
+
+  canvas.height =
+    size.height;
+
 
   const ctx =
-    canvas.getContext("2d",{
-      alpha:false
-    });
+    canvas.getContext(
+      "2d",
+      {
+        alpha:
+          false
+      }
+    );
+
 
   if(!ctx){
+
     throw new Error(
       "Canvas rendering is not available."
     );
   }
+
+
 
   /* AUDIO */
 
@@ -2190,34 +3755,48 @@ async function renderVideo(
     window.AudioContext ||
     window.webkitAudioContext;
 
+
   if(!AudioCtx){
 
-    URL.revokeObjectURL(videoURL);
-
     throw new Error(
-      "Web Audio is not available in this browser."
+      "Web Audio is not available."
     );
   }
+
 
   const audioContext =
     new AudioCtx();
 
+
   if(
-    audioContext.state === "suspended"
+    audioContext.state ===
+    "suspended"
   ){
+
     await audioContext.resume();
   }
 
+
+
   const destination =
-    audioContext.createMediaStreamDestination();
+    audioContext
+      .createMediaStreamDestination();
+
+
+
+  /* ORIGINAL VIDEO AUDIO */
 
   const videoSource =
-    audioContext.createMediaElementSource(
-      renderVideo
-    );
+    audioContext
+      .createMediaElementSource(
+        renderVideo
+      );
+
 
   const videoGain =
-    audioContext.createGain();
+    audioContext
+      .createGain();
+
 
   videoGain.gain.value =
     clamp(
@@ -2226,33 +3805,46 @@ async function renderVideo(
       1
     );
 
+
   videoSource.connect(
     videoGain
   );
+
 
   videoGain.connect(
     destination
   );
 
 
+
   /* MUSIC */
 
-  let musicSource = null;
+  let musicSource =
+    null;
 
-  let musicGain = null;
+  let musicGain =
+    null;
+
 
   if(musicBuffer){
 
     musicSource =
-      audioContext.createBufferSource();
+      audioContext
+        .createBufferSource();
+
 
     musicSource.buffer =
       musicBuffer;
 
-    musicSource.loop = true;
+
+    musicSource.loop =
+      true;
+
 
     musicGain =
-      audioContext.createGain();
+      audioContext
+        .createGain();
+
 
     musicGain.gain.value =
       clamp(
@@ -2261,9 +3853,11 @@ async function renderVideo(
         1
       );
 
+
     musicSource.connect(
       musicGain
     );
+
 
     musicGain.connect(
       destination
@@ -2271,59 +3865,96 @@ async function renderVideo(
   }
 
 
-  /* CANVAS */
+
+  /* VIDEO STREAM */
 
   const canvasStream =
-    canvas.captureStream(30);
+    canvas.captureStream(
+      30
+    );
+
 
   const mixedStream =
     new MediaStream();
 
+
   canvasStream
     .getVideoTracks()
-    .forEach(track => {
+    .forEach(
+      track =>
+        mixedStream.addTrack(
+          track
+        )
+    );
 
-      mixedStream.addTrack(track);
-    });
 
   destination.stream
     .getAudioTracks()
-    .forEach(track => {
+    .forEach(
+      track =>
+        mixedStream.addTrack(
+          track
+        )
+    );
 
-      mixedStream.addTrack(track);
-    });
 
+
+  /* RECORDER */
 
   const mime =
     chooseMime();
 
-  const recorder =
-    new MediaRecorder(
-      mixedStream,
-      mime
-        ? {
-            mimeType:mime,
-            videoBitsPerSecond:5000000
-          }
-        : {
-            videoBitsPerSecond:5000000
-          }
+
+  let recorder;
+
+
+  try{
+
+    recorder =
+      new MediaRecorder(
+        mixedStream,
+
+        mime
+          ? {
+              mimeType:
+                mime,
+
+              videoBitsPerSecond:
+                5000000
+            }
+
+          : {
+              videoBitsPerSecond:
+                5000000
+            }
+      );
+
+  }catch(error){
+
+    throw new Error(
+      "This browser cannot create the edited video format."
     );
+  }
+
 
   const chunks = [];
+
 
   recorder.ondataavailable =
     event => {
 
       if(
         event.data &&
-        event.data.size > 0
+        event.data.size >
+        0
       ){
+
         chunks.push(
           event.data
         );
       }
     };
+
 
 
   const recorderDone =
@@ -2332,6 +3963,7 @@ async function renderVideo(
 
         recorder.onstop =
           resolve;
+
 
         recorder.onerror =
           event =>
@@ -2345,24 +3977,33 @@ async function renderVideo(
     );
 
 
+
   /* SEEK */
 
   await new Promise(
     (resolve,reject) => {
 
-      let finished = false;
+      let finished =
+        false;
 
-      const done = () => {
 
-        if(finished) return;
+      const done =
+        () => {
 
-        finished = true;
+          if(finished){
+            return;
+          }
 
-        resolve();
-      };
+          finished =
+            true;
+
+          resolve();
+        };
+
 
       renderVideo.onseeked =
         done;
+
 
       renderVideo.onerror =
         () =>
@@ -2372,16 +4013,26 @@ async function renderVideo(
             )
           );
 
+
       renderVideo.currentTime =
         startTime;
     }
   );
 
 
-  recorder.start(250);
+
+  /* START RECORDING */
+
+  recorder.start(
+    250
+  );
+
 
   if(musicSource){
-    musicSource.start(0);
+
+    musicSource.start(
+      0
+    );
   }
 
 
@@ -2392,48 +4043,63 @@ async function renderVideo(
   await renderVideo.play();
 
 
-  const startRealTime =
-    performance.now();
 
+  /* =====================================================
+     FRAME LOOP
+     ===================================================== */
 
   await new Promise(
-    (resolve) => {
+    resolve => {
 
       function frame(){
 
         const current =
           renderVideo.currentTime;
 
+
         const elapsed =
           Math.max(
             0,
-            current - startTime
+            current -
+            startTime
           );
+
 
         const progress =
           clamp(
             elapsed /
             Math.max(
               0.001,
-              endTime-startTime
+              endTime -
+              startTime
             ),
             0,
             1
           );
 
+
         setProgress(
-          progress * 100
+          progress *
+          100
         );
+
 
         setStatus(
           "Rendering video · " +
-          Math.round(progress*100) +
+          Math.round(
+            progress *
+            100
+          ) +
           "%"
         );
 
 
+
+        /* BACKGROUND */
+
         ctx.fillStyle =
           "#000";
+
 
         ctx.fillRect(
           0,
@@ -2443,12 +4109,17 @@ async function renderVideo(
         );
 
 
+
+        /* VIDEO */
+
         ctx.save();
+
 
         ctx.filter =
           `brightness(${cfg.brightness}%)
            contrast(${cfg.contrast}%)
            saturate(${cfg.saturation}%)`;
+
 
         drawCover(
           ctx,
@@ -2457,33 +4128,88 @@ async function renderVideo(
           canvas.height
         );
 
+
         ctx.restore();
 
 
-        applyColour(
-          ctx,
-          canvas,
-          cfg
-        );
 
+        /* CINEMATIC */
+
+        if(
+          cfg.style ===
+            "cinematic" ||
+          cfg.style ===
+            "moody"
+        ){
+
+          const gradient =
+            ctx.createLinearGradient(
+              0,
+              0,
+              0,
+              canvas.height
+            );
+
+
+          gradient.addColorStop(
+            0,
+            "rgba(0,0,0,.08)"
+          );
+
+
+          gradient.addColorStop(
+            0.5,
+            "rgba(0,0,0,0)"
+          );
+
+
+          gradient.addColorStop(
+            1,
+            "rgba(0,0,0,.18)"
+          );
+
+
+          ctx.fillStyle =
+            gradient;
+
+
+          ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+        }
+
+
+
+        /* CAPTION */
 
         if(cfg.caption){
 
-          let captionTime =
+          const captionTime =
             elapsed;
 
-          let captionDuration =
-            endTime-startTime;
+
+          const captionDuration =
+            endTime -
+            startTime;
+
+
 
           if(
             cfg.captionPosition ===
             "beginning"
           ){
-            if(captionTime <=
-               Math.min(
-                 3,
-                 captionDuration
-               )){
+
+            if(
+              captionTime <=
+              Math.min(
+                3,
+                captionDuration
+              )
+            ){
+
               drawCaption(
                 ctx,
                 cfg.caption,
@@ -2494,9 +4220,10 @@ async function renderVideo(
                 cfg.captionAnimation
               );
             }
-          }
 
-          else if(
+
+
+          }else if(
             cfg.captionPosition ===
             "end"
           ){
@@ -2504,11 +4231,14 @@ async function renderVideo(
             const begin =
               Math.max(
                 0,
-                captionDuration-3
+                captionDuration -
+                3
               );
 
+
             if(
-              captionTime >= begin
+              captionTime >=
+              begin
             ){
 
               drawCaption(
@@ -2516,11 +4246,14 @@ async function renderVideo(
                 cfg.caption,
                 canvas.width,
                 canvas.height,
-                captionTime-begin,
+                captionTime -
+                  begin,
                 3,
                 cfg.captionAnimation
               );
             }
+
+
 
           }else{
 
@@ -2537,16 +4270,26 @@ async function renderVideo(
         }
 
 
+
+        /* FINISH */
+
         if(
-          current >= endTime ||
-          !Number.isFinite(current)
+          current >=
+          endTime ||
+          !Number.isFinite(
+            current
+          )
         ){
 
           try{
+
             renderVideo.pause();
-          }catch(e){}
+
+          }catch(error){}
+
 
           resolve();
+
           return;
         }
 
@@ -2556,6 +4299,7 @@ async function renderVideo(
         );
       }
 
+
       requestAnimationFrame(
         frame
       );
@@ -2563,9 +4307,13 @@ async function renderVideo(
   );
 
 
+
   try{
+
     renderVideo.pause();
-  }catch(e){}
+
+  }catch(error){}
+
 
 
   await new Promise(
@@ -2577,9 +4325,12 @@ async function renderVideo(
   );
 
 
+
   if(
-    recorder.state !== "inactive"
+    recorder.state !==
+    "inactive"
   ){
+
     recorder.stop();
   }
 
@@ -2587,32 +4338,45 @@ async function renderVideo(
   await recorderDone;
 
 
+
   if(musicSource){
 
     try{
+
       musicSource.stop();
-    }catch(e){}
+
+    }catch(error){}
   }
+
 
 
   canvasStream
     .getTracks()
     .forEach(
-      track => track.stop()
+      track =>
+        track.stop()
     );
+
 
   destination.stream
     .getTracks()
     .forEach(
-      track => track.stop()
+      track =>
+        track.stop()
     );
 
 
-  await audioContext.close();
+  try{
+
+    await audioContext.close();
+
+  }catch(error){}
+
 
   URL.revokeObjectURL(
     videoURL
   );
+
 
 
   const finalType =
@@ -2623,32 +4387,45 @@ async function renderVideo(
         : "video/mp4"
     );
 
+
   const blob =
     new Blob(
       chunks,
       {
-        type:finalType
+        type:
+          finalType
       }
     );
 
-  if(blob.size < 1000){
+
+  if(
+    blob.size <
+    1000
+  ){
 
     throw new Error(
       "The edited video was empty."
     );
   }
 
+
   return {
-    blob,
-    type:finalType,
+
+    blob:
+      blob,
+
+    type:
+      finalType,
+
     musicName:
       musicName || ""
   };
 }
 
 
+
 /* =========================================================
-   CREATE
+   CREATE EDITED VIDEO
    ========================================================= */
 
 createBtn.addEventListener(
@@ -2657,13 +4434,19 @@ createBtn.addEventListener(
 
     clearMessage();
 
-    resultCard.classList.add(
-      "hidden"
+    resultCard
+      .classList
+      .add("hidden");
+
+
+    setProgress(
+      0
     );
 
-    setProgress(0);
 
-    if(!selectedVideoFile){
+    if(
+      !selectedVideoFile
+    ){
 
       showError(
         "Please upload a video first."
@@ -2673,50 +4456,66 @@ createBtn.addEventListener(
     }
 
 
+
     const cfg =
       buildConfig();
 
 
     if(
-      musicMode === "upload" &&
+      musicMode ===
+      "upload" &&
       selectedMusicFile &&
-      !isAudioFile(selectedMusicFile)
+      !isAudioFile(
+        selectedMusicFile
+      )
     ){
 
       showError(
-        "The selected music file is not supported. " +
-        "Use MP3, WAV, M4A, AAC or OGG."
+        "Please choose MP3, WAV, M4A, AAC or OGG for music."
       );
 
       return;
     }
 
 
-    createBtn.disabled = true;
-    createBtn.style.opacity = ".6";
+
+    createBtn.disabled =
+      true;
+
+    createBtn.style.opacity =
+      ".6";
 
 
-    let musicBuffer = null;
-    let musicName = "";
-    let musicWarning = "";
+
+    let musicBuffer =
+      null;
+
+    let musicName =
+      "";
+
+    let musicWarning =
+      "";
+
 
 
     try{
 
       setStatus(
-        "Reading your request..."
+        "Understanding your request..."
       );
 
 
       updatePlanPreview();
 
 
+
       /* =================================================
-         MUSIC SELECTION
+         UPLOADED MUSIC
          ================================================= */
 
       if(
-        musicMode === "upload" &&
+        musicMode ===
+        "upload" &&
         selectedMusicFile
       ){
 
@@ -2724,12 +4523,23 @@ createBtn.addEventListener(
           "Loading your music..."
         );
 
+
         const AudioCtx =
           window.AudioContext ||
           window.webkitAudioContext;
 
+
+        if(!AudioCtx){
+
+          throw new Error(
+            "Web Audio is not supported."
+          );
+        }
+
+
         const tempContext =
           new AudioCtx();
+
 
         try{
 
@@ -2737,88 +4547,104 @@ createBtn.addEventListener(
             tempContext.state ===
             "suspended"
           ){
+
             await tempContext.resume();
           }
 
-          musicBuffer =
-            await decodeMusicFile(
-              selectedMusicFile,
-              tempContext
+
+          const arrayBuffer =
+            await selectedMusicFile
+              .arrayBuffer();
+
+
+          if(
+            !arrayBuffer ||
+            arrayBuffer.byteLength <
+            1000
+          ){
+
+            throw new Error(
+              "The selected music file is empty."
             );
+          }
+
+
+          musicBuffer =
+            await tempContext
+              .decodeAudioData(
+                arrayBuffer.slice(0)
+              );
+
 
           musicName =
             selectedMusicFile.name;
 
+
         }finally{
 
           try{
+
             await tempContext.close();
-          }catch(e){}
+
+          }catch(error){}
         }
+
+
+
+      /* =================================================
+         AI MUSIC
+         ================================================= */
 
       }else if(
         cfg.wantsMusic ||
-        musicMode === "ai"
+        musicMode ===
+        "ai"
       ){
 
         const request =
           cfg.musicRequest ||
           "cinematic soundtrack";
 
+
         setStatus(
-          "YARUVA is choosing music..."
+          "YARUVA is searching for music..."
         );
+
 
         try{
 
-          const track =
+          const selected =
             await searchJamendo(
               request
             );
 
-          if(!track){
+
+          if(
+            !selected ||
+            !selected.buffer ||
+            !selected.track
+          ){
 
             throw new Error(
-              "No permitted track found."
+              "No playable music was found."
             );
           }
 
-          const AudioCtx =
-            window.AudioContext ||
-            window.webkitAudioContext;
 
-          const tempContext =
-            new AudioCtx();
+          musicBuffer =
+            selected.buffer;
 
-          try{
 
-            if(
-              tempContext.state ===
-              "suspended"
-            ){
-              await tempContext.resume();
-            }
+          musicName =
+            [
+              selected.track.name,
+              selected.track.artist_name
+            ]
+            .filter(Boolean)
+            .join(
+              " · "
+            );
 
-            musicBuffer =
-              await decodeRemoteMusic(
-                track,
-                tempContext
-              );
-
-            musicName =
-              [
-                track.name,
-                track.artist_name
-              ]
-              .filter(Boolean)
-              .join(" · ");
-
-          }finally{
-
-            try{
-              await tempContext.close();
-            }catch(e){}
-          }
 
         }catch(error){
 
@@ -2827,15 +4653,17 @@ createBtn.addEventListener(
             error
           );
 
-          musicBuffer = null;
+
+          musicBuffer =
+            null;
+
 
           musicWarning =
-            "YARUVA couldn't load automatic music for this request. " +
-            "The video will still be rendered without background music. " +
-            "You can also upload your own permitted music.";
-
+            "YARUVA could not load automatic music for this request. " +
+            "The video will still be rendered without background music.";
         }
       }
+
 
 
       /* =================================================
@@ -2845,7 +4673,7 @@ createBtn.addEventListener(
       if(musicBuffer){
 
         setStatus(
-          "Music loaded: " +
+          "Music selected: " +
           musicName
         );
 
@@ -2857,6 +4685,7 @@ createBtn.addEventListener(
       }
 
 
+
       const result =
         await renderVideo(
           selectedVideoFile,
@@ -2864,6 +4693,7 @@ createBtn.addEventListener(
           musicBuffer,
           musicName
         );
+
 
 
       /* =================================================
@@ -2877,19 +4707,25 @@ createBtn.addEventListener(
         );
       }
 
+
       resultURL =
         URL.createObjectURL(
           result.blob
         );
 
+
       resultVideo.src =
         resultURL;
+
 
       resultVideo.load();
 
 
+
       const extension =
-        result.type.includes("mp4")
+        result.type.includes(
+          "mp4"
+        )
           ? "mp4"
           : "webm";
 
@@ -2897,21 +4733,27 @@ createBtn.addEventListener(
       downloadBtn.href =
         resultURL;
 
+
       downloadBtn.download =
         "yaruva-edited-video." +
         extension;
 
 
-      resultCard.classList.remove(
-        "hidden"
+
+      resultCard
+        .classList
+        .remove("hidden");
+
+
+      setProgress(
+        100
       );
 
-
-      setProgress(100);
 
       setStatus(
         "✓ Finished! Your edited video is ready."
       );
+
 
 
       if(musicWarning){
@@ -2936,24 +4778,34 @@ createBtn.addEventListener(
       }
 
 
+
       resultCard.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
+        behavior:
+          "smooth",
+
+        block:
+          "start"
       });
+
 
 
     }catch(error){
 
       console.error(
-        "YARUVA render error:",
+        "YARUVA V6 error:",
         error
       );
+
 
       setStatus(
         "Something needs your attention."
       );
 
-      setProgress(0);
+
+      setProgress(
+        0
+      );
+
 
       showError(
         error &&
@@ -2962,20 +4814,28 @@ createBtn.addEventListener(
           : "Something went wrong while creating the video."
       );
 
+
     }finally{
 
-      createBtn.disabled = false;
-      createBtn.style.opacity = "1";
+      createBtn.disabled =
+        false;
+
+      createBtn.style.opacity =
+        "1";
     }
   }
 );
+
 
 
 /* =========================================================
    INITIALISE
    ========================================================= */
 
-setMusicMode("upload");
+setMusicMode(
+  "upload"
+);
+
 updatePlanPreview();
 
 </script>
