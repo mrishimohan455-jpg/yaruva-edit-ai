@@ -21,12 +21,18 @@ function json(data, status = 200) {
   });
 }
 
-async function fetchWithTimeout(url, options = {}, ms = 6000) {
-  const controller = new AbortController();
+async function fetchWithTimeout(
+  url,
+  options = {},
+  ms = 6000
+) {
+  const controller =
+    new AbortController();
 
-  const timer = setTimeout(() => {
-    controller.abort();
-  }, ms);
+  const timer = setTimeout(
+    () => controller.abort(),
+    ms
+  );
 
   try {
     return await fetch(url, {
@@ -38,154 +44,259 @@ async function fetchWithTimeout(url, options = {}, ms = 6000) {
   }
 }
 
-async function searchMusic(request) {
-  const url = new URL(request.url);
+/* =========================
+   JAMENDO SEARCH
+========================= */
 
-  const query =
-    (url.searchParams.get("query") || "")
-      .trim()
-      .slice(0, 100);
-
-  const jamendo =
+async function jamendoSearch(params) {
+  const url =
     new URL(
       "https://api.jamendo.com/v3.0/tracks/"
     );
 
-  jamendo.searchParams.set(
+  url.searchParams.set(
     "client_id",
     JAMENDO_CLIENT_ID
   );
 
-  jamendo.searchParams.set(
+  url.searchParams.set(
     "format",
     "json"
   );
 
-  jamendo.searchParams.set(
+  url.searchParams.set(
     "limit",
-    "8"
+    "10"
   );
 
-  jamendo.searchParams.set(
+  url.searchParams.set(
     "audioformat",
     "mp32"
   );
 
-  jamendo.searchParams.set(
+  url.searchParams.set(
     "type",
     "single albumtrack"
   );
 
-  if (query) {
-    jamendo.searchParams.set(
-      "search",
-      query
-    );
-  } else {
-    jamendo.searchParams.set(
-      "featured",
-      "1"
-    );
-  }
-
-  let upstream;
-
-  try {
-    upstream =
-      await fetchWithTimeout(
-        jamendo,
-        {},
-        SEARCH_TIMEOUT
-      );
-  } catch (error) {
-    return json(
-      {
-        ok: false,
-        error:
-          error?.name === "AbortError"
-            ? "Jamendo search timed out."
-            : "Jamendo search failed."
-      },
-      504
-    );
-  }
-
-  if (!upstream.ok) {
-    return json(
-      {
-        ok: false,
-        error:
-          `Jamendo returned HTTP ${upstream.status}.`
-      },
-      502
-    );
-  }
-
-  let data;
-
-  try {
-    data = await upstream.json();
-  } catch {
-    return json(
-      {
-        ok: false,
-        error:
-          "Jamendo returned invalid JSON."
-      },
-      502
-    );
-  }
-
-  const results =
-    Array.isArray(data?.results)
-      ? data.results
-      : [];
-
-  const seen = new Set();
-  const tracks = [];
-
-  for (const track of results) {
-    if (!track?.id) continue;
-    if (!track?.audio) continue;
-
+  for (
+    const [key, value]
+    of Object.entries(params)
+  ) {
     if (
-      track.audiodownload_allowed === false
+      value !== undefined &&
+      value !== null &&
+      value !== ""
     ) {
-      continue;
+      url.searchParams.set(
+        key,
+        value
+      );
     }
+  }
 
-    const id =
-      String(track.id);
+  const response =
+    await fetchWithTimeout(
+      url,
+      {},
+      SEARCH_TIMEOUT
+    );
 
-    if (seen.has(id)) continue;
+  if (!response.ok) {
+    throw new Error(
+      `Jamendo HTTP ${response.status}`
+    );
+  }
 
-    seen.add(id);
+  const data =
+    await response.json();
 
-    tracks.push({
-      id,
-      name:
-        track.name ||
-        "Untitled",
-      artist_name:
-        track.artist_name ||
-        "Unknown artist",
-      duration:
-        Number(track.duration) ||
-        0,
-      license_ccurl:
-        track.license_ccurl ||
-        "",
-      audiodownload_allowed:
-        true
+  return Array.isArray(
+    data?.results
+  )
+    ? data.results
+    : [];
+}
+
+/* =========================
+   BUILD SMART SEARCH
+========================= */
+
+function buildSearches(query) {
+  const text =
+    String(query || "")
+      .toLowerCase();
+
+  const searches = [];
+
+  /*
+   * Jamendo recommends featured
+   * genre selections for discovery.
+   */
+
+  if (
+    /cinematic|movie|film|dramatic|epic|motivat/.test(
+      text
+    )
+  ) {
+    searches.push({
+      featured: "1",
+      tags: "soundtrack"
+    });
+
+    searches.push({
+      featured: "1",
+      fuzzytags: "cinematic"
+    });
+
+    searches.push({
+      featured: "1",
+      tags: "rock"
     });
   }
+
+  if (
+    /calm|relax|peace|meditat|piano/.test(
+      text
+    )
+  ) {
+    searches.push({
+      featured: "1",
+      tags: "relaxation"
+    });
+
+    searches.push({
+      featured: "1",
+      fuzzytags: "piano"
+    });
+  }
+
+  if (
+    /energetic|energy|gym|workout|fast/.test(
+      text
+    )
+  ) {
+    searches.push({
+      featured: "1",
+      tags: "electronic"
+    });
+
+    searches.push({
+      featured: "1",
+      tags: "rock"
+    });
+  }
+
+  if (
+    /romantic|love/.test(
+      text
+    )
+  ) {
+    searches.push({
+      featured: "1",
+      tags: "pop"
+    });
+
+    searches.push({
+      featured: "1",
+      fuzzytags: "romantic"
+    });
+  }
+
+  /*
+   * Always have reliable fallbacks.
+   */
+
+  searches.push({
+    featured: "1",
+    tags: "soundtrack"
+  });
+
+  searches.push({
+    featured: "1",
+    tags: "electronic"
+  });
+
+  searches.push({
+    featured: "1",
+    tags: "rock"
+  });
+
+  return searches;
+}
+
+/* =========================
+   SEARCH MUSIC
+========================= */
+
+async function searchMusic(request) {
+  const url =
+    new URL(request.url);
+
+  const query =
+    (
+      url.searchParams.get(
+        "query"
+      ) || ""
+    )
+      .trim()
+      .slice(0, 100);
+
+  const candidates = [];
+
+  const searches =
+    buildSearches(query);
+
+  /*
+   * Try searches one by one.
+   * Stop as soon as we have usable
+   * tracks.
+   */
+
+  for (
+    const params
+    of searches
+  ) {
+    try {
+      const results =
+        await jamendoSearch(
+          params
+        );
+
+      candidates.push(
+        ...results
+      );
+
+      const usable =
+        getUsableTracks(
+          candidates
+        );
+
+      if (
+        usable.length >= 5
+      ) {
+        break;
+      }
+
+    } catch (error) {
+      console.warn(
+        "Jamendo search failed:",
+        error?.message
+      );
+    }
+  }
+
+  const tracks =
+    getUsableTracks(
+      candidates
+    ).slice(0, 10);
 
   if (!tracks.length) {
     return json(
       {
         ok: false,
         error:
-          "No usable music was found."
+          "Jamendo returned no tracks that YARUVA can use."
       },
       404
     );
@@ -197,15 +308,103 @@ async function searchMusic(request) {
   });
 }
 
-async function streamMusic(request) {
+/* =========================
+   FILTER USABLE TRACKS
+========================= */
+
+function getUsableTracks(
+  results
+) {
+  const seen =
+    new Set();
+
+  const tracks =
+    [];
+
+  for (
+    const track
+    of results
+  ) {
+    if (!track?.id) {
+      continue;
+    }
+
+    /*
+     * Audio must exist.
+     */
+    if (!track?.audio) {
+      continue;
+    }
+
+    /*
+     * Respect Jamendo's permission.
+     */
+    if (
+      track.audiodownload_allowed ===
+      false
+    ) {
+      continue;
+    }
+
+    const id =
+      String(track.id);
+
+    if (
+      seen.has(id)
+    ) {
+      continue;
+    }
+
+    seen.add(id);
+
+    tracks.push({
+      id,
+
+      name:
+        track.name ||
+        "Untitled",
+
+      artist_name:
+        track.artist_name ||
+        "Unknown artist",
+
+      duration:
+        Number(
+          track.duration
+        ) || 0,
+
+      license_ccurl:
+        track.license_ccurl ||
+        "",
+
+      audiodownload_allowed:
+        true
+    });
+  }
+
+  return tracks;
+}
+
+/* =========================
+   STREAM MUSIC
+========================= */
+
+async function streamMusic(
+  request
+) {
   const url =
     new URL(request.url);
 
   const id =
-    (url.searchParams.get("id") || "")
-      .trim();
+    (
+      url.searchParams.get(
+        "id"
+      ) || ""
+    ).trim();
 
-  if (!/^\d+$/.test(id)) {
+  if (
+    !/^\d+$/.test(id)
+  ) {
     return json(
       {
         ok: false,
@@ -252,12 +451,15 @@ async function streamMusic(request) {
         },
         STREAM_TIMEOUT
       );
+
   } catch (error) {
+
     return json(
       {
         ok: false,
         error:
-          error?.name === "AbortError"
+          error?.name ===
+          "AbortError"
             ? "Music stream timed out."
             : "Music stream failed."
       },
@@ -284,7 +486,8 @@ async function streamMusic(request) {
       corsHeaders(
         upstream.headers.get(
           "content-type"
-        ) || "audio/mpeg"
+        ) ||
+        "audio/mpeg"
       )
     );
 
@@ -297,26 +500,44 @@ async function streamMusic(request) {
     upstream.body,
     {
       status: 200,
-      headers: responseHeaders
+      headers:
+        responseHeaders
     }
   );
 }
 
-async function handleGET(request) {
+/* =========================
+   GET
+========================= */
+
+export function GET(
+  request
+) {
+  return handleGET(
+    request
+  );
+}
+
+async function handleGET(
+  request
+) {
   try {
+
     const url =
       new URL(request.url);
 
     const mode =
-      url.searchParams.get("mode");
+      url.searchParams.get(
+        "mode"
+      );
 
     /*
-     * IMPORTANT:
-     * This responds instantly.
-     * It does NOT contact Jamendo.
+     * HEALTH CHECK
      */
 
-    if (mode === "health") {
+    if (
+      mode === "health"
+    ) {
       return json({
         ok: true,
         service:
@@ -326,19 +547,30 @@ async function handleGET(request) {
       });
     }
 
-    if (mode === "stream") {
+    /*
+     * MUSIC STREAM
+     */
+
+    if (
+      mode === "stream"
+    ) {
       return await streamMusic(
         request
       );
     }
+
+    /*
+     * MUSIC SEARCH
+     */
 
     return await searchMusic(
       request
     );
 
   } catch (error) {
+
     console.error(
-      "YARUVA Music API error",
+      "YARUVA Music API error:",
       error
     );
 
@@ -354,16 +586,17 @@ async function handleGET(request) {
   }
 }
 
-export function GET(request) {
-  return handleGET(request);
-}
+/* =========================
+   OPTIONS
+========================= */
 
 export function OPTIONS() {
   return new Response(
     null,
     {
       status: 204,
-      headers: corsHeaders()
+      headers:
+        corsHeaders()
     }
   );
 }
