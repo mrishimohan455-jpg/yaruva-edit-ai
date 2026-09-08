@@ -147,13 +147,6 @@ button{
     cursor:not-allowed;
 }
 
-.secondary{
-    padding:12px 15px;
-    border-radius:10px;
-    background:#222;
-    color:#fff;
-}
-
 .progress-wrap{
     display:none;
     margin-top:16px;
@@ -237,6 +230,7 @@ button{
 }
 
 @media(max-width:600px){
+
     .hero h1{
         font-size:25px;
     }
@@ -249,27 +243,48 @@ button{
 </style>
 </head>
 
+
 <body>
 
 <header class="header">
-    <div class="logo">YARUVA</div>
-    <div class="badge">EDIT AI • LOCAL</div>
+
+    <div class="logo">
+        YARUVA
+    </div>
+
+    <div class="badge">
+        EDIT AI • LOCAL
+    </div>
+
 </header>
+
 
 <main class="container">
 
+
 <section class="hero">
-    <h1>Create. Edit. Transform.</h1>
+
+    <h1>
+        Create. Edit. Transform.
+    </h1>
+
     <p>
         Upload your video and tell YARUVA exactly how you want it edited.
         YARUVA will apply the requested edits and create a new video.
     </p>
+
 </section>
 
-<!-- UPLOAD -->
+
+<!-- =========================
+     UPLOAD
+========================= -->
+
 <section class="card">
 
-    <h2>01 • Upload your video</h2>
+    <h2>
+        01 • Upload your video
+    </h2>
 
     <input
         id="videoInput"
@@ -278,6 +293,7 @@ button{
     >
 
     <div class="video-box">
+
         <video
             id="sourceVideo"
             controls
@@ -285,27 +301,43 @@ button{
             style="display:none;"
         ></video>
 
-        <div id="videoPlaceholder" style="color:#555;font-size:13px;">
+        <div
+            id="videoPlaceholder"
+            style="color:#555;font-size:13px;"
+        >
             Your video preview will appear here
         </div>
+
     </div>
 
 </section>
 
-<!-- AI REQUEST -->
+
+<!-- =========================
+     AI REQUEST
+========================= -->
+
 <section class="card">
 
-    <h2>02 • Tell YARUVA what you want</h2>
+    <h2>
+        02 • Tell YARUVA what you want
+    </h2>
 
     <textarea
         id="aiPrompt"
-        placeholder="Example: Make this a cinematic motivational Reel. Make the colours darker, increase contrast and add the caption Never Give Up."
+        placeholder='Example: Make this a cinematic motivational Reel. Make the colours darker, increase contrast and add caption "Never Give Up".'
     ></textarea>
 
     <div class="example">
-        Try: “Make it cinematic” • “Make it brighter” •
-        “Make a motivational Reel” • “Add caption Never Give Up”
+
+        Try:
+        “Make it cinematic” •
+        “Make it brighter” •
+        “Make a motivational Reel” •
+        “Add caption Never Give Up”
+
     </div>
+
 
     <button
         id="generateBtn"
@@ -316,15 +348,31 @@ button{
         ✦ Create Edited Video
     </button>
 
-    <div id="plan" class="plan"></div>
 
-    <div id="progressWrap" class="progress-wrap">
+    <div
+        id="plan"
+        class="plan"
+    ></div>
+
+
+    <div
+        id="progressWrap"
+        class="progress-wrap"
+    >
 
         <div class="progress-bar">
-            <div id="progress" class="progress"></div>
+
+            <div
+                id="progress"
+                class="progress"
+            ></div>
+
         </div>
 
-        <div id="status" class="status">
+        <div
+            id="status"
+            class="status"
+        >
             Preparing editor...
         </div>
 
@@ -332,59 +380,129 @@ button{
 
 </section>
 
-<!-- DETECTED SETTINGS -->
-<section id="settingsCard" class="card" style="display:none;">
 
-    <h2>YARUVA Edit Settings</h2>
+<!-- =========================
+     SETTINGS
+========================= -->
+
+<section
+    id="settingsCard"
+    class="card"
+    style="display:none;"
+>
+
+    <h2>
+        YARUVA Edit Settings
+    </h2>
 
     <div class="settings">
 
         <div class="setting">
-            <label>STYLE</label>
-            <strong id="styleValue">Original</strong>
+
+            <label>
+                STYLE
+            </label>
+
+            <strong id="styleValue">
+                Original
+            </strong>
+
         </div>
 
-        <div class="setting">
-            <label>FORMAT</label>
-            <strong id="formatValue">Original</strong>
-        </div>
 
         <div class="setting">
-            <label>BRIGHTNESS</label>
-            <strong id="brightnessValue">100%</strong>
+
+            <label>
+                FORMAT
+            </label>
+
+            <strong id="formatValue">
+                Original
+            </strong>
+
         </div>
 
-        <div class="setting">
-            <label>CONTRAST</label>
-            <strong id="contrastValue">100%</strong>
-        </div>
 
         <div class="setting">
-            <label>SATURATION</label>
-            <strong id="saturationValue">100%</strong>
+
+            <label>
+                BRIGHTNESS
+            </label>
+
+            <strong id="brightnessValue">
+                100%
+            </strong>
+
         </div>
 
+
         <div class="setting">
-            <label>CAPTION</label>
-            <strong id="captionValue">None</strong>
+
+            <label>
+                CONTRAST
+            </label>
+
+            <strong id="contrastValue">
+                100%
+            </strong>
+
+        </div>
+
+
+        <div class="setting">
+
+            <label>
+                SATURATION
+            </label>
+
+            <strong id="saturationValue">
+                100%
+            </strong>
+
+        </div>
+
+
+        <div class="setting">
+
+            <label>
+                CAPTION
+            </label>
+
+            <strong id="captionValue">
+                None
+            </strong>
+
         </div>
 
     </div>
 
 </section>
 
-<!-- RESULT -->
-<section id="resultCard" class="card result">
 
-    <h2>03 • Your edited video</h2>
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+    id="resultCard"
+    class="card result"
+>
+
+    <h2>
+        03 • Your edited video
+    </h2>
+
 
     <div class="video-box">
+
         <video
             id="resultVideo"
             controls
             playsinline
         ></video>
+
     </div>
+
 
     <a
         id="downloadBtn"
@@ -396,74 +514,129 @@ button{
 
 </section>
 
+
 <section class="card">
 
     <div class="tip">
-        <strong style="color:#fff;">YARUVA tip:</strong><br><br>
-        The current editor processes the video directly in your browser.
-        Your video does not need to be uploaded to an external AI service
-        for this MVP.
+
+        <strong style="color:#fff;">
+            YARUVA tip:
+        </strong>
+
+        <br><br>
+
+        Your video is processed directly in the browser
+        for this free MVP.
+
     </div>
 
 </section>
+
 
 </main>
 
 
 <script>
 
-const videoInput = document.getElementById("videoInput");
-const sourceVideo = document.getElementById("sourceVideo");
-const videoPlaceholder = document.getElementById("videoPlaceholder");
-const generateBtn = document.getElementById("generateBtn");
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+const videoInput =
+    document.getElementById("videoInput");
+
+const sourceVideo =
+    document.getElementById("sourceVideo");
+
+const videoPlaceholder =
+    document.getElementById("videoPlaceholder");
+
+const generateBtn =
+    document.getElementById("generateBtn");
 
 let videoURL = null;
+
 let sourceFile = null;
 
 
-/* =========================
+/* =====================================================
    VIDEO UPLOAD
-========================= */
+===================================================== */
 
-videoInput.addEventListener("change", function(){
+videoInput.addEventListener(
+    "change",
+    function(){
 
-    const file = this.files[0];
+        const file =
+            this.files[0];
 
-    if(!file){
-        return;
+        if(!file){
+
+            return;
+
+        }
+
+
+        sourceFile =
+            file;
+
+
+        if(videoURL){
+
+            URL.revokeObjectURL(
+                videoURL
+            );
+
+        }
+
+
+        videoURL =
+            URL.createObjectURL(
+                file
+            );
+
+
+        sourceVideo.src =
+            videoURL;
+
+
+        sourceVideo.style.display =
+            "block";
+
+
+        videoPlaceholder.style.display =
+            "none";
+
+
+        generateBtn.disabled =
+            false;
+
     }
-
-    sourceFile = file;
-
-    if(videoURL){
-        URL.revokeObjectURL(videoURL);
-    }
-
-    videoURL = URL.createObjectURL(file);
-
-    sourceVideo.src = videoURL;
-    sourceVideo.style.display = "block";
-    videoPlaceholder.style.display = "none";
-
-    generateBtn.disabled = false;
-
-});
+);
 
 
-/* =========================
-   LOCAL AI INTERPRETER
-========================= */
+/* =====================================================
+   YARUVA LOCAL AI INTERPRETER
+===================================================== */
 
 function interpretRequest(text){
 
-    text = text.toLowerCase();
+    const originalText =
+        text.trim();
+
+    const lower =
+        originalText.toLowerCase();
+
 
     const edit = {
 
         style:"Original",
 
         brightness:100,
+
         contrast:100,
+
         saturation:100,
 
         aspect:"original",
@@ -473,133 +646,291 @@ function interpretRequest(text){
     };
 
 
-    /* CINEMATIC */
+    /* ---------------------------------
+       CINEMATIC
+    --------------------------------- */
 
     if(
-        text.includes("cinematic") ||
-        text.includes("movie") ||
-        text.includes("film")
+        lower.includes("cinematic") ||
+        lower.includes("movie") ||
+        lower.includes("film")
     ){
 
-        edit.style = "Cinematic";
+        edit.style =
+            "Cinematic";
 
-        edit.brightness = 88;
-        edit.contrast = 125;
-        edit.saturation = 88;
+        edit.brightness =
+            88;
+
+        edit.contrast =
+            125;
+
+        edit.saturation =
+            88;
 
     }
 
 
-    /* MOTIVATIONAL */
+    /* ---------------------------------
+       MOTIVATIONAL
+    --------------------------------- */
 
     if(
-        text.includes("motivational") ||
-        text.includes("motivation")
+        lower.includes("motivational") ||
+        lower.includes("motivation")
     ){
 
-        edit.style = "Motivational";
+        edit.style =
+            "Motivational";
 
-        edit.brightness = 92;
-        edit.contrast = 120;
-        edit.saturation = 105;
+        edit.brightness =
+            92;
+
+        edit.contrast =
+            120;
+
+        edit.saturation =
+            105;
 
     }
 
 
-    /* BRIGHT */
+    /* ---------------------------------
+       BRIGHT
+    --------------------------------- */
 
     if(
-        text.includes("bright") ||
-        text.includes("brighter") ||
-        text.includes("light")
+        lower.includes("bright") ||
+        lower.includes("brighter") ||
+        lower.includes("light")
     ){
 
-        edit.brightness = 115;
+        edit.brightness =
+            115;
 
     }
 
 
-    /* DARK */
+    /* ---------------------------------
+       DARK
+    --------------------------------- */
 
     if(
-        text.includes("dark") ||
-        text.includes("darker")
+        lower.includes("dark") ||
+        lower.includes("darker")
     ){
 
-        edit.brightness = 82;
+        edit.brightness =
+            82;
 
     }
 
 
-    /* CONTRAST */
+    /* ---------------------------------
+       CONTRAST
+    --------------------------------- */
 
     if(
-        text.includes("contrast") ||
-        text.includes("dramatic")
+        lower.includes("contrast") ||
+        lower.includes("dramatic")
     ){
 
-        edit.contrast = 125;
+        edit.contrast =
+            125;
 
     }
 
 
-    /* SATURATION */
+    /* ---------------------------------
+       COLOUR
+    --------------------------------- */
 
     if(
-        text.includes("colour") ||
-        text.includes("color") ||
-        text.includes("vibrant")
+        lower.includes("colour") ||
+        lower.includes("color") ||
+        lower.includes("vibrant")
     ){
 
-        edit.saturation = 120;
+        edit.saturation =
+            120;
 
     }
 
 
+    /* ---------------------------------
+       BLACK & WHITE
+    --------------------------------- */
+
     if(
-        text.includes("desaturate") ||
-        text.includes("black and white") ||
-        text.includes("black & white")
+        lower.includes("black and white") ||
+        lower.includes("black & white") ||
+        lower.includes("grayscale") ||
+        lower.includes("greyscale")
     ){
 
-        edit.saturation = 0;
+        edit.saturation =
+            0;
 
     }
 
 
-    /* REEL FORMAT */
+    /* ---------------------------------
+       REEL FORMAT
+    --------------------------------- */
 
     if(
-        text.includes("reel") ||
-        text.includes("instagram") ||
-        text.includes("9:16") ||
-        text.includes("vertical")
+        lower.includes("reel") ||
+        lower.includes("instagram") ||
+        lower.includes("9:16") ||
+        lower.includes("vertical")
     ){
 
-        edit.aspect = "9:16";
+        edit.aspect =
+            "9:16";
 
     }
 
 
-    /* CAPTION */
+    /* =================================================
+       CAPTION DETECTION
+    ================================================= */
 
-    const captionMatch =
-        text.match(/caption\s+["']([^"']+)["']/i);
 
-    if(captionMatch){
+    let caption =
+        "";
 
-        edit.caption = captionMatch[1];
 
-    }else{
+    /*
+       METHOD 1
 
-        const simpleCaption =
-            text.match(/caption\s+([a-z0-9 !?,.'-]{2,60})(?:\.|$)/i);
+       add caption "Never Give Up"
+    */
 
-        if(simpleCaption){
+    let match =
+        originalText.match(
+            /(?:add\s+(?:my\s+)?caption|caption)\s*[:\-]?\s*["“”']([^"“”']+)["“”']/i
+        );
 
-            edit.caption = simpleCaption[1].trim();
+
+    if(match){
+
+        caption =
+            match[1].trim();
+
+    }
+
+
+    /*
+       METHOD 2
+
+       caption: Never Give Up
+    */
+
+    if(!caption){
+
+        match =
+            originalText.match(
+                /(?:add\s+(?:my\s+)?caption|caption)\s*[:\-]\s*(.+?)(?:\.|$)/i
+            );
+
+
+        if(match){
+
+            caption =
+                match[1].trim();
 
         }
+
+    }
+
+
+    /*
+       METHOD 3
+
+       Add caption Never Give Up
+    */
+
+    if(!caption){
+
+        match =
+            originalText.match(
+                /add\s+(?:my\s+)?caption\s+(.+?)(?:\.|$)/i
+            );
+
+
+        if(match){
+
+            caption =
+                match[1].trim();
+
+        }
+
+    }
+
+
+    /*
+       METHOD 4
+
+       Put this caption: Never Give Up
+    */
+
+    if(!caption){
+
+        match =
+            originalText.match(
+                /(?:put|write|show|display)\s+(?:this\s+)?(?:caption|text)\s*[:\-]?\s*["“”']?(.+?)["“”']?(?:\.|$)/i
+            );
+
+
+        if(match){
+
+            caption =
+                match[1].trim();
+
+        }
+
+    }
+
+
+    /*
+       METHOD 5
+
+       Add text "Never Give Up"
+    */
+
+    if(!caption){
+
+        match =
+            originalText.match(
+                /add\s+(?:the\s+)?text\s*[:\-]?\s*["“”']([^"“”']+)["“”']/i
+            );
+
+
+        if(match){
+
+            caption =
+                match[1].trim();
+
+        }
+
+    }
+
+
+    /*
+       CLEAN CAPTION
+    */
+
+    if(caption){
+
+        caption =
+            caption
+                .replace(/^["“”']+/, "")
+                .replace(/["“”']+$/, "")
+                .trim();
+
+
+        edit.caption =
+            caption;
 
     }
 
@@ -609,163 +940,262 @@ function interpretRequest(text){
 }
 
 
-/* =========================
-   UPDATE UI
-========================= */
+/* =====================================================
+   SHOW SETTINGS
+===================================================== */
 
 function showSettings(edit){
 
-    document.getElementById("settingsCard").style.display = "block";
+    document.getElementById(
+        "settingsCard"
+    ).style.display =
+        "block";
 
-    document.getElementById("styleValue").textContent =
+
+    document.getElementById(
+        "styleValue"
+    ).textContent =
         edit.style;
 
-    document.getElementById("formatValue").textContent =
-        edit.aspect === "9:16" ? "9:16 Reel" : "Original";
 
-    document.getElementById("brightnessValue").textContent =
+    document.getElementById(
+        "formatValue"
+    ).textContent =
+        edit.aspect === "9:16"
+            ? "9:16 Reel"
+            : "Original";
+
+
+    document.getElementById(
+        "brightnessValue"
+    ).textContent =
         edit.brightness + "%";
 
-    document.getElementById("contrastValue").textContent =
+
+    document.getElementById(
+        "contrastValue"
+    ).textContent =
         edit.contrast + "%";
 
-    document.getElementById("saturationValue").textContent =
+
+    document.getElementById(
+        "saturationValue"
+    ).textContent =
         edit.saturation + "%";
 
-    document.getElementById("captionValue").textContent =
-        edit.caption || "None";
+
+    document.getElementById(
+        "captionValue"
+    ).textContent =
+        edit.caption ||
+        "None";
 
 }
 
 
-/* =========================
+/* =====================================================
    START EDITING
-========================= */
+===================================================== */
 
 async function startEditing(){
 
     if(!sourceFile){
-        alert("Please upload a video first.");
+
+        alert(
+            "Please upload a video first."
+        );
+
         return;
+
     }
+
 
     const prompt =
-        document.getElementById("aiPrompt").value.trim();
+        document
+            .getElementById("aiPrompt")
+            .value
+            .trim();
+
 
     if(!prompt){
-        alert("Tell YARUVA how you want your video edited.");
+
+        alert(
+            "Tell YARUVA how you want your video edited."
+        );
+
         return;
+
     }
 
 
-    const edit = interpretRequest(prompt);
+    const edit =
+        interpretRequest(
+            prompt
+        );
 
-    showSettings(edit);
+
+    showSettings(
+        edit
+    );
 
 
-    const plan = document.getElementById("plan");
+    const plan =
+        document.getElementById(
+            "plan"
+        );
 
-    plan.style.display = "block";
+
+    plan.style.display =
+        "block";
+
 
     plan.innerHTML =
         "✦ YARUVA understood your request.<br><br>" +
-        "Applying <strong>" + edit.style +
+
+        "Applying <strong>" +
+        edit.style +
         "</strong> styling, " +
-        edit.brightness + "% brightness, " +
-        edit.contrast + "% contrast, " +
-        edit.saturation + "% saturation" +
-        (edit.caption
-            ? ", and caption <strong>\"" +
-              edit.caption +
-              "\"</strong>."
-            : "."
+
+        edit.brightness +
+        "% brightness, " +
+
+        edit.contrast +
+        "% contrast, " +
+
+        edit.saturation +
+        "% saturation" +
+
+        (
+            edit.caption
+            ?
+            ', and caption <strong>"' +
+            edit.caption +
+            '"</strong>.'
+            :
+            "."
         );
 
 
     const progressWrap =
-        document.getElementById("progressWrap");
+        document.getElementById(
+            "progressWrap"
+        );
 
-    progressWrap.style.display = "block";
 
-    generateBtn.disabled = true;
+    progressWrap.style.display =
+        "block";
+
+
+    generateBtn.disabled =
+        true;
 
 
     try{
 
-        await renderVideo(edit);
+        await renderVideo(
+            edit
+        );
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            error
+        );
 
-        document.getElementById("status").textContent =
-            "Something went wrong while rendering.";
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "Rendering failed.";
+
 
         alert(
-            "YARUVA could not render this video in this browser. Try a shorter/smaller video."
+            "YARUVA could not render this video. Try a shorter video."
         );
 
     }
 
 
-    generateBtn.disabled = false;
+    generateBtn.disabled =
+        false;
 
 }
 
 
-/* =========================
-   RENDER ENGINE
-========================= */
+/* =====================================================
+   VIDEO RENDER ENGINE
+===================================================== */
 
 async function renderVideo(edit){
 
-    const video = sourceVideo;
+    const video =
+        sourceVideo;
 
-
-    /* Wait for metadata */
 
     if(video.readyState < 2){
 
-        await new Promise(resolve => {
+        await new Promise(
+            resolve => {
 
-            video.addEventListener(
-                "loadedmetadata",
-                resolve,
-                {once:true}
-            );
+                video.addEventListener(
+                    "loadedmetadata",
+                    resolve,
+                    {
+                        once:true
+                    }
+                );
 
-        });
+            }
+        );
 
     }
 
 
-    const originalWidth = video.videoWidth;
-    const originalHeight = video.videoHeight;
+    const originalWidth =
+        video.videoWidth;
+
+    const originalHeight =
+        video.videoHeight;
 
 
-    let canvasWidth = originalWidth;
-    let canvasHeight = originalHeight;
+    let canvasWidth =
+        originalWidth;
+
+    let canvasHeight =
+        originalHeight;
 
 
-    /* 9:16 */
+    /* ---------------------------------
+       9:16 REEL
+    --------------------------------- */
 
     if(edit.aspect === "9:16"){
 
-        canvasWidth = 720;
-        canvasHeight = 1280;
+        canvasWidth =
+            720;
+
+        canvasHeight =
+            1280;
 
     }else{
 
-        const maxWidth = 1280;
+        const maxWidth =
+            1280;
+
 
         if(originalWidth > maxWidth){
 
-            canvasWidth = maxWidth;
+            canvasWidth =
+                maxWidth;
+
 
             canvasHeight =
                 Math.round(
                     originalHeight *
-                    (maxWidth / originalWidth)
+                    (
+                        maxWidth /
+                        originalWidth
+                    )
                 );
 
         }
@@ -774,19 +1204,23 @@ async function renderVideo(edit){
 
 
     const canvas =
-        document.createElement("canvas");
+        document.createElement(
+            "canvas"
+        );
 
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+
+    canvas.width =
+        canvasWidth;
+
+    canvas.height =
+        canvasHeight;
 
 
     const ctx =
-        canvas.getContext("2d");
+        canvas.getContext(
+            "2d"
+        );
 
-
-    /*
-      Browser support check
-    */
 
     if(!canvas.captureStream){
 
@@ -798,10 +1232,13 @@ async function renderVideo(edit){
 
 
     const stream =
-        canvas.captureStream(30);
+        canvas.captureStream(
+            30
+        );
 
 
-    let mimeType = "";
+    let mimeType =
+        "";
 
 
     if(
@@ -813,7 +1250,9 @@ async function renderVideo(edit){
         mimeType =
             "video/webm;codecs=vp9";
 
-    }else if(
+    }
+
+    else if(
         MediaRecorder.isTypeSupported(
             "video/webm;codecs=vp8"
         )
@@ -822,7 +1261,9 @@ async function renderVideo(edit){
         mimeType =
             "video/webm;codecs=vp8";
 
-    }else if(
+    }
+
+    else if(
         MediaRecorder.isTypeSupported(
             "video/webm"
         )
@@ -831,10 +1272,12 @@ async function renderVideo(edit){
         mimeType =
             "video/webm";
 
-    }else{
+    }
+
+    else{
 
         throw new Error(
-            "No supported video recorder."
+            "Video recording is not supported."
         );
 
     }
@@ -849,48 +1292,65 @@ async function renderVideo(edit){
         );
 
 
-    const chunks = [];
+    const chunks =
+        [];
 
 
-    recorder.ondataavailable = function(event){
+    recorder.ondataavailable =
+        function(event){
 
-        if(event.data && event.data.size > 0){
+            if(
+                event.data &&
+                event.data.size > 0
+            ){
 
-            chunks.push(event.data);
+                chunks.push(
+                    event.data
+                );
 
-        }
+            }
 
-    };
+        };
 
 
     const recordingFinished =
-        new Promise(resolve => {
+        new Promise(
+            resolve => {
 
-            recorder.onstop = function(){
+                recorder.onstop =
+                    function(){
 
-                const blob =
-                    new Blob(
-                        chunks,
-                        {
-                            type:mimeType
-                        }
-                    );
-
-                resolve(blob);
-
-            };
-
-        });
+                        const blob =
+                            new Blob(
+                                chunks,
+                                {
+                                    type:mimeType
+                                }
+                            );
 
 
-    /*
-       Start recording
-    */
+                        resolve(
+                            blob
+                        );
 
-    recorder.start(250);
+                    };
+
+            }
+        );
 
 
-    video.currentTime = 0;
+    /* ---------------------------------
+       START RECORDING
+    --------------------------------- */
+
+    recorder.start(
+        250
+    );
+
+
+    video.currentTime =
+        0;
+
 
     await video.play();
 
@@ -899,9 +1359,9 @@ async function renderVideo(edit){
         video.duration;
 
 
-    /*
-       Rendering loop
-    */
+    /* ---------------------------------
+       DRAW FRAMES
+    --------------------------------- */
 
     function drawFrame(){
 
@@ -916,57 +1376,94 @@ async function renderVideo(edit){
 
 
         /*
-          Cinematic colour processing
+           Colour effects
         */
 
         ctx.filter =
-            "brightness(" + edit.brightness + "%) " +
-            "contrast(" + edit.contrast + "%) " +
-            "saturate(" + edit.saturation + "%)";
+            "brightness(" +
+            edit.brightness +
+            "%) " +
 
+            "contrast(" +
+            edit.contrast +
+            "%) " +
+
+            "saturate(" +
+            edit.saturation +
+            "%)";
+
+
+        /* ---------------------------------
+           9:16 CROP
+        --------------------------------- */
 
         if(edit.aspect === "9:16"){
 
-            /*
-              Cover crop for Reel format
-            */
-
             const sourceRatio =
-                originalWidth / originalHeight;
+                originalWidth /
+                originalHeight;
+
 
             const targetRatio =
-                canvasWidth / canvasHeight;
+                canvasWidth /
+                canvasHeight;
 
 
             let drawWidth;
+
             let drawHeight;
+
             let offsetX;
+
             let offsetY;
 
 
-            if(sourceRatio > targetRatio){
-
-                drawHeight = canvasHeight;
-
-                drawWidth =
-                    drawHeight * sourceRatio;
-
-                offsetX =
-                    (canvasWidth - drawWidth) / 2;
-
-                offsetY = 0;
-
-            }else{
-
-                drawWidth = canvasWidth;
+            if(
+                sourceRatio >
+                targetRatio
+            ){
 
                 drawHeight =
-                    drawWidth / sourceRatio;
+                    canvasHeight;
 
-                offsetX = 0;
+
+                drawWidth =
+                    drawHeight *
+                    sourceRatio;
+
+
+                offsetX =
+                    (
+                        canvasWidth -
+                        drawWidth
+                    ) / 2;
+
 
                 offsetY =
-                    (canvasHeight - drawHeight) / 2;
+                    0;
+
+            }
+
+            else{
+
+                drawWidth =
+                    canvasWidth;
+
+
+                drawHeight =
+                    drawWidth /
+                    sourceRatio;
+
+
+                offsetX =
+                    0;
+
+
+                offsetY =
+                    (
+                        canvasHeight -
+                        drawHeight
+                    ) / 2;
 
             }
 
@@ -979,7 +1476,9 @@ async function renderVideo(edit){
                 drawHeight
             );
 
-        }else{
+        }
+
+        else{
 
             ctx.drawImage(
                 video,
@@ -992,12 +1491,13 @@ async function renderVideo(edit){
         }
 
 
-        ctx.filter = "none";
+        ctx.filter =
+            "none";
 
 
-        /*
-          Caption
-        */
+        /* ---------------------------------
+           CAPTION
+        --------------------------------- */
 
         if(edit.caption){
 
@@ -1011,12 +1511,18 @@ async function renderVideo(edit){
         }
 
 
+        /* ---------------------------------
+           PROGRESS
+        --------------------------------- */
+
         const percent =
             Math.min(
                 100,
                 Math.round(
-                    (video.currentTime /
-                    duration) * 100
+                    (
+                        video.currentTime /
+                        duration
+                    ) * 100
                 )
             );
 
@@ -1035,7 +1541,9 @@ async function renderVideo(edit){
             "%";
 
 
-        requestAnimationFrame(drawFrame);
+        requestAnimationFrame(
+            drawFrame
+        );
 
     }
 
@@ -1043,28 +1551,31 @@ async function renderVideo(edit){
     drawFrame();
 
 
-    /*
-      Stop recorder after video ends
-    */
+    /* ---------------------------------
+       WAIT FOR VIDEO END
+    --------------------------------- */
 
-    await new Promise(resolve => {
+    await new Promise(
+        resolve => {
 
-        video.addEventListener(
-            "ended",
-            resolve,
-            {once:true}
-        );
+            video.addEventListener(
+                "ended",
+                resolve,
+                {
+                    once:true
+                }
+            );
 
-    });
+        }
+    );
 
-
-    /*
-      Give final frames time to encode
-    */
 
     await new Promise(
         resolve =>
-            setTimeout(resolve,500)
+            setTimeout(
+                resolve,
+                700
+            )
     );
 
 
@@ -1075,12 +1586,14 @@ async function renderVideo(edit){
         await recordingFinished;
 
 
-    /*
-      Show result
-    */
+    /* ---------------------------------
+       OUTPUT VIDEO
+    --------------------------------- */
 
     const outputURL =
-        URL.createObjectURL(outputBlob);
+        URL.createObjectURL(
+            outputBlob
+        );
 
 
     const resultVideo =
@@ -1125,23 +1638,18 @@ async function renderVideo(edit){
         "✓ Video editing complete";
 
 
-    /*
-      Scroll to result
-    */
-
     document.getElementById(
         "resultCard"
     ).scrollIntoView({
         behavior:"smooth"
     });
 
-
 }
 
 
-/* =========================
+/* =====================================================
    CAPTION RENDERING
-========================= */
+===================================================== */
 
 function drawCaption(
     ctx,
@@ -1152,8 +1660,10 @@ function drawCaption(
 
     const fontSize =
         Math.max(
-            28,
-            Math.round(width * 0.055)
+            30,
+            Math.round(
+                width * 0.055
+            )
         );
 
 
@@ -1166,19 +1676,23 @@ function drawCaption(
     ctx.textAlign =
         "center";
 
+
     ctx.textBaseline =
         "middle";
 
 
-    /*
-      Caption background
-    */
+    const paddingX =
+        28;
 
-    const paddingX = 22;
-    const paddingY = 14;
+
+    const paddingY =
+        16;
+
 
     const metrics =
-        ctx.measureText(text);
+        ctx.measureText(
+            text
+        );
 
 
     const boxWidth =
@@ -1192,16 +1706,22 @@ function drawCaption(
 
 
     const x =
-        width / 2 -
-        boxWidth / 2;
+        (
+            width -
+            boxWidth
+        ) / 2;
 
 
     const y =
-        height * 0.78;
+        height * 0.76;
 
+
+    /* ---------------------------------
+       Caption background
+    --------------------------------- */
 
     ctx.fillStyle =
-        "rgba(0,0,0,0.55)";
+        "rgba(0,0,0,0.65)";
 
 
     roundRect(
@@ -1210,16 +1730,16 @@ function drawCaption(
         y,
         boxWidth,
         boxHeight,
-        14
+        16
     );
 
 
     ctx.fill();
 
 
-    /*
-      Caption text
-    */
+    /* ---------------------------------
+       Caption text
+    --------------------------------- */
 
     ctx.fillStyle =
         "#ffffff";
@@ -1228,15 +1748,16 @@ function drawCaption(
     ctx.fillText(
         text,
         width / 2,
-        y + boxHeight / 2
+        y +
+        boxHeight / 2
     );
 
 }
 
 
-/* =========================
+/* =====================================================
    ROUNDED RECTANGLE
-========================= */
+===================================================== */
 
 function roundRect(
     ctx,
@@ -1249,15 +1770,20 @@ function roundRect(
 
     ctx.beginPath();
 
+
     ctx.moveTo(
         x + radius,
         y
     );
 
+
     ctx.lineTo(
-        x + width - radius,
+        x +
+        width -
+        radius,
         y
     );
+
 
     ctx.quadraticCurveTo(
         x + width,
@@ -1266,10 +1792,14 @@ function roundRect(
         y + radius
     );
 
+
     ctx.lineTo(
         x + width,
-        y + height - radius
+        y +
+        height -
+        radius
     );
+
 
     ctx.quadraticCurveTo(
         x + width,
@@ -1278,10 +1808,12 @@ function roundRect(
         y + height
     );
 
+
     ctx.lineTo(
         x + radius,
         y + height
     );
+
 
     ctx.quadraticCurveTo(
         x,
@@ -1290,10 +1822,12 @@ function roundRect(
         y + height - radius
     );
 
+
     ctx.lineTo(
         x,
         y + radius
     );
+
 
     ctx.quadraticCurveTo(
         x,
@@ -1301,6 +1835,7 @@ function roundRect(
         x + radius,
         y
     );
+
 
     ctx.closePath();
 
