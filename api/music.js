@@ -474,7 +474,7 @@ async function streamMusic(request) {
 
   jamendo.searchParams.set(
     "action",
-    "stream"
+    "download"
   );
 
   let upstream;
