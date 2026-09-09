@@ -1516,77 +1516,217 @@ async function searchYaruvaMusic(request){
 
   }
 
+  const AudioContextClass =
+    window.AudioContext ||
+    window.webkitAudioContext;
+
+  if(!AudioContextClass){
+
+    throw new Error(
+      "Your browser does not support automatic music."
+    );
+
+  }
+
   const audioContext =
-    new (
-      window.AudioContext ||
-      window.webkitAudioContext
-    )();
+    new AudioContextClass();
+
+
+  /* ---------------------------------------------
+     TIMEOUT HELPER
+     --------------------------------------------- */
+
+  const withTimeout = (
+    promise,
+    milliseconds,
+    message
+  ) => {
+
+    let timer;
+
+    const timeout =
+      new Promise((_, reject) => {
+
+        timer = setTimeout(() => {
+
+          reject(
+            new Error(message)
+          );
+
+        }, milliseconds);
+
+      });
+
+    return Promise.race([
+      promise,
+      timeout
+    ]).finally(() => {
+
+      clearTimeout(timer);
+
+    });
+
+  };
+
 
   try{
 
+    /* -------------------------------------------
+       START AUDIO SYSTEM
+       ------------------------------------------- */
+
     if(
-      audioContext.state === "suspended"
+      audioContext.state ===
+      "suspended"
     ){
 
-      await audioContext.resume();
+      await withTimeout(
+        audioContext.resume(),
+        5000,
+        "Audio system took too long to start."
+      );
 
     }
 
-    for(const query of queries){
+
+    /* -------------------------------------------
+       USE FIRST BEST MUSIC SEARCH
+       ------------------------------------------- */
+
+    const query =
+      queries[0];
+
+
+    setProgress(
+      20,
+      `YARUVA is searching for ${query}...`
+    );
+
+
+    /* -------------------------------------------
+       SEARCH JAMENDO
+       ------------------------------------------- */
+
+    const tracks =
+      await withTimeout(
+        jamendoSearch(query),
+        8000,
+        "Music search timed out."
+      );
+
+
+    if(
+      !Array.isArray(tracks) ||
+      tracks.length === 0
+    ){
+
+      throw new Error(
+        "No suitable automatic music was found."
+      );
+
+    }
+
+
+    /* -------------------------------------------
+       TAKE ONLY FIRST 3 PLAYABLE TRACKS
+       ------------------------------------------- */
+
+    const candidates =
+      tracks
+        .filter(track =>
+          track &&
+          track.id
+        )
+        .slice(0,3);
+
+
+    if(
+      candidates.length === 0
+    ){
+
+      throw new Error(
+        "No playable music was found."
+      );
+
+    }
+
+
+    /* -------------------------------------------
+       TRY MUSIC TRACKS
+       ------------------------------------------- */
+
+    for(
+      let index = 0;
+      index < candidates.length;
+      index++
+    ){
+
+      const track =
+        candidates[index];
+
 
       try{
 
         setProgress(
-          20,
-          `YARUVA is searching for ${query}...`
+          28,
+          `Loading ${track.name || "music"}...`
         );
 
-        const tracks =
-          await jamendoSearch(query);
 
-        if(!tracks.length){
-
-          continue;
-
-        }
-
-        for(const track of tracks){
-
-          try{
-
-            setProgress(
-              28,
-              `Loading ${track.name || "music"}...`
-            );
-
-            const buffer =
-              await tryDecodeMusicTrack(
-                track,
-                audioContext
-              );
-
-            return {
+        const buffer =
+          await withTimeout(
+            tryDecodeMusicTrack(
               track,
-              buffer,
               audioContext
-            };
+            ),
+            12000,
+            "Music loading timed out."
+          );
 
-          }catch(error){
 
-            console.warn(
-              "Music candidate failed:",
-              error
-            );
+        /* ---------------------------------------
+           CHECK AUDIO BUFFER
+           --------------------------------------- */
 
-          }
+        if(
+          !buffer ||
+          !buffer.duration ||
+          !buffer.length
+        ){
+
+          throw new Error(
+            "Music audio could not be decoded."
+          );
 
         }
+
+
+        /* ---------------------------------------
+           SUCCESS
+           --------------------------------------- */
+
+        setProgress(
+          34,
+          `Selected ${track.name || "background music"}`
+        );
+
+
+        return {
+
+          track: track,
+
+          buffer: buffer,
+
+          audioContext: audioContext
+
+        };
+
 
       }catch(error){
 
         console.warn(
-          "Music search failed:",
-          query,
+          "Automatic music candidate failed:",
+          track.name,
           error
         );
 
@@ -1594,23 +1734,37 @@ async function searchYaruvaMusic(request){
 
     }
 
+
+    /* -------------------------------------------
+       NO TRACK COULD BE PLAYED
+       ------------------------------------------- */
+
+    throw new Error(
+      "YARUVA could not load a playable automatic music track."
+    );
+
+
   }catch(error){
 
     try{
+
       await audioContext.close();
+
     }catch(_){}
 
-    throw error;
+
+    throw new Error(
+
+      error &&
+      error.message
+
+        ? error.message
+
+        : "YARUVA could not load automatic music."
+
+    );
 
   }
-
-  try{
-    await audioContext.close();
-  }catch(_){}
-
-  throw new Error(
-    "YARUVA could not load automatic music."
-  );
 
 }
 
