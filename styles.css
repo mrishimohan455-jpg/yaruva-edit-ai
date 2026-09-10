@@ -812,3 +812,149 @@ section + section {
     padding: 0 25px;
   }
 }
+/* =========================
+   YARUVA V4 — PROJECTS
+   ========================= */
+
+.projects-page {
+  padding: 12px 18px 35px;
+}
+
+.projects-heading {
+  padding: 15px 3px 28px;
+}
+
+.projects-heading h1 {
+  font-size: 48px;
+  line-height: .88;
+  letter-spacing: -.065em;
+}
+
+.projects-heading h1 span {
+  color: var(--purple);
+}
+
+.projects-heading p {
+  max-width: 390px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 11px;
+}
+
+.project-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(50,35,20,.06);
+}
+
+.project-image {
+  aspect-ratio: 1 / 1.15;
+  overflow: hidden;
+  background: #211b29;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.project-details {
+  min-height: 58px;
+  padding: 11px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.project-details strong {
+  padding-right: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+}
+
+.project-details small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.delete-project {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255,253,249,.88);
+  backdrop-filter: blur(10px);
+  font-size: 19px;
+  line-height: 1;
+}
+
+.projects-empty {
+  min-height: 330px;
+  padding: 35px 20px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  text-align: center;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(222,208,255,.7), transparent 55%),
+    var(--white);
+  border: 1px solid var(--line);
+}
+
+.empty-project-icon {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 17px;
+  border-radius: 20px;
+  background: var(--purple);
+  color: white;
+  font-size: 27px;
+}
+
+.projects-empty h2 {
+  font-size: 21px;
+  letter-spacing: -.04em;
+}
+
+.projects-empty p {
+  max-width: 280px;
+  margin: 8px 0 20px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (min-width: 700px) {
+
+  .projects-page {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+}
