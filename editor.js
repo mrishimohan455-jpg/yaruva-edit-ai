@@ -667,11 +667,11 @@ async function removeBackgroundAI(button) {
 
   try {
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     // LOAD MODNET
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     const model =
 
@@ -685,37 +685,31 @@ async function removeBackgroundAI(button) {
 
     }
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     // RUN MODNET
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     const output =
 
       await model(currentImage);
 
-    if (
-
-      !output ||
-
-      !output[0]
-
-    ) {
+    if (!output || !output[0]) {
 
       throw new Error(
 
-        "MODNet did not return a mask."
+        "MODNet did not return an alpha mask."
 
       );
 
     }
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
-    // LOAD ORIGINAL IMAGE
+    // LOAD ORIGINAL
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     const original =
 
@@ -729,37 +723,27 @@ async function removeBackgroundAI(button) {
 
       original.naturalHeight;
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
-    // ORIGINAL IMAGE CANVAS
+    // ORIGINAL IMAGE
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     const canvas =
 
       document.createElement("canvas");
 
-    canvas.width =
+    canvas.width = width;
 
-      width;
-
-    canvas.height =
-
-      height;
+    canvas.height = height;
 
     const ctx =
 
-      canvas.getContext(
+      canvas.getContext("2d", {
 
-        "2d",
+        willReadFrequently: true
 
-        {
-
-          willReadFrequently: true
-
-        }
-
-      );
+      });
 
     ctx.drawImage(
 
@@ -775,79 +759,55 @@ async function removeBackgroundAI(button) {
 
     );
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
-    // AI MASK
+    // MODNET MASK
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     const maskCanvas =
 
       output[0].toCanvas();
 
-    const resizedMask =
-
-      document.createElement("canvas");
-
-    resizedMask.width =
-
-      width;
-
-    resizedMask.height =
-
-      height;
-
     const maskCtx =
 
-      resizedMask.getContext(
+      maskCanvas.getContext("2d", {
 
-        "2d",
+        willReadFrequently: true
 
-        {
+      });
 
-          willReadFrequently: true
+    const maskWidth =
 
-        }
+      maskCanvas.width;
+
+    const maskHeight =
+
+      maskCanvas.height;
+
+    const maskImage =
+
+      maskCtx.getImageData(
+
+        0,
+
+        0,
+
+        maskWidth,
+
+        maskHeight
 
       );
 
-    maskCtx.drawImage(
+    // ----------------------------------------------
 
-      maskCanvas,
+    // ORIGINAL IMAGE PIXELS
 
-      0,
-
-      0,
-
-      width,
-
-      height
-
-    );
-
-    // --------------------------------------------------
-
-    // READ IMAGE + MASK
-
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     const imageData =
 
       ctx.getImageData(
-
-        0,
-
-        0,
-
-        width,
-
-        height
-
-      );
-
-    const maskData =
-
-      maskCtx.getImageData(
 
         0,
 
@@ -865,97 +825,125 @@ async function removeBackgroundAI(button) {
 
     const maskPixels =
 
-      maskData.data;
+      maskImage.data;
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
-    // CLEAN AI MASK
+    // BILINEAR MASK SAMPLING
 
-    // --------------------------------------------------
+    //
+
+    // Instead of stretching the mask using
+
+    // drawImage(), sample the MODNet matte
+
+    // directly for each original pixel.
+
+    // ----------------------------------------------
 
     for (
 
-      let i = 0;
+      let y = 0;
 
-      i < pixels.length;
+      y < height;
 
-      i += 4
+      y++
 
     ) {
 
-      const raw =
+      const maskY =
 
-        maskPixels[i];
+        Math.min(
 
-      // Increase mask contrast.
+          maskHeight - 1,
 
-      //
+          Math.floor(
 
-      // 0   = background
+            y *
 
-      // 255 = person
+            maskHeight /
 
-      //
-
-      // This removes the unwanted
-
-      // checkerboard transparency
-
-      // from the subject.
-
-      let alpha;
-
-      if (raw < 45) {
-
-        alpha = 0;
-
-      }
-
-      else if (raw > 190) {
-
-        alpha = 255;
-
-      }
-
-      else {
-
-        // Smooth transition
-
-        // for hair and edges.
-
-        alpha =
-
-          Math.round(
-
-            ((raw - 45) / 145) * 255
-
-          );
-
-      }
-
-      pixels[i + 3] =
-
-        Math.max(
-
-          0,
-
-          Math.min(
-
-            255,
-
-            alpha
+            height
 
           )
 
         );
 
+      for (
+
+        let x = 0;
+
+        x < width;
+
+        x++
+
+      ) {
+
+        const maskX =
+
+          Math.min(
+
+            maskWidth - 1,
+
+            Math.floor(
+
+              x *
+
+              maskWidth /
+
+              width
+
+            )
+
+          );
+
+        const imageIndex =
+
+          (
+
+            y *
+
+            width +
+
+            x
+
+          ) * 4;
+
+        const maskIndex =
+
+          (
+
+            maskY *
+
+            maskWidth +
+
+            maskX
+
+          ) * 4;
+
+        // MODNet grayscale alpha matte
+
+        const alpha =
+
+          maskPixels[maskIndex];
+
+        pixels[
+
+          imageIndex + 3
+
+        ] =
+
+          alpha;
+
+      }
+
     }
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
-    // APPLY CLEAN MASK
+    // APPLY MATTE
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     ctx.putImageData(
 
@@ -967,11 +955,11 @@ async function removeBackgroundAI(button) {
 
     );
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
-    // EXPORT TRANSPARENT PNG
+    // EXPORT PNG
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     const result =
 
@@ -981,11 +969,11 @@ async function removeBackgroundAI(button) {
 
       );
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     // SHOW RESULT
 
-    // --------------------------------------------------
+    // ----------------------------------------------
 
     showResult(
 
