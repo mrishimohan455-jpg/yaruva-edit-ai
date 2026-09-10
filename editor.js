@@ -4694,147 +4694,159 @@ console.log(
 
   async function applyProfessionalBackground(
 
-    type
+  type
 
-  ) {
+) {
 
-    if (!generatedImage) {
+  if (!generatedImage) {
 
-      alert(
+    alert(
 
-        "Remove the background first."
-
-      );
-
-      return;
-
-    }
-
-    const subject =
-
-      await loadImage(
-
-        generatedImage
-
-      );
-
-    const width =
-
-      subject.naturalWidth;
-
-    const height =
-
-      subject.naturalHeight;
-
-    const canvas =
-
-      document.createElement(
-
-        "canvas"
-
-      );
-
-    canvas.width =
-
-      width;
-
-    canvas.height =
-
-      height;
-
-    const ctx =
-
-      canvas.getContext(
-
-        "2d"
-
-      );
-
-    // Background
-
-    drawProfessionalBackground(
-
-      ctx,
-
-      width,
-
-      height,
-
-      type
+      "Remove the background first."
 
     );
 
-    // Soft subject shadow
-
-    ctx.save();
-
-    ctx.globalAlpha =
-
-      0.18;
-
-    ctx.filter =
-
-      "blur(24px)";
-
-    ctx.drawImage(
-
-      subject,
-
-      width * .02,
-
-      height * .025,
-
-      width,
-
-      height
-
-    );
-
-    ctx.restore();
-
-    // Actual subject
-
-    ctx.drawImage(
-
-      subject,
-
-      0,
-
-      0,
-
-      width,
-
-      height
-
-    );
-
-    const result =
-
-      canvas.toDataURL(
-
-        "image/png"
-
-      );
-
-    showResult(
-
-      result,
-
-      "YARUVA AI Background Studio — " +
-
-      type
-
-    );
-
-    if (imageStatus) {
-
-      imageStatus.textContent =
-
-        "Background applied";
-
-    }
+    return;
 
   }
+
+  const subject =
+
+    await loadImage(
+
+      generatedImage
+
+    );
+
+  const width =
+
+    subject.naturalWidth;
+
+  const height =
+
+    subject.naturalHeight;
+
+  const canvas =
+
+    document.createElement(
+
+      "canvas"
+
+    );
+
+  canvas.width =
+
+    width;
+
+  canvas.height =
+
+    height;
+
+  const ctx =
+
+    canvas.getContext(
+
+      "2d"
+
+    );
+
+  // --------------------------------------------------
+
+  // DRAW PROFESSIONAL BACKGROUND
+
+  // --------------------------------------------------
+
+  drawProfessionalBackground(
+
+    ctx,
+
+    width,
+
+    height,
+
+    type
+
+  );
+
+  // --------------------------------------------------
+
+  // DRAW SUBJECT
+
+  // --------------------------------------------------
+
+  //
+
+  // IMPORTANT:
+
+  // No blurred duplicate.
+
+  // This prevents the ghost/halo around
+
+  // the hair, ears and shoulders.
+
+  //
+
+  ctx.globalAlpha =
+
+    1;
+
+  ctx.filter =
+
+    "none";
+
+  ctx.drawImage(
+
+    subject,
+
+    0,
+
+    0,
+
+    width,
+
+    height
+
+  );
+
+  // --------------------------------------------------
+
+  // EXPORT
+
+  // --------------------------------------------------
+
+  const result =
+
+    canvas.toDataURL(
+
+      "image/png"
+
+    );
+
+  // --------------------------------------------------
+
+  // SHOW RESULT
+
+  // --------------------------------------------------
+
+  showResult(
+
+    result,
+
+    "YARUVA AI Background Studio — " +
+
+    type
+
+  );
+
+  if (imageStatus) {
+
+    imageStatus.textContent =
+
+      "Background applied";
+
+  }
+
+}
 
   // ----------------------------------------------------
 
