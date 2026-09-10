@@ -1,6 +1,6 @@
 // ======================================================
-// YARUVA AI EDITOR V3
-// Free browser AI + YARUVA image engine
+// YARUVA AI EDITOR V4
+// Free browser AI + MODNet background removal
 // ======================================================
 
 
@@ -28,11 +28,18 @@ const saveProjectBtn = document.getElementById("saveProjectBtn");
 const imageStatus = document.getElementById("imageStatus");
 const canvasLabel = document.getElementById("canvasLabel");
 
+
+// ======================================================
+// STATE
+// ======================================================
+
 let currentImage = null;
 let generatedImage = null;
 
 let transformersModule = null;
+
 let aiRemoveModel = null;
+let aiRemoveProcessor = null;
 
 let showingBefore = false;
 
@@ -57,7 +64,9 @@ uploadBox?.addEventListener("click", (event) => {
     event.target === uploadBtn ||
     uploadBtn?.contains(event.target)
   ) {
+
     return;
+
   }
 
   imageInput?.click();
@@ -74,63 +83,75 @@ changeImageBtn?.addEventListener("click", () => {
 
 imageInput?.addEventListener("change", () => {
 
-  const file = imageInput.files?.[0];
+  const file =
+    imageInput.files?.[0];
 
   if (!file) return;
 
 
   if (!file.type.startsWith("image/")) {
 
-    alert("Please choose an image file.");
+    alert(
+      "Please choose an image file."
+    );
 
     return;
 
   }
 
 
-  const reader = new FileReader();
+  const reader =
+    new FileReader();
 
 
   reader.onload = () => {
 
-    currentImage = reader.result;
+    currentImage =
+      reader.result;
 
-    generatedImage = null;
+    generatedImage =
+      null;
 
-    showingBefore = false;
+    showingBefore =
+      false;
 
 
     if (previewImage) {
 
-      previewImage.src = currentImage;
+      previewImage.src =
+        currentImage;
 
     }
 
 
     if (previewCard) {
 
-      previewCard.hidden = false;
+      previewCard.hidden =
+        false;
 
     }
 
 
     if (imageStatus) {
 
-      imageStatus.textContent = "Image ready";
+      imageStatus.textContent =
+        "Image ready";
 
     }
 
 
     if (canvasLabel) {
 
-      canvasLabel.textContent = "Your image";
+      canvasLabel.textContent =
+        "Your image";
 
     }
 
 
     if (beforeAfterBtn) {
 
-      beforeAfterBtn.textContent = "Before / After";
+      beforeAfterBtn.textContent =
+        "Before / After";
 
     }
 
@@ -157,19 +178,27 @@ imageInput?.addEventListener("change", () => {
 
 function loadImage(src) {
 
-  return new Promise((resolve, reject) => {
+  return new Promise(
+    (resolve, reject) => {
 
-    const img = new Image();
+      const img =
+        new Image();
 
-    img.onload = () => resolve(img);
+      img.onload =
+        () => resolve(img);
 
-    img.onerror = () => reject(
-      new Error("Unable to load image.")
-    );
+      img.onerror =
+        () => reject(
+          new Error(
+            "Unable to load image."
+          )
+        );
 
-    img.src = src;
+      img.src =
+        src;
 
-  });
+    }
+  );
 
 }
 
@@ -178,19 +207,37 @@ function loadImage(src) {
 // LOCAL YARUVA IMAGE ENGINE
 // ======================================================
 
-async function yaruvaCreateImage(imageData, prompt) {
+async function yaruvaCreateImage(
+  imageData,
+  prompt
+) {
 
-  const img = await loadImage(imageData);
-
-  const canvas = document.createElement("canvas");
-
-  const ctx = canvas.getContext("2d", {
-    willReadFrequently: true
-  });
+  const img =
+    await loadImage(
+      imageData
+    );
 
 
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
+  const canvas =
+    document.createElement(
+      "canvas"
+    );
+
+
+  const ctx =
+    canvas.getContext(
+      "2d",
+      {
+        willReadFrequently: true
+      }
+    );
+
+
+  canvas.width =
+    img.naturalWidth;
+
+  canvas.height =
+    img.naturalHeight;
 
 
   ctx.drawImage(
@@ -200,21 +247,27 @@ async function yaruvaCreateImage(imageData, prompt) {
   );
 
 
-  const image = ctx.getImageData(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+  const image =
+    ctx.getImageData(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
 
 
-  const data = image.data;
+  const data =
+    image.data;
+
 
   const text =
-    String(prompt || "").toLowerCase();
+    String(
+      prompt || ""
+    ).toLowerCase();
 
 
-  let mode = "enhance";
+  let mode =
+    "enhance";
 
 
   if (
@@ -223,7 +276,8 @@ async function yaruvaCreateImage(imageData, prompt) {
     text.includes("film")
   ) {
 
-    mode = "cinematic";
+    mode =
+      "cinematic";
 
   }
 
@@ -234,7 +288,8 @@ async function yaruvaCreateImage(imageData, prompt) {
     text.includes("editorial")
   ) {
 
-    mode = "luxury";
+    mode =
+      "luxury";
 
   }
 
@@ -245,7 +300,8 @@ async function yaruvaCreateImage(imageData, prompt) {
     text.includes("light")
   ) {
 
-    mode = "relight";
+    mode =
+      "relight";
 
   }
 
@@ -255,7 +311,8 @@ async function yaruvaCreateImage(imageData, prompt) {
     text.includes("face")
   ) {
 
-    mode = "portrait";
+    mode =
+      "portrait";
 
   }
 
@@ -266,18 +323,34 @@ async function yaruvaCreateImage(imageData, prompt) {
     i += 4
   ) {
 
-    let r = data[i];
-    let g = data[i + 1];
-    let b = data[i + 2];
+    let r =
+      data[i];
+
+    let g =
+      data[i + 1];
+
+    let b =
+      data[i + 2];
 
 
     // ENHANCE
 
     if (mode === "enhance") {
 
-      r = (r - 128) * 1.10 + 128;
-      g = (g - 128) * 1.10 + 128;
-      b = (b - 128) * 1.10 + 128;
+      r =
+        (r - 128) *
+        1.10 +
+        128;
+
+      g =
+        (g - 128) *
+        1.10 +
+        128;
+
+      b =
+        (b - 128) *
+        1.10 +
+        128;
 
     }
 
@@ -286,9 +359,20 @@ async function yaruvaCreateImage(imageData, prompt) {
 
     if (mode === "cinematic") {
 
-      r = (r - 128) * 1.18 + 128;
-      g = (g - 128) * 1.08 + 128;
-      b = (b - 128) * 1.15 + 128;
+      r =
+        (r - 128) *
+        1.18 +
+        128;
+
+      g =
+        (g - 128) *
+        1.08 +
+        128;
+
+      b =
+        (b - 128) *
+        1.15 +
+        128;
 
       r += 6;
       b += 8;
@@ -300,9 +384,20 @@ async function yaruvaCreateImage(imageData, prompt) {
 
     if (mode === "luxury") {
 
-      r = (r - 128) * 1.22 + 128;
-      g = (g - 128) * 1.14 + 128;
-      b = (b - 128) * 1.18 + 128;
+      r =
+        (r - 128) *
+        1.22 +
+        128;
+
+      g =
+        (g - 128) *
+        1.14 +
+        128;
+
+      b =
+        (b - 128) *
+        1.18 +
+        128;
 
       r += 5;
 
@@ -317,9 +412,20 @@ async function yaruvaCreateImage(imageData, prompt) {
       g += 15;
       b += 15;
 
-      r = (r - 128) * 1.08 + 128;
-      g = (g - 128) * 1.08 + 128;
-      b = (b - 128) * 1.08 + 128;
+      r =
+        (r - 128) *
+        1.08 +
+        128;
+
+      g =
+        (g - 128) *
+        1.08 +
+        128;
+
+      b =
+        (b - 128) *
+        1.08 +
+        128;
 
     }
 
@@ -328,9 +434,20 @@ async function yaruvaCreateImage(imageData, prompt) {
 
     if (mode === "portrait") {
 
-      r = (r - 128) * 1.08 + 128;
-      g = (g - 128) * 1.05 + 128;
-      b = (b - 128) * 1.04 + 128;
+      r =
+        (r - 128) *
+        1.08 +
+        128;
+
+      g =
+        (g - 128) *
+        1.05 +
+        128;
+
+      b =
+        (b - 128) *
+        1.04 +
+        128;
 
     }
 
@@ -338,19 +455,30 @@ async function yaruvaCreateImage(imageData, prompt) {
     data[i] =
       Math.max(
         0,
-        Math.min(255, r)
+        Math.min(
+          255,
+          r
+        )
       );
+
 
     data[i + 1] =
       Math.max(
         0,
-        Math.min(255, g)
+        Math.min(
+          255,
+          g
+        )
       );
+
 
     data[i + 2] =
       Math.max(
         0,
-        Math.min(255, b)
+        Math.min(
+          255,
+          b
+        )
       );
 
   }
@@ -358,7 +486,9 @@ async function yaruvaCreateImage(imageData, prompt) {
 
   // CINEMATIC VIGNETTE
 
-  if (mode === "cinematic") {
+  if (
+    mode === "cinematic"
+  ) {
 
     const cx =
       canvas.width / 2;
@@ -400,17 +530,30 @@ async function yaruvaCreateImage(imageData, prompt) {
 
         const factor =
           1 -
-          (distance / maxDist) *
+          (
+            distance /
+            maxDist
+          ) *
           0.22;
 
 
         const index =
-          (y * canvas.width + x) * 4;
+          (
+            y *
+            canvas.width +
+            x
+          ) *
+          4;
 
 
-        data[index] *= factor;
-        data[index + 1] *= factor;
-        data[index + 2] *= factor;
+        data[index] *=
+          factor;
+
+        data[index + 1] *=
+          factor;
+
+        data[index + 2] *=
+          factor;
 
       }
 
@@ -438,19 +581,25 @@ async function yaruvaCreateImage(imageData, prompt) {
 // SHOW RESULT
 // ======================================================
 
-function showResult(image, prompt) {
+function showResult(
+  image,
+  prompt
+) {
 
-  generatedImage = image;
+  generatedImage =
+    image;
 
-  showingBefore = false;
+  showingBefore =
+    false;
 
 
   if (resultImage) {
 
-    resultImage.src = image;
+    resultImage.src =
+      image;
 
 
-    // Transparent PNG checkerboard
+    // Transparent preview
 
     resultImage.style.backgroundImage =
       "linear-gradient(45deg,#e8e8e8 25%,transparent 25%)," +
@@ -480,19 +629,23 @@ function showResult(image, prompt) {
 
   if (resultSection) {
 
-    resultSection.hidden = false;
+    resultSection.hidden =
+      false;
 
   }
 
 
-  setTimeout(() => {
+  setTimeout(
+    () => {
 
-    resultSection?.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
+      resultSection?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
 
-  }, 100);
+    },
+    100
+  );
 
 }
 
@@ -525,7 +678,8 @@ generateBtn?.addEventListener(
       generateBtn.textContent;
 
 
-    generateBtn.disabled = true;
+    generateBtn.disabled =
+      true;
 
     generateBtn.textContent =
       "Creating...";
@@ -545,8 +699,9 @@ generateBtn?.addEventListener(
         prompt
       );
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
       console.error(
         "YARUVA Generate Error:",
@@ -558,12 +713,16 @@ generateBtn?.addEventListener(
         "YARUVA could not process this image."
       );
 
-    } finally {
+    }
 
-      generateBtn.disabled = false;
+    finally {
+
+      generateBtn.disabled =
+        false;
 
       generateBtn.textContent =
-        originalText || "Generate";
+        originalText ||
+        "Generate";
 
     }
 
@@ -577,7 +736,9 @@ generateBtn?.addEventListener(
 
 async function loadTransformers() {
 
-  if (transformersModule) {
+  if (
+    transformersModule
+  ) {
 
     return transformersModule;
 
@@ -599,11 +760,22 @@ async function loadTransformers() {
 // LOAD MODNET
 // ======================================================
 
-async function loadRemoveModel(button) {
+async function loadRemoveModel(
+  button
+) {
 
-  if (aiRemoveModel) {
+  if (
+    aiRemoveModel &&
+    aiRemoveProcessor
+  ) {
 
-    return aiRemoveModel;
+    return {
+      model:
+        aiRemoveModel,
+
+      processor:
+        aiRemoveProcessor
+    };
 
   }
 
@@ -620,373 +792,318 @@ async function loadRemoveModel(button) {
     await loadTransformers();
 
 
-  // Official MODNet configuration
+  // Official MODNet model
 
   aiRemoveModel =
-    await transformers.pipeline(
-      "background-removal",
+    await transformers.AutoModel.from_pretrained(
       "Xenova/modnet",
       {
-        dtype: "fp32"
+        dtype:
+          "fp32"
       }
     );
 
 
-  return aiRemoveModel;
+  // Official MODNet processor
+
+  aiRemoveProcessor =
+    await transformers.AutoProcessor.from_pretrained(
+      "Xenova/modnet"
+    );
+
+
+  return {
+
+    model:
+      aiRemoveModel,
+
+    processor:
+      aiRemoveProcessor
+
+  };
 
 }
 
 
 // ======================================================
 // REAL AI BACKGROUND REMOVAL
+// OFFICIAL MODNET ALPHA MATTE PIPELINE
 // ======================================================
 
-async function removeBackgroundAI(button) {
+async function removeBackgroundAI(
+  button
+) {
 
   if (!currentImage) {
 
-    alert("Upload an image first.");
+    alert(
+      "Upload an image first."
+    );
 
     return;
 
   }
 
-  const originalText =
 
-    button?.textContent || "Remove";
+  const originalText =
+    button?.textContent ||
+    "Remove";
+
 
   if (button) {
 
-    button.disabled = true;
+    button.disabled =
+      true;
 
     button.textContent =
-
       "Loading AI...";
 
   }
 
+
   try {
 
-    // ----------------------------------------------
+    // --------------------------------------------------
+    // LOAD TRANSFORMERS
+    // --------------------------------------------------
 
-    // LOAD MODNET
+    const transformers =
+      await loadTransformers();
 
-    // ----------------------------------------------
 
-    const model =
+    // --------------------------------------------------
+    // LOAD MODEL + PROCESSOR
+    // --------------------------------------------------
 
-      await loadRemoveModel(button);
+    const ai =
+      await loadRemoveModel(
+        button
+      );
+
 
     if (button) {
 
       button.textContent =
+        "Preparing image...";
 
+    }
+
+
+    // --------------------------------------------------
+    // LOAD IMAGE USING RawImage
+    // --------------------------------------------------
+
+    const image =
+      await transformers.RawImage.fromURL(
+        currentImage
+      );
+
+
+    if (button) {
+
+      button.textContent =
         "AI Processing...";
 
     }
 
-    // ----------------------------------------------
 
+    // --------------------------------------------------
+    // PREPROCESS IMAGE
+    // --------------------------------------------------
+
+    const processed =
+      await ai.processor(
+        image
+      );
+
+
+    // --------------------------------------------------
     // RUN MODNET
-
-    // ----------------------------------------------
+    // --------------------------------------------------
 
     const output =
-
-      await model(currentImage);
-
-    if (!output || !output[0]) {
-
-      throw new Error(
-
-        "MODNet did not return an alpha mask."
-
-      );
-
-    }
-
-    // ----------------------------------------------
-
-    // LOAD ORIGINAL
-
-    // ----------------------------------------------
-
-    const original =
-
-      await loadImage(currentImage);
-
-    const width =
-
-      original.naturalWidth;
-
-    const height =
-
-      original.naturalHeight;
-
-    // ----------------------------------------------
-
-    // ORIGINAL IMAGE
-
-    // ----------------------------------------------
-
-    const canvas =
-
-      document.createElement("canvas");
-
-    canvas.width = width;
-
-    canvas.height = height;
-
-    const ctx =
-
-      canvas.getContext("2d", {
-
-        willReadFrequently: true
-
+      await ai.model({
+        input:
+          processed.pixel_values
       });
 
-    ctx.drawImage(
 
-      original,
-
-      0,
-
-      0,
-
-      width,
-
-      height
-
-    );
-
-    // ----------------------------------------------
-
-    // MODNET MASK
-
-    // ----------------------------------------------
-
-    const maskCanvas =
-
-      output[0].toCanvas();
-
-    const maskCtx =
-
-      maskCanvas.getContext("2d", {
-
-        willReadFrequently: true
-
-      });
-
-    const maskWidth =
-
-      maskCanvas.width;
-
-    const maskHeight =
-
-      maskCanvas.height;
-
-    const maskImage =
-
-      maskCtx.getImageData(
-
-        0,
-
-        0,
-
-        maskWidth,
-
-        maskHeight
-
-      );
-
-    // ----------------------------------------------
-
-    // ORIGINAL IMAGE PIXELS
-
-    // ----------------------------------------------
-
-    const imageData =
-
-      ctx.getImageData(
-
-        0,
-
-        0,
-
-        width,
-
-        height
-
-      );
-
-    const pixels =
-
-      imageData.data;
-
-    const maskPixels =
-
-      maskImage.data;
-
-    // ----------------------------------------------
-
-    // BILINEAR MASK SAMPLING
-
-    //
-
-    // Instead of stretching the mask using
-
-    // drawImage(), sample the MODNet matte
-
-    // directly for each original pixel.
-
-    // ----------------------------------------------
-
-    for (
-
-      let y = 0;
-
-      y < height;
-
-      y++
-
+    if (
+      !output ||
+      !output.output ||
+      !output.output[0]
     ) {
 
-      const maskY =
-
-        Math.min(
-
-          maskHeight - 1,
-
-          Math.floor(
-
-            y *
-
-            maskHeight /
-
-            height
-
-          )
-
-        );
-
-      for (
-
-        let x = 0;
-
-        x < width;
-
-        x++
-
-      ) {
-
-        const maskX =
-
-          Math.min(
-
-            maskWidth - 1,
-
-            Math.floor(
-
-              x *
-
-              maskWidth /
-
-              width
-
-            )
-
-          );
-
-        const imageIndex =
-
-          (
-
-            y *
-
-            width +
-
-            x
-
-          ) * 4;
-
-        const maskIndex =
-
-          (
-
-            maskY *
-
-            maskWidth +
-
-            maskX
-
-          ) * 4;
-
-        // MODNet grayscale alpha matte
-
-        const alpha =
-
-          maskPixels[maskIndex];
-
-        pixels[
-
-          imageIndex + 3
-
-        ] =
-
-          alpha;
-
-      }
+      throw new Error(
+        "MODNet did not return an alpha matte."
+      );
 
     }
 
-    // ----------------------------------------------
 
-    // APPLY MATTE
+    // --------------------------------------------------
+    // OFFICIAL MODNET MASK CREATION
+    // --------------------------------------------------
 
-    // ----------------------------------------------
-
-    ctx.putImageData(
-
-      imageData,
-
-      0,
-
-      0
-
-    );
-
-    // ----------------------------------------------
-
-    // EXPORT PNG
-
-    // ----------------------------------------------
-
-    const result =
-
-      canvas.toDataURL(
-
-        "image/png"
-
+    const mask =
+      await transformers.RawImage.fromTensor(
+        output.output[0]
+          .mul(255)
+          .to("uint8")
       );
 
-    // ----------------------------------------------
 
+    // --------------------------------------------------
+    // RESIZE MASK TO ORIGINAL IMAGE
+    // --------------------------------------------------
+
+    const resizedMask =
+      await mask.resize(
+        image.width,
+        image.height
+      );
+
+
+    // --------------------------------------------------
+    // ORIGINAL IMAGE CANVAS
+    // --------------------------------------------------
+
+    const canvas =
+      document.createElement(
+        "canvas"
+      );
+
+
+    canvas.width =
+      image.width;
+
+    canvas.height =
+      image.height;
+
+
+    const ctx =
+      canvas.getContext(
+        "2d",
+        {
+          willReadFrequently:
+            true
+        }
+      );
+
+
+    // Draw original image
+
+    ctx.drawImage(
+      image.toCanvas(),
+      0,
+      0,
+      image.width,
+      image.height
+    );
+
+
+    // --------------------------------------------------
+    // GET ORIGINAL PIXELS
+    // --------------------------------------------------
+
+    const imageData =
+      ctx.getImageData(
+        0,
+        0,
+        image.width,
+        image.height
+      );
+
+
+    const pixels =
+      imageData.data;
+
+
+    // --------------------------------------------------
+    // GET MASK PIXELS
+    // --------------------------------------------------
+
+    const maskCanvas =
+      resizedMask.toCanvas();
+
+
+    const maskCtx =
+      maskCanvas.getContext(
+        "2d",
+        {
+          willReadFrequently:
+            true
+        }
+      );
+
+
+    const maskData =
+      maskCtx.getImageData(
+        0,
+        0,
+        image.width,
+        image.height
+      );
+
+
+    const maskPixels =
+      maskData.data;
+
+
+    // --------------------------------------------------
+    // APPLY ALPHA MATTE
+    // --------------------------------------------------
+
+    for (
+      let i = 0;
+      i < pixels.length;
+      i += 4
+    ) {
+
+      const alpha =
+        maskPixels[i];
+
+
+      pixels[i + 3] =
+        alpha;
+
+    }
+
+
+    // --------------------------------------------------
+    // WRITE TRANSPARENCY
+    // --------------------------------------------------
+
+    ctx.putImageData(
+      imageData,
+      0,
+      0
+    );
+
+
+    // --------------------------------------------------
+    // EXPORT PNG
+    // --------------------------------------------------
+
+    const result =
+      canvas.toDataURL(
+        "image/png"
+      );
+
+
+    // --------------------------------------------------
     // SHOW RESULT
-
-    // ----------------------------------------------
+    // --------------------------------------------------
 
     showResult(
-
       result,
-
       "AI Background Removal — YARUVA AI"
-
     );
+
 
     if (imageStatus) {
 
       imageStatus.textContent =
-
         "AI background removed";
 
     }
@@ -996,19 +1113,17 @@ async function removeBackgroundAI(button) {
   catch (error) {
 
     console.error(
-
       "YARUVA MODNet Error:",
-
       error
-
     );
 
+
     alert(
-
       "YARUVA AI error: " +
-
-      (error?.message || error)
-
+      (
+        error?.message ||
+        error
+      )
     );
 
   }
@@ -1017,10 +1132,10 @@ async function removeBackgroundAI(button) {
 
     if (button) {
 
-      button.disabled = false;
+      button.disabled =
+        false;
 
       button.textContent =
-
         originalText;
 
     }
@@ -1029,108 +1144,129 @@ async function removeBackgroundAI(button) {
 
 }
 
+
 // ======================================================
 // AI MAGIC TOOLS
 // ======================================================
 
 document
-  .querySelectorAll("[data-magic]")
-  .forEach(button => {
+  .querySelectorAll(
+    "[data-magic]"
+  )
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      async () => {
+      button.addEventListener(
+        "click",
+        async () => {
 
-        const title =
-          button
-            .querySelector("strong")
-            ?.textContent
-            ?.trim() || "";
-
-
-        // REAL AI REMOVE
-
-        if (
-          title
-            .toLowerCase()
-            .includes("remove")
-        ) {
-
-          await removeBackgroundAI(
+          const title =
             button
-          );
-
-          return;
-
-        }
-
-
-        if (!currentImage) {
-
-          alert(
-            "Upload an image first."
-          );
-
-          return;
-
-        }
+              .querySelector(
+                "strong"
+              )
+              ?.textContent
+              ?.trim() ||
+            "";
 
 
-        const prompt =
-          button.dataset.magic ||
-          title;
+          // ------------------------------------------------
+          // REAL AI REMOVE
+          // ------------------------------------------------
+
+          if (
+            title
+              .toLowerCase()
+              .includes(
+                "remove"
+              )
+          ) {
+
+            await removeBackgroundAI(
+              button
+            );
+
+            return;
+
+          }
 
 
-        const oldText =
-          button.textContent;
+          // ------------------------------------------------
+          // OTHER MAGIC TOOLS
+          // ------------------------------------------------
+
+          if (!currentImage) {
+
+            alert(
+              "Upload an image first."
+            );
+
+            return;
+
+          }
 
 
-        button.disabled = true;
+          const prompt =
+            button.dataset.magic ||
+            title;
 
-        button.textContent =
-          "Working...";
+
+          const oldText =
+            button.textContent;
 
 
-        try {
+          button.disabled =
+            true;
 
-          const output =
-            await yaruvaCreateImage(
-              currentImage,
+          button.textContent =
+            "Working...";
+
+
+          try {
+
+            const output =
+              await yaruvaCreateImage(
+                currentImage,
+                prompt
+              );
+
+
+            showResult(
+              output,
               prompt
             );
 
+          }
 
-          showResult(
-            output,
-            prompt
-          );
+          catch (error) {
 
-
-        } catch (error) {
-
-          console.error(
-            "YARUVA Magic Error:",
-            error
-          );
+            console.error(
+              "YARUVA Magic Error:",
+              error
+            );
 
 
-          alert(
-            "YARUVA could not process this image."
-          );
+            alert(
+              "YARUVA could not process this image."
+            );
 
-        } finally {
+          }
 
-          button.disabled = false;
+          finally {
 
-          button.textContent =
-            oldText;
+            button.disabled =
+              false;
+
+            button.textContent =
+              oldText;
+
+          }
 
         }
+      );
 
-      }
-    );
-
-  });
+    }
+  );
 
 
 // ======================================================
@@ -1177,11 +1313,16 @@ beforeAfterBtn?.addEventListener(
         generatedImage;
 
 
-      canvasLabel.textContent =
-        "AI result";
+      if (canvasLabel) {
 
+        canvasLabel.textContent =
+          "AI result";
 
-    } else {
+      }
+
+    }
+
+    else {
 
       beforeAfterBtn.textContent =
         "Before / After";
@@ -1191,8 +1332,12 @@ beforeAfterBtn?.addEventListener(
         currentImage;
 
 
-      canvasLabel.textContent =
-        "Your image";
+      if (canvasLabel) {
+
+        canvasLabel.textContent =
+          "Your image";
+
+      }
 
     }
 
@@ -1219,7 +1364,8 @@ saveProjectBtn?.addEventListener(
     }
 
 
-    let projects = [];
+    let projects =
+      [];
 
 
     try {
@@ -1228,12 +1374,16 @@ saveProjectBtn?.addEventListener(
         JSON.parse(
           localStorage.getItem(
             "yaruvaProjects"
-          ) || "[]"
+          ) ||
+          "[]"
         );
 
-    } catch {
+    }
 
-      projects = [];
+    catch {
+
+      projects =
+        [];
 
     }
 
@@ -1251,7 +1401,8 @@ saveProjectBtn?.addEventListener(
         "YARUVA AI result",
 
       createdAt:
-        new Date().toLocaleString()
+        new Date()
+          .toLocaleString()
 
     });
 
@@ -1259,7 +1410,10 @@ saveProjectBtn?.addEventListener(
     localStorage.setItem(
       "yaruvaProjects",
       JSON.stringify(
-        projects.slice(0, 30)
+        projects.slice(
+          0,
+          30
+        )
       )
     );
 
@@ -1328,26 +1482,28 @@ document
   .querySelectorAll(
     "[data-profile]"
   )
-  .forEach(button => {
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        alert(
-          "YARUVA Profile — coming soon."
-        );
+          alert(
+            "YARUVA Profile — coming soon."
+          );
 
-      }
-    );
+        }
+      );
 
-  });
+    }
+  );
 
 
 // ======================================================
-// YARUVA READY
+// READY
 // ======================================================
 
 console.log(
-  "YARUVA AI Editor V3 loaded successfully."
+  "YARUVA AI Editor V4 loaded successfully."
 );
