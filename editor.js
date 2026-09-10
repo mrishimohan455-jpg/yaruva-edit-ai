@@ -1,194 +1,220 @@
-// YARUVA AI EDITOR
-
-let originalImage = "";
-let editedImage = "";
-
-// Elements
 const imageInput = document.getElementById("imageInput");
-const imagePreview = document.getElementById("imagePreview");
-const previewSection = document.getElementById("previewSection");
+const uploadBtn = document.getElementById("uploadBtn");
+const uploadBox = document.getElementById("uploadBox");
+const previewCard = document.getElementById("previewCard");
+const previewImage = document.getElementById("previewImage");
+const changeImageBtn = document.getElementById("changeImageBtn");
 
 const promptInput = document.getElementById("promptInput");
 const generateBtn = document.getElementById("generateBtn");
 
-const resultPreview = document.getElementById("resultPreview");
-const compareSection = document.getElementById("compareSection");
+const resultSection = document.getElementById("resultSection");
+const resultImage = document.getElementById("resultImage");
+const resultPrompt = document.getElementById("resultPrompt");
+
+const saveProjectBtn = document.getElementById("saveProjectBtn");
+const exportBtn = document.getElementById("exportBtn");
 
 const videoPrompt = document.getElementById("videoPrompt");
 const videoBtn = document.getElementById("videoBtn");
 const videoStatus = document.getElementById("videoStatus");
-const videoPreview = document.getElementById("videoPreview");
+const videoResult = document.getElementById("videoResult");
+
+let currentImage = "";
+let generatedImage = "";
 
 
-// -----------------------------
-// IMAGE UPLOAD
-// -----------------------------
+/* =========================
+   IMAGE UPLOAD
+   ========================= */
 
-if (imageInput) {
+uploadBtn?.addEventListener("click", () => {
+  imageInput?.click();
+});
 
-  imageInput.addEventListener("change", function () {
+changeImageBtn?.addEventListener("click", () => {
+  imageInput?.click();
+});
 
-    const file = this.files[0];
+imageInput?.addEventListener("change", event => {
+  const file = event.target.files?.[0];
 
-    if (!file) return;
+  if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file.");
-      return;
+  if (!file.type.startsWith("image/")) {
+    alert("Please choose an image file.");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    currentImage = reader.result;
+
+    previewImage.src = currentImage;
+
+    uploadBox.hidden = true;
+    previewCard.hidden = false;
+
+    const status = document.getElementById("imageStatus");
+
+    if (status) {
+      status.textContent = "Image ready";
     }
+  };
 
-    const reader = new FileReader();
-
-    reader.onload = function (event) {
-
-      originalImage = event.target.result;
-
-      if (imagePreview) {
-        imagePreview.src = originalImage;
-      }
-
-      if (previewSection) {
-        previewSection.hidden = false;
-      }
-
-      if (compareSection) {
-        compareSection.hidden = true;
-      }
-
-    };
-
-    reader.readAsDataURL(file);
-
-  });
-
-}
-
-
-// -----------------------------
-// PROMPT SUGGESTIONS
-// -----------------------------
-
-document.querySelectorAll("[data-prompt]").forEach(button => {
-
-  button.addEventListener("click", () => {
-
-    const prompt = button.dataset.prompt;
-
-    if (promptInput) {
-      promptInput.value = prompt;
-      promptInput.focus();
-    }
-
-  });
-
+  reader.readAsDataURL(file);
 });
 
 
-// -----------------------------
-// AI IMAGE EDIT
-// -----------------------------
+/* =========================
+   DRAG & DROP
+   ========================= */
 
-async function generateAIEdit(promptOverride = null) {
+uploadBox?.addEventListener("dragover", event => {
+  event.preventDefault();
+  uploadBox.style.transform = "scale(.99)";
+});
 
-  if (!originalImage) {
+uploadBox?.addEventListener("dragleave", () => {
+  uploadBox.style.transform = "";
+});
 
-    alert("Please upload an image first.");
+uploadBox?.addEventListener("drop", event => {
+  event.preventDefault();
 
+  uploadBox.style.transform = "";
+
+  const file = event.dataTransfer.files?.[0];
+
+  if (!file || !file.type.startsWith("image/")) {
+    alert("Please drop an image.");
     return;
-
   }
 
-  const prompt =
-    promptOverride ||
-    promptInput.value.trim();
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    currentImage = reader.result;
+
+    previewImage.src = currentImage;
+
+    uploadBox.hidden = true;
+    previewCard.hidden = false;
+
+    const status = document.getElementById("imageStatus");
+
+    if (status) {
+      status.textContent = "Image ready";
+    }
+  };
+
+  reader.readAsDataURL(file);
+});
+
+
+/* =========================
+   PROMPT SUGGESTIONS
+   ========================= */
+
+document.querySelectorAll("[data-prompt]").forEach(button => {
+  button.addEventListener("click", () => {
+    promptInput.value = button.dataset.prompt || "";
+    promptInput.focus();
+  });
+});
+
+
+/* =========================
+   AI MAGIC
+   ========================= */
+
+document.querySelectorAll("[data-magic]").forEach(button => {
+  button.addEventListener("click", () => {
+
+    promptInput.value = button.dataset.magic || "";
+
+    promptInput.focus();
+
+    document.querySelector(".ai-prompt")?.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  });
+});
+
+
+/* =========================
+   AI IMAGE GENERATION
+   ========================= */
+
+generateBtn?.addEventListener("click", generateImage);
+
+async function generateImage() {
+
+  if (!currentImage) {
+    alert("Please upload an image first.");
+    return;
+  }
+
+  const prompt = promptInput.value.trim();
 
   if (!prompt) {
-
     alert("Tell YARUVA what you want to create.");
-
+    promptInput.focus();
     return;
-
   }
 
+  const originalText = generateBtn.innerHTML;
 
   generateBtn.disabled = true;
-
-  generateBtn.innerHTML =
-    "YARUVA is creating…";
-
+  generateBtn.innerHTML = `
+    <span>Creating…</span>
+    <b>✦</b>
+  `;
 
   try {
 
-    const response = await fetch(
-      "/api/edit-image",
-      {
-        method: "POST",
+    const response = await fetch("/api/edit-image", {
+      method: "POST",
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-        body: JSON.stringify({
-
-          image: originalImage,
-
-          prompt: prompt
-
-        })
-
-      }
-    );
-
+      body: JSON.stringify({
+        image: currentImage,
+        prompt
+      })
+    });
 
     const data = await response.json();
 
-
     if (!response.ok) {
-
       throw new Error(
-        data.error ||
-        "AI editing failed."
+        data?.error ||
+        "YARUVA could not generate the image."
       );
-
     }
 
-
-    editedImage =
-      data.image ||
-      data.result ||
-      data.url;
-
-
-    if (!editedImage) {
-
+    if (!data.image) {
       throw new Error(
-        "No edited image was returned."
+        "No generated image was returned."
       );
-
     }
 
+    generatedImage = data.image;
 
-    if (resultPreview) {
+    resultImage.src = generatedImage;
 
-      resultPreview.src =
-        editedImage;
+    resultPrompt.textContent = prompt;
 
-    }
+    resultSection.hidden = false;
 
-
-    if (compareSection) {
-
-      compareSection.hidden =
-        false;
-
-    }
-
-
-    saveProject(
-      editedImage,
-      prompt
-    );
-
+    resultSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
 
   } catch (error) {
 
@@ -196,432 +222,238 @@ async function generateAIEdit(promptOverride = null) {
 
     alert(
       error.message ||
-      "Something went wrong."
+      "Something went wrong while creating your image."
     );
 
   } finally {
 
     generateBtn.disabled = false;
-
-    generateBtn.innerHTML =
-      "Generate with AI <b>→</b>";
-
+    generateBtn.innerHTML = originalText;
   }
-
 }
 
 
-// -----------------------------
-// GENERATE BUTTON
-// -----------------------------
+/* =========================
+   SAVE PROJECT
+   ========================= */
 
-if (generateBtn) {
+saveProjectBtn?.addEventListener("click", saveProject);
 
-  generateBtn.addEventListener(
-    "click",
-    () => generateAIEdit()
-  );
+function saveProject() {
 
-}
-
-
-// -----------------------------
-// AI MAGIC BUTTONS
-// -----------------------------
-
-const magicPrompts = {
-
-  enhance:
-    "Enhance this image with realistic details, sharpness, professional lighting and high-end quality.",
-
-  cinematic:
-    "Transform this image into a cinematic film still with dramatic lighting, realistic colors, depth and premium visual grading.",
-
-  remove:
-    "Remove distracting or unwanted background elements while keeping the main subject realistic and natural.",
-
-  relight:
-    "Relight this image with beautiful professional studio lighting while preserving the subject and realistic appearance.",
-
-  luxury:
-    "Give this image a premium luxury editorial appearance with sophisticated lighting, elegant tones and photorealistic detail.",
-
-  portrait:
-    "Transform this into a professional studio portrait with realistic skin, flattering lighting, depth and premium photography quality."
-
-};
-
-
-document.querySelectorAll(".magic-btn").forEach(button => {
-
-  button.addEventListener("click", () => {
-
-    const action =
-      button.dataset.action;
-
-    const prompt =
-      magicPrompts[action];
-
-    if (!prompt) return;
-
-    if (promptInput) {
-      promptInput.value = prompt;
-    }
-
-    generateAIEdit(prompt);
-
-  });
-
-});
-
-
-// -----------------------------
-// CREATE VIDEO
-// -----------------------------
-
-if (videoBtn) {
-
-  videoBtn.addEventListener(
-    "click",
-    createVideo
-  );
-
-}
-
-
-async function createVideo() {
-
-  if (!originalImage) {
-
-    alert(
-      "Upload an image before creating a video."
-    );
-
+  if (!generatedImage) {
+    alert("Generate an image first.");
     return;
-
   }
 
-
-  const prompt =
-    videoPrompt.value.trim() ||
-    "Create a cinematic realistic animation with natural movement and a slow camera motion.";
-
-
-  videoBtn.disabled = true;
-
-  videoBtn.innerHTML =
-    "Creating video…";
-
-
-  videoStatus.innerHTML =
-    "<p>YARUVA is generating your video…</p>";
-
-
-  try {
-
-    const response = await fetch(
-      "/api/video",
-      {
-
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify({
-
-          prompt: prompt,
-
-          image: originalImage
-
-        })
-
-      }
+  const projects =
+    JSON.parse(
+      localStorage.getItem("yaruvaProjects") || "[]"
     );
 
+  const project = {
+    id: Date.now(),
+    title: "YARUVA Creation",
+    prompt: promptInput.value.trim(),
+    image: generatedImage,
+    createdAt: new Date().toISOString()
+  };
 
-    const data =
-      await response.json();
+  projects.unshift(project);
 
-
-    if (!response.ok) {
-
-      throw new Error(
-        data.error ||
-        "Video generation failed."
-      );
-
-    }
-
-
-    if (!data.id) {
-
-      throw new Error(
-        "Video job was not created."
-      );
-
-    }
-
-
-    await pollVideo(data.id);
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    videoStatus.innerHTML =
-      `<p>${escapeHtml(error.message)}</p>`;
-
-  } finally {
-
-    videoBtn.disabled = false;
-
-    videoBtn.innerHTML =
-      "Create AI Video <b>▶</b>";
-
-  }
-
-}
-
-
-// -----------------------------
-// VIDEO STATUS
-// -----------------------------
-
-async function pollVideo(id) {
-
-  let attempts = 0;
-
-  const maxAttempts = 120;
-
-
-  while (attempts < maxAttempts) {
-
-    attempts++;
-
-
-    const response =
-      await fetch(
-        "/api/video-status?id=" +
-        encodeURIComponent(id)
-      );
-
-
-    const data =
-      await response.json();
-
-
-    const status =
-      data.status ||
-      "processing";
-
-
-    videoStatus.innerHTML =
-      `<p>Video status: ${escapeHtml(status)}</p>`;
-
-
-    if (
-      status === "completed" ||
-      status === "succeeded"
-    ) {
-
-      const videoUrl =
-        "/api/video-content?id=" +
-        encodeURIComponent(id);
-
-
-      videoPreview.src =
-        videoUrl;
-
-      videoPreview.hidden =
-        false;
-
-
-      videoStatus.innerHTML =
-        "<p>✓ Your AI video is ready.</p>";
-
-
-      saveProject(
-        videoUrl,
-        promptForVideo()
-      );
-
-
-      return;
-
-    }
-
-
-    if (
-      status === "failed" ||
-      status === "cancelled"
-    ) {
-
-      throw new Error(
-        "Video generation did not complete."
-      );
-
-    }
-
-
-    await wait(5000);
-
-  }
-
-
-  throw new Error(
-    "Video generation timed out. Please try again."
+  localStorage.setItem(
+    "yaruvaProjects",
+    JSON.stringify(projects.slice(0, 30))
   );
 
+  saveProjectBtn.textContent = "✓ Saved";
+
+  setTimeout(() => {
+    saveProjectBtn.textContent = "Save project";
+  }, 1800);
 }
 
 
-function promptForVideo() {
+/* =========================
+   EXPORT
+   ========================= */
 
-  return (
-    videoPrompt?.value?.trim() ||
-    "AI generated video"
-  );
+exportBtn?.addEventListener("click", () => {
 
-}
-
-
-// -----------------------------
-// SAVE PROJECT
-// -----------------------------
-
-function saveProject(url, prompt) {
-
-  try {
-
-    const projects =
-      JSON.parse(
-        localStorage.getItem(
-          "yaruva_projects"
-        ) || "[]"
-      );
-
-
-    projects.unshift({
-
-      id:
-        Date.now(),
-
-      type:
-        url.includes("video")
-          ? "video"
-          : "image",
-
-      url:
-        url,
-
-      prompt:
-        prompt,
-
-      createdAt:
-        new Date().toISOString()
-
-    });
-
-
-    localStorage.setItem(
-      "yaruva_projects",
-      JSON.stringify(
-        projects.slice(0, 30)
-      )
-    );
-
-  } catch (error) {
-
-    console.warn(
-      "Could not save project",
-      error
-    );
-
-  }
-
-}
-
-
-// -----------------------------
-// EXPORT
-// -----------------------------
-
-const exportBtn =
-  document.getElementById(
-    "exportBtn"
-  );
-
-
-if (exportBtn) {
-
-  exportBtn.addEventListener(
-    "click",
-    exportResult
-  );
-
-}
-
-
-function exportResult() {
-
-  const url =
-    editedImage ||
-    originalImage;
-
-
-  if (!url) {
-
-    alert(
-      "Create or upload something first."
-    );
-
+  if (!generatedImage) {
+    alert("Create an image first.");
     return;
-
   }
 
+  const link = document.createElement("a");
 
-  const link =
-    document.createElement("a");
-
-  link.href =
-    url;
-
-  link.download =
-    "YARUVA-Creation.png";
+  link.href = generatedImage;
+  link.download = "yaruva-ai-creation.png";
 
   document.body.appendChild(link);
 
   link.click();
 
   link.remove();
+});
 
+
+/* =========================
+   IMAGE → VIDEO
+   ========================= */
+
+videoBtn?.addEventListener("click", createVideo);
+
+async function createVideo() {
+
+  if (!currentImage) {
+    alert("Upload an image first.");
+    return;
+  }
+
+  const prompt =
+    videoPrompt.value.trim() ||
+    "Create a cinematic animation from this image with subtle camera movement and natural motion.";
+
+  const originalText = videoBtn.innerHTML;
+
+  videoBtn.disabled = true;
+
+  videoBtn.innerHTML = `
+    Creating video…
+    <b>▶</b>
+  `;
+
+  videoStatus.hidden = false;
+  videoStatus.textContent =
+    "YARUVA is preparing your cinematic video…";
+
+  videoResult.hidden = true;
+
+  try {
+
+    const response = await fetch("/api/video", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        prompt,
+        image: currentImage
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data?.error ||
+        "Video generation failed."
+      );
+    }
+
+    if (!data.id) {
+      throw new Error(
+        "No video job was created."
+      );
+    }
+
+    await pollVideo(data.id);
+
+  } catch (error) {
+
+    console.error(error);
+
+    videoStatus.textContent =
+      error.message ||
+      "Unable to create the video.";
+
+  } finally {
+
+    videoBtn.disabled = false;
+    videoBtn.innerHTML = originalText;
+  }
 }
 
 
-// -----------------------------
-// HELPERS
-// -----------------------------
+/* =========================
+   VIDEO STATUS
+   ========================= */
 
-function wait(ms) {
+async function pollVideo(id) {
 
-  return new Promise(
-    resolve =>
-      setTimeout(resolve, ms)
+  const maxAttempts = 60;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+
+    const response = await fetch(
+      `/api/video-status?id=${encodeURIComponent(id)}`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data?.error ||
+        "Unable to check video status."
+      );
+    }
+
+    const progress =
+      data.progress != null
+        ? Math.round(data.progress)
+        : null;
+
+    if (data.status === "completed") {
+
+      videoStatus.textContent =
+        "Your cinematic video is ready.";
+
+      videoResult.src =
+        `/api/video-content?id=${encodeURIComponent(id)}`;
+
+      videoResult.hidden = false;
+
+      videoResult.load();
+
+      return;
+    }
+
+    if (
+      data.status === "failed" ||
+      data.status === "error"
+    ) {
+
+      throw new Error(
+        data?.error?.message ||
+        "Video generation failed."
+      );
+    }
+
+    videoStatus.textContent =
+      progress != null
+        ? `Creating your video… ${progress}%`
+        : "Creating your cinematic video…";
+
+    await new Promise(resolve =>
+      setTimeout(resolve, 5000)
+    );
+  }
+
+  throw new Error(
+    "Video generation is taking longer than expected. Please try again later."
   );
-
 }
 
 
-function escapeHtml(value) {
+/* =========================
+   PROFILE
+   ========================= */
 
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-
-}
+document
+  .getElementById("profileNav")
+  ?.addEventListener("click", () => {
+    alert("YARUVA profile — coming soon.");
+  });
