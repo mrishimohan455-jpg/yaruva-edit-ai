@@ -3387,18 +3387,1306 @@ console.log(
   // ----------------------------------------------------
 
   function drawProfessionalBackground(
+  ctx,
+  width,
+  height,
+  type
+) {
 
-    ctx,
+  // ==================================================
+  // YARUVA BACKGROUND STUDIO V3
+  // Photorealistic-style cinematic environments
+  // ==================================================
 
-    width,
+  const W = width;
+  const H = height;
 
-    height,
+  ctx.clearRect(0, 0, W, H);
 
-    type
 
+  // --------------------------------------------------
+  // Helper: fill gradient
+  // --------------------------------------------------
+
+  function gradient(
+    colors,
+    y1 = 0,
+    y2 = H
   ) {
 
-    let gradient;
+    const g =
+      ctx.createLinearGradient(
+        0,
+        y1,
+        0,
+        y2
+      );
+
+    colors.forEach(
+      (color, index) => {
+
+        g.addColorStop(
+          index /
+          (colors.length - 1),
+          color
+        );
+
+      }
+    );
+
+    ctx.fillStyle = g;
+
+    ctx.fillRect(
+      0,
+      0,
+      W,
+      H
+    );
+
+  }
+
+
+  // --------------------------------------------------
+  // Helper: glow
+  // --------------------------------------------------
+
+  function glow(
+    x,
+    y,
+    radius,
+    color,
+    alpha
+  ) {
+
+    const g =
+      ctx.createRadialGradient(
+        x,
+        y,
+        0,
+        x,
+        y,
+        radius
+      );
+
+    g.addColorStop(
+      0,
+      `rgba(${color},${alpha})`
+    );
+
+    g.addColorStop(
+      1,
+      `rgba(${color},0)`
+    );
+
+    ctx.fillStyle = g;
+
+    ctx.fillRect(
+      0,
+      0,
+      W,
+      H
+    );
+
+  }
+
+
+  // ==================================================
+  // CINEMATIC CITY
+  // ==================================================
+
+  if (type === "city") {
+
+    gradient(
+      [
+        "#080b18",
+        "#17172d",
+        "#30253b",
+        "#0c101c"
+      ]
+    );
+
+
+    // Moon / city glow
+
+    glow(
+      W * 0.76,
+      H * 0.22,
+      W * 0.42,
+      "255,190,130",
+      0.28
+    );
+
+
+    // Atmospheric haze
+
+    const haze =
+      ctx.createLinearGradient(
+        0,
+        H * 0.42,
+        0,
+        H
+      );
+
+    haze.addColorStop(
+      0,
+      "rgba(130,140,180,0)"
+    );
+
+    haze.addColorStop(
+      1,
+      "rgba(10,12,25,0.75)"
+    );
+
+    ctx.fillStyle = haze;
+
+    ctx.fillRect(
+      0,
+      H * 0.35,
+      W,
+      H * 0.65
+    );
+
+
+    // Distant skyline
+
+    const buildings = [
+      [0.00, 0.48, 0.13, 0.52],
+      [0.11, 0.58, 0.12, 0.42],
+      [0.22, 0.50, 0.14, 0.50],
+      [0.35, 0.60, 0.10, 0.40],
+      [0.44, 0.46, 0.15, 0.54],
+      [0.58, 0.55, 0.11, 0.45],
+      [0.68, 0.43, 0.14, 0.57],
+      [0.82, 0.52, 0.18, 0.48]
+    ];
+
+
+    buildings.forEach(
+      (b, buildingIndex) => {
+
+        const x =
+          W * b[0];
+
+        const y =
+          H * b[1];
+
+        const bw =
+          W * b[2];
+
+        const bh =
+          H * b[3];
+
+
+        const buildingGradient =
+          ctx.createLinearGradient(
+            x,
+            y,
+            x + bw,
+            y + bh
+          );
+
+        buildingGradient.addColorStop(
+          0,
+          "#111728"
+        );
+
+        buildingGradient.addColorStop(
+          0.5,
+          "#171c2e"
+        );
+
+        buildingGradient.addColorStop(
+          1,
+          "#080b14"
+        );
+
+        ctx.fillStyle =
+          buildingGradient;
+
+        ctx.fillRect(
+          x,
+          y,
+          bw,
+          bh
+        );
+
+
+        // Windows
+
+        const rows = 9;
+        const cols = 4;
+
+        for (
+          let row = 0;
+          row < rows;
+          row++
+        ) {
+
+          for (
+            let col = 0;
+            col < cols;
+            col++
+          ) {
+
+            if (
+              (row + col + buildingIndex) %
+              3 === 0
+            ) continue;
+
+
+            const wx =
+              x +
+              bw * 0.16 +
+              col *
+              bw * 0.19;
+
+            const wy =
+              y +
+              bh * 0.10 +
+              row *
+              bh * 0.095;
+
+
+            ctx.fillStyle =
+              "rgba(255,210,120,0.65)";
+
+            ctx.fillRect(
+              wx,
+              wy,
+              Math.max(2, bw * 0.055),
+              Math.max(3, bh * 0.035)
+            );
+
+          }
+
+        }
+
+      }
+    );
+
+
+    // Road / foreground
+
+    const road =
+      ctx.createLinearGradient(
+        0,
+        H * 0.78,
+        0,
+        H
+      );
+
+    road.addColorStop(
+      0,
+      "#151722"
+    );
+
+    road.addColorStop(
+      1,
+      "#05060b"
+    );
+
+    ctx.fillStyle =
+      road;
+
+    ctx.fillRect(
+      0,
+      H * 0.78,
+      W,
+      H * 0.22
+    );
+
+
+    // Road light reflections
+
+    for (
+      let i = 0;
+      i < 18;
+      i++
+    ) {
+
+      const x =
+        (i / 18) * W;
+
+      const reflection =
+        ctx.createLinearGradient(
+          x,
+          H * 0.77,
+          x,
+          H
+        );
+
+      reflection.addColorStop(
+        0,
+        "rgba(255,190,100,0.22)"
+      );
+
+      reflection.addColorStop(
+        1,
+        "rgba(255,190,100,0)"
+      );
+
+      ctx.fillStyle =
+        reflection;
+
+      ctx.fillRect(
+        x,
+        H * 0.76,
+        W * 0.018,
+        H * 0.24
+      );
+
+    }
+
+  }
+
+
+  // ==================================================
+  // LUXURY OFFICE
+  // ==================================================
+
+  else if (type === "office") {
+
+    gradient(
+      [
+        "#10131a",
+        "#292c35",
+        "#15171d"
+      ]
+    );
+
+
+    // Large window
+
+    ctx.fillStyle =
+      "#182331";
+
+    ctx.fillRect(
+      W * 0.08,
+      H * 0.10,
+      W * 0.84,
+      H * 0.65
+    );
+
+
+    // Window light
+
+    const windowGlow =
+      ctx.createLinearGradient(
+        0,
+        H * 0.10,
+        0,
+        H * 0.75
+      );
+
+    windowGlow.addColorStop(
+      0,
+      "rgba(160,190,220,0.30)"
+    );
+
+    windowGlow.addColorStop(
+      1,
+      "rgba(60,80,100,0.05)"
+    );
+
+    ctx.fillStyle =
+      windowGlow;
+
+    ctx.fillRect(
+      W * 0.08,
+      H * 0.10,
+      W * 0.84,
+      H * 0.65
+    );
+
+
+    // Window divisions
+
+    ctx.strokeStyle =
+      "rgba(220,230,240,0.18)";
+
+    ctx.lineWidth =
+      Math.max(2, W * 0.004);
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      W * 0.50,
+      H * 0.10
+    );
+
+    ctx.lineTo(
+      W * 0.50,
+      H * 0.75
+    );
+
+    ctx.moveTo(
+      W * 0.08,
+      H * 0.42
+    );
+
+    ctx.lineTo(
+      W * 0.92,
+      H * 0.42
+    );
+
+    ctx.stroke();
+
+
+    // Floor
+
+    const floor =
+      ctx.createLinearGradient(
+        0,
+        H * 0.72,
+        0,
+        H
+      );
+
+    floor.addColorStop(
+      0,
+      "#30323a"
+    );
+
+    floor.addColorStop(
+      1,
+      "#101116"
+    );
+
+    ctx.fillStyle =
+      floor;
+
+    ctx.fillRect(
+      0,
+      H * 0.72,
+      W,
+      H * 0.28
+    );
+
+
+    // Warm interior glow
+
+    glow(
+      W * 0.20,
+      H * 0.35,
+      W * 0.35,
+      "255,205,150",
+      0.16
+    );
+
+  }
+
+
+  // ==================================================
+  // GOLDEN SUNSET
+  // ==================================================
+
+  else if (type === "sunset") {
+
+    gradient(
+      [
+        "#39234d",
+        "#b95f5a",
+        "#f09a58",
+        "#f5c77a"
+      ]
+    );
+
+
+    // Sun
+
+    glow(
+      W * 0.78,
+      H * 0.43,
+      W * 0.30,
+      "255,220,150",
+      0.65
+    );
+
+
+    ctx.fillStyle =
+      "rgba(255,220,150,0.90)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      W * 0.78,
+      H * 0.43,
+      Math.min(W, H) * 0.055,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    // Horizon
+
+    ctx.fillStyle =
+      "#29352d";
+
+    ctx.fillRect(
+      0,
+      H * 0.67,
+      W,
+      H * 0.33
+    );
+
+
+    // Distant hills
+
+    ctx.fillStyle =
+      "#202b28";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      0,
+      H * 0.68
+    );
+
+    for (
+      let i = 0;
+      i <= 8;
+      i++
+    ) {
+
+      ctx.lineTo(
+        W * (i / 8),
+        H *
+        (0.62 +
+        Math.sin(i * 1.7) * 0.045)
+      );
+
+    }
+
+    ctx.lineTo(
+      W,
+      H
+    );
+
+    ctx.lineTo(
+      0,
+      H
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+  }
+
+
+  // ==================================================
+  // ROOFTOP
+  // ==================================================
+
+  else if (type === "rooftop") {
+
+    gradient(
+      [
+        "#07101d",
+        "#17334a",
+        "#597a8b"
+      ]
+    );
+
+
+    glow(
+      W * 0.78,
+      H * 0.25,
+      W * 0.35,
+      "120,180,220",
+      0.28
+    );
+
+
+    // Distant skyline
+
+    for (
+      let i = 0;
+      i < 9;
+      i++
+    ) {
+
+      const bw =
+        W * (
+          0.07 +
+          (i % 3) * 0.025
+        );
+
+      const bh =
+        H * (
+          0.15 +
+          (i % 4) * 0.055
+        );
+
+      const x =
+        W *
+        (i * 0.115);
+
+      const y =
+        H * 0.72 -
+        bh;
+
+      ctx.fillStyle =
+        "#182531";
+
+      ctx.fillRect(
+        x,
+        y,
+        bw,
+        bh
+      );
+
+    }
+
+
+    // Rooftop floor
+
+    const floor =
+      ctx.createLinearGradient(
+        0,
+        H * 0.68,
+        0,
+        H
+      );
+
+    floor.addColorStop(
+      0,
+      "#3b4148"
+    );
+
+    floor.addColorStop(
+      1,
+      "#11151a"
+    );
+
+    ctx.fillStyle =
+      floor;
+
+    ctx.fillRect(
+      0,
+      H * 0.68,
+      W,
+      H * 0.32
+    );
+
+
+    // Floor perspective lines
+
+    ctx.strokeStyle =
+      "rgba(220,230,235,0.12)";
+
+    ctx.lineWidth =
+      Math.max(1, W * 0.002);
+
+    for (
+      let i = 0;
+      i < 8;
+      i++
+    ) {
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        W * 0.5,
+        H * 0.68
+      );
+
+      ctx.lineTo(
+        W * (i / 7),
+        H
+      );
+
+      ctx.stroke();
+
+    }
+
+  }
+
+
+  // ==================================================
+  // TROPICAL BEACH
+  // ==================================================
+
+  else if (type === "beach") {
+
+    gradient(
+      [
+        "#4e91bd",
+        "#9dd1df",
+        "#f2d7a0"
+      ]
+    );
+
+
+    // Sunlight
+
+    glow(
+      W * 0.78,
+      H * 0.20,
+      W * 0.40,
+      "255,230,170",
+      0.40
+    );
+
+
+    // Ocean
+
+    const ocean =
+      ctx.createLinearGradient(
+        0,
+        H * 0.48,
+        0,
+        H * 0.80
+      );
+
+    ocean.addColorStop(
+      0,
+      "#398ba5"
+    );
+
+    ocean.addColorStop(
+      1,
+      "#15546d"
+    );
+
+    ctx.fillStyle =
+      ocean;
+
+    ctx.fillRect(
+      0,
+      H * 0.48,
+      W,
+      H * 0.32
+    );
+
+
+    // Beach
+
+    ctx.fillStyle =
+      "#d9bd82";
+
+    ctx.fillRect(
+      0,
+      H * 0.80,
+      W,
+      H * 0.20
+    );
+
+
+    // Palm silhouettes
+
+    function palm(x, y, scale) {
+
+      ctx.strokeStyle =
+        "rgba(20,55,45,0.85)";
+
+      ctx.lineWidth =
+        Math.max(
+          2,
+          W * 0.008 * scale
+        );
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        x,
+        y
+      );
+
+      ctx.quadraticCurveTo(
+        x - W * 0.025 * scale,
+        y - H * 0.12 * scale,
+        x + W * 0.015 * scale,
+        y - H * 0.23 * scale
+      );
+
+      ctx.stroke();
+
+
+      const topX =
+        x + W * 0.015 * scale;
+
+      const topY =
+        y - H * 0.23 * scale;
+
+
+      for (
+        let i = 0;
+        i < 7;
+        i++
+      ) {
+
+        const angle =
+          -1.9 +
+          i * 0.55;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          topX,
+          topY
+        );
+
+        ctx.quadraticCurveTo(
+          topX +
+          Math.cos(angle) *
+          W * 0.08 * scale,
+          topY +
+          Math.sin(angle) *
+          H * 0.06 * scale,
+          topX +
+          Math.cos(angle) *
+          W * 0.16 * scale,
+          topY +
+          Math.sin(angle) *
+          H * 0.13 * scale
+        );
+
+        ctx.stroke();
+
+      }
+
+    }
+
+    palm(
+      W * 0.10,
+      H * 0.82,
+      1
+    );
+
+    palm(
+      W * 0.90,
+      H * 0.84,
+      0.85
+    );
+
+  }
+
+
+  // ==================================================
+  // NATURE
+  // ==================================================
+
+  else if (type === "nature") {
+
+    gradient(
+      [
+        "#86b7a0",
+        "#4f8067",
+        "#1c392d"
+      ]
+    );
+
+
+    // Soft sunlight
+
+    glow(
+      W * 0.50,
+      H * 0.25,
+      W * 0.50,
+      "255,235,180",
+      0.28
+    );
+
+
+    // Distant forest
+
+    for (
+      let i = 0;
+      i < 15;
+      i++
+    ) {
+
+      const x =
+        W *
+        (i / 14);
+
+      const treeHeight =
+        H *
+        (0.20 +
+        (i % 5) * 0.035);
+
+      ctx.fillStyle =
+        i % 2 === 0
+          ? "#28523e"
+          : "#1f4435";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        x,
+        H * 0.63,
+        treeHeight * 0.55,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
+
+    }
+
+
+    // Ground
+
+    const ground =
+      ctx.createLinearGradient(
+        0,
+        H * 0.67,
+        0,
+        H
+      );
+
+    ground.addColorStop(
+      0,
+      "#547657"
+    );
+
+    ground.addColorStop(
+      1,
+      "#172d20"
+    );
+
+    ctx.fillStyle =
+      ground;
+
+    ctx.fillRect(
+      0,
+      H * 0.67,
+      W,
+      H * 0.33
+    );
+
+
+    // Light path
+
+    const path =
+      ctx.createLinearGradient(
+        W * 0.5,
+        H * 0.65,
+        W * 0.5,
+        H
+      );
+
+    path.addColorStop(
+      0,
+      "rgba(230,210,160,0.20)"
+    );
+
+    path.addColorStop(
+      1,
+      "rgba(230,210,160,0)"
+    );
+
+    ctx.fillStyle =
+      path;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      W * 0.47,
+      H * 0.65
+    );
+
+    ctx.lineTo(
+      W * 0.53,
+      H * 0.65
+    );
+
+    ctx.lineTo(
+      W * 0.72,
+      H
+    );
+
+    ctx.lineTo(
+      W * 0.28,
+      H
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+  }
+
+
+  // ==================================================
+  // PHOTO STUDIO
+  // ==================================================
+
+  else if (type === "studio") {
+
+    gradient(
+      [
+        "#eeeeee",
+        "#cfd2d6",
+        "#8f949b"
+      ]
+    );
+
+
+    // Studio light
+
+    glow(
+      W * 0.50,
+      H * 0.25,
+      W * 0.55,
+      "255,255,255",
+      0.35
+    );
+
+
+    // Floor
+
+    const floor =
+      ctx.createLinearGradient(
+        0,
+        H * 0.70,
+        0,
+        H
+      );
+
+    floor.addColorStop(
+      0,
+      "#c5c7ca"
+    );
+
+    floor.addColorStop(
+      1,
+      "#6e7379"
+    );
+
+    ctx.fillStyle =
+      floor;
+
+    ctx.fillRect(
+      0,
+      H * 0.70,
+      W,
+      H * 0.30
+    );
+
+
+    // Seamless studio horizon
+
+    ctx.fillStyle =
+      "rgba(255,255,255,0.18)";
+
+    ctx.fillRect(
+      0,
+      H * 0.69,
+      W,
+      H * 0.015
+    );
+
+  }
+
+
+  // ==================================================
+  // NEON NIGHT
+  // ==================================================
+
+  else if (type === "neon") {
+
+    gradient(
+      [
+        "#05020d",
+        "#12072b",
+        "#080512"
+      ]
+    );
+
+
+    glow(
+      W * 0.20,
+      H * 0.30,
+      W * 0.40,
+      "100,40,255",
+      0.32
+    );
+
+
+    glow(
+      W * 0.82,
+      H * 0.45,
+      W * 0.40,
+      "255,50,150",
+      0.25
+    );
+
+
+    // Neon buildings
+
+    for (
+      let i = 0;
+      i < 8;
+      i++
+    ) {
+
+      const x =
+        W * i / 8;
+
+      const bw =
+        W * 0.10;
+
+      const bh =
+        H *
+        (0.30 +
+        (i % 3) * 0.08);
+
+      ctx.fillStyle =
+        "#090b17";
+
+      ctx.fillRect(
+        x,
+        H * 0.75 - bh,
+        bw,
+        bh
+      );
+
+
+      // Neon strips
+
+      ctx.strokeStyle =
+        i % 2 === 0
+          ? "rgba(80,120,255,0.65)"
+          : "rgba(255,60,180,0.65)";
+
+      ctx.lineWidth =
+        Math.max(
+          2,
+          W * 0.004
+        );
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        x + bw * 0.15,
+        H * 0.75 - bh * 0.72
+      );
+
+      ctx.lineTo(
+        x + bw * 0.85,
+        H * 0.75 - bh * 0.72
+      );
+
+      ctx.stroke();
+
+    }
+
+
+    // Wet street
+
+    const street =
+      ctx.createLinearGradient(
+        0,
+        H * 0.74,
+        0,
+        H
+      );
+
+    street.addColorStop(
+      0,
+      "#151525"
+    );
+
+    street.addColorStop(
+      1,
+      "#030308"
+    );
+
+    ctx.fillStyle =
+      street;
+
+    ctx.fillRect(
+      0,
+      H * 0.74,
+      W,
+      H * 0.26
+    );
+
+
+    // Reflections
+
+    for (
+      let i = 0;
+      i < 10;
+      i++
+    ) {
+
+      ctx.fillStyle =
+        i % 2 === 0
+          ? "rgba(90,100,255,0.16)"
+          : "rgba(255,50,180,0.14)";
+
+      ctx.fillRect(
+        W * (i / 10),
+        H * 0.77,
+        W * 0.025,
+        H * 0.22
+      );
+
+    }
+
+  }
+
+
+  // ==================================================
+  // FALLBACK
+  // ==================================================
+
+  else {
+
+    gradient(
+      [
+        "#20232b",
+        "#4a4e58"
+      ]
+    );
+
+  }
+
+
+  // ==================================================
+  // FINAL CINEMATIC ATMOSPHERE
+  // ==================================================
+
+  // Very subtle vignette.
+  // This affects only the background.
+  // It does NOT duplicate the subject.
+
+  const vignette =
+    ctx.createRadialGradient(
+      W * 0.5,
+      H * 0.45,
+      Math.min(W, H) * 0.20,
+      W * 0.5,
+      H * 0.5,
+      Math.max(W, H) * 0.72
+    );
+
+  vignette.addColorStop(
+    0,
+    "rgba(0,0,0,0)"
+  );
+
+  vignette.addColorStop(
+    1,
+    "rgba(0,0,0,0.34)"
+  );
+
+  ctx.fillStyle =
+    vignette;
+
+  ctx.fillRect(
+    0,
+    0,
+    W,
+    H
+  );
+
+}
 
     // ==================================================
 
