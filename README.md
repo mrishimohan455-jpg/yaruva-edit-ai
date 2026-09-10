@@ -1,1 +1,0 @@
-# yaruva-edit-ai
