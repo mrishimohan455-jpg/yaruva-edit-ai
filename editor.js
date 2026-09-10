@@ -1,19 +1,11 @@
-/*
-====================================================
- YARUVA AI — FREE LOCAL CREATIVE ENGINE
- No OpenAI API
- No API key
- No paid AI service
- Runs directly in the browser
-====================================================
-*/
+// YARUVA AI EDITOR
+// Local editing + real browser AI background removal
 
 const imageInput = document.getElementById("imageInput");
 const uploadBtn = document.getElementById("uploadBtn");
 const uploadBox = document.getElementById("uploadBox");
 const previewCard = document.getElementById("previewCard");
 const previewImage = document.getElementById("previewImage");
-const changeImageBtn = document.getElementById("changeImageBtn");
 
 const promptInput = document.getElementById("promptInput");
 const generateBtn = document.getElementById("generateBtn");
@@ -21,813 +13,772 @@ const generateBtn = document.getElementById("generateBtn");
 const resultSection = document.getElementById("resultSection");
 const resultImage = document.getElementById("resultImage");
 const resultPrompt = document.getElementById("resultPrompt");
-
 const saveProjectBtn = document.getElementById("saveProjectBtn");
-const exportBtn = document.getElementById("exportBtn");
 
-const videoPrompt = document.getElementById("videoPrompt");
-const videoBtn = document.getElementById("videoBtn");
-const videoStatus = document.getElementById("videoStatus");
-const videoResult = document.getElementById("videoResult");
-
-let currentImage = "";
-let generatedImage = "";
+let currentImage = null;
+let generatedImage = null;
+let aiRemoveModel = null;
+let transformersModule = null;
 
 
-/* ==================================================
-   IMAGE UPLOAD
-================================================== */
+// --------------------------------------------------
+// UPLOAD
+// --------------------------------------------------
 
-function readImage(file) {
+uploadBtn?.addEventListener("click", () => {
+  imageInput?.click();
+});
+
+uploadBox?.addEventListener("click", () => {
+  imageInput?.click();
+});
+
+imageInput?.addEventListener("change", () => {
+  const file = imageInput.files?.[0];
 
   if (!file) return;
 
-  if (!file.type.startsWith("image/")) {
-    alert("Please choose a valid image.");
-    return;
-  }
-
   const reader = new FileReader();
 
-  reader.onload = function () {
-
+  reader.onload = () => {
     currentImage = reader.result;
 
-    previewImage.src = currentImage;
-
-    uploadBox.hidden = true;
-    previewCard.hidden = false;
-
-    const status =
-      document.getElementById("imageStatus");
-
-    if (status) {
-      status.textContent = "Image ready";
+    if (previewImage) {
+      previewImage.src = currentImage;
     }
+
+    previewCard?.classList.remove("hidden");
   };
 
   reader.readAsDataURL(file);
+});
+
+
+// --------------------------------------------------
+// IMAGE LOADER
+// --------------------------------------------------
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+
+    img.src = src;
+  });
 }
 
 
-uploadBtn?.addEventListener("click", function () {
-  imageInput?.click();
-});
+// --------------------------------------------------
+// LOCAL YARUVA IMAGE ENGINE
+// --------------------------------------------------
 
+async function yaruvaCreateImage(imageData, prompt) {
 
-changeImageBtn?.addEventListener("click", function () {
-  imageInput?.click();
-});
+  const img = await loadImage(imageData);
 
-
-imageInput?.addEventListener("change", function (event) {
-
-  const file = event.target.files?.[0];
-
-  readImage(file);
-
-});
-
-
-/* ==================================================
-   DRAG & DROP
-================================================== */
-
-uploadBox?.addEventListener("dragover", function (event) {
-
-  event.preventDefault();
-
-  uploadBox.style.transform = "scale(.98)";
-
-});
-
-
-uploadBox?.addEventListener("dragleave", function () {
-
-  uploadBox.style.transform = "";
-
-});
-
-
-uploadBox?.addEventListener("drop", function (event) {
-
-  event.preventDefault();
-
-  uploadBox.style.transform = "";
-
-  const file =
-    event.dataTransfer.files?.[0];
-
-  readImage(file);
-
-});
-
-
-/* ==================================================
-   PROMPT SUGGESTIONS
-================================================== */
-
-document
-  .querySelectorAll("[data-prompt]")
-  .forEach(function (button) {
-
-    button.addEventListener("click", function () {
-
-      promptInput.value =
-        button.dataset.prompt || "";
-
-      promptInput.focus();
-
-    });
-
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d", {
+    willReadFrequently: true
   });
 
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
 
-/* ==================================================
-   AI MAGIC
-================================================== */
+  ctx.drawImage(img, 0, 0);
 
-document
-  .querySelectorAll("[data-magic]")
-  .forEach(function (button) {
-
-    button.addEventListener("click", function () {
-
-      promptInput.value =
-        button.dataset.magic || "";
-
-      promptInput.focus();
-
-      document
-        .querySelector(".ai-prompt")
-        ?.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-
-    });
-
-  });
-
-
-/* ==================================================
-   YARUVA IMAGE ENGINE
-================================================== */
-
-async function yaruvaCreateImage(
-  imageData,
-  prompt
-) {
-
-  const image =
-    await loadImage(imageData);
-
-  const canvas =
-    document.createElement("canvas");
-
-  const ctx =
-    canvas.getContext("2d");
-
-  const MAX_SIZE = 1600;
-
-  let width =
-    image.naturalWidth ||
-    image.width;
-
-  let height =
-    image.naturalHeight ||
-    image.height;
-
-
-  /* Resize large images */
-
-  if (
-    width > MAX_SIZE ||
-    height > MAX_SIZE
-  ) {
-
-    const scale =
-      Math.min(
-        MAX_SIZE / width,
-        MAX_SIZE / height
-      );
-
-    width =
-      Math.round(width * scale);
-
-    height =
-      Math.round(height * scale);
-  }
-
-
-  canvas.width = width;
-  canvas.height = height;
-
-
-  ctx.drawImage(
-    image,
+  const image = ctx.getImageData(
     0,
     0,
-    width,
-    height
+    canvas.width,
+    canvas.height
   );
 
+  const data = image.data;
 
-  const text =
-    String(prompt || "")
-      .toLowerCase();
-
+  const text = String(prompt || "").toLowerCase();
 
   let mode = "enhance";
 
-
   if (
     text.includes("cinematic") ||
-    text.includes("cinema") ||
     text.includes("movie") ||
     text.includes("film")
   ) {
-
     mode = "cinematic";
-
   }
 
-  else if (
+  if (
     text.includes("luxury") ||
-    text.includes("editorial") ||
-    text.includes("fashion")
+    text.includes("fashion") ||
+    text.includes("editorial")
   ) {
-
     mode = "luxury";
-
   }
 
-  else if (
+  if (
     text.includes("relight") ||
     text.includes("lighting") ||
     text.includes("light")
   ) {
-
     mode = "relight";
-
   }
 
-  else if (
+  if (
     text.includes("portrait") ||
-    text.includes("professional portrait")
+    text.includes("face")
   ) {
-
     mode = "portrait";
-
   }
 
 
-  processPixels(
-    canvas,
-    ctx,
-    mode
-  );
+  // -------------------------------
+  // Pixel processing
+  // -------------------------------
 
+  for (let i = 0; i < data.length; i += 4) {
 
-  return canvas.toDataURL(
-    "image/jpeg",
-    0.94
-  );
-}
-
-
-/* ==================================================
-   IMAGE PROCESSING
-================================================== */
-
-function processPixels(
-  canvas,
-  ctx,
-  mode
-) {
-
-  const width =
-    canvas.width;
-
-  const height =
-    canvas.height;
-
-
-  const imageData =
-    ctx.getImageData(
-      0,
-      0,
-      width,
-      height
-    );
-
-
-  const pixels =
-    imageData.data;
-
-
-  for (
-    let i = 0;
-    i < pixels.length;
-    i += 4
-  ) {
-
-    let r = pixels[i];
-    let g = pixels[i + 1];
-    let b = pixels[i + 2];
-
-
-    const brightness =
-      (r + g + b) / 3;
-
-
-    /* ================================
-       ENHANCE
-    ================================= */
+    let r = data[i];
+    let g = data[i + 1];
+    let b = data[i + 2];
 
     if (mode === "enhance") {
 
-      r = contrast(r, 1.12);
-      g = contrast(g, 1.12);
-      b = contrast(b, 1.12);
+      r = (r - 128) * 1.10 + 128;
+      g = (g - 128) * 1.10 + 128;
+      b = (b - 128) * 1.10 + 128;
 
-      r *= 1.05;
-      g *= 1.05;
-      b *= 1.05;
     }
 
-
-    /* ================================
-       CINEMATIC
-    ================================= */
 
     if (mode === "cinematic") {
 
-      r = contrast(r, 1.18);
-      g = contrast(g, 1.12);
-      b = contrast(b, 1.08);
+      r = (r - 128) * 1.18 + 128;
+      g = (g - 128) * 1.08 + 128;
+      b = (b - 128) * 1.15 + 128;
 
-      r *= 1.05;
-      g *= 0.98;
-      b *= 0.94;
+      r += 6;
+      b += 8;
 
-
-      if (brightness < 90) {
-
-        b *= 1.08;
-
-      }
-
-
-      if (brightness > 190) {
-
-        r *= 1.04;
-
-      }
     }
 
-
-    /* ================================
-       LUXURY
-    ================================= */
 
     if (mode === "luxury") {
 
-      r = contrast(r, 1.10);
-      g = contrast(g, 1.06);
-      b = contrast(b, 1.08);
+      r = (r - 128) * 1.22 + 128;
+      g = (g - 128) * 1.14 + 128;
+      b = (b - 128) * 1.18 + 128;
 
-      r *= 1.08;
-      g *= 1.02;
-      b *= 1.04;
+      r += 5;
+
     }
 
-
-    /* ================================
-       RELIGHT
-    ================================= */
 
     if (mode === "relight") {
 
-      const lift =
-        brightness < 150
-          ? 1.17
-          : 1.05;
+      r += 15;
+      g += 15;
+      b += 15;
 
-      r *= lift;
-      g *= lift;
-      b *= lift;
+      r = (r - 128) * 1.08 + 128;
+      g = (g - 128) * 1.08 + 128;
+      b = (b - 128) * 1.08 + 128;
+
     }
 
-
-    /* ================================
-       PORTRAIT
-    ================================= */
 
     if (mode === "portrait") {
 
-      r *= 1.05;
-      g *= 1.02;
-      b *= 0.98;
+      r = (r - 128) * 1.08 + 128;
+      g = (g - 128) * 1.05 + 128;
+      b = (b - 128) * 1.04 + 128;
 
-      r = contrast(r, 1.04);
-      g = contrast(g, 1.04);
-      b = contrast(b, 1.02);
     }
 
 
-    pixels[i] =
-      clamp(r);
-
-    pixels[i + 1] =
-      clamp(g);
-
-    pixels[i + 2] =
-      clamp(b);
+    data[i] = Math.max(0, Math.min(255, r));
+    data[i + 1] = Math.max(0, Math.min(255, g));
+    data[i + 2] = Math.max(0, Math.min(255, b));
   }
 
 
-  ctx.putImageData(
-    imageData,
-    0,
-    0
-  );
-
-
-  /* ================================
-     CINEMATIC VIGNETTE
-  ================================= */
+  // Cinematic vignette
 
   if (mode === "cinematic") {
 
-    const gradient =
-      ctx.createRadialGradient(
-        width / 2,
-        height / 2,
-        Math.min(width, height) * 0.18,
-        width / 2,
-        height / 2,
-        Math.max(width, height) * 0.72
-      );
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
 
-
-    gradient.addColorStop(
-      0,
-      "rgba(0,0,0,0)"
+    const maxDist = Math.sqrt(
+      cx * cx + cy * cy
     );
 
+    for (let y = 0; y < canvas.height; y++) {
 
-    gradient.addColorStop(
-      0.72,
-      "rgba(0,0,0,.08)"
-    );
+      for (let x = 0; x < canvas.width; x++) {
 
+        const dx = x - cx;
+        const dy = y - cy;
 
-    gradient.addColorStop(
-      1,
-      "rgba(0,0,0,.40)"
-    );
+        const distance = Math.sqrt(
+          dx * dx + dy * dy
+        );
 
+        const factor =
+          1 - (distance / maxDist) * 0.22;
 
-    ctx.fillStyle =
-      gradient;
+        const index =
+          (y * canvas.width + x) * 4;
 
-
-    ctx.fillRect(
-      0,
-      0,
-      width,
-      height
-    );
+        data[index] *= factor;
+        data[index + 1] *= factor;
+        data[index + 2] *= factor;
+      }
+    }
   }
 
-}
 
+  ctx.putImageData(image, 0, 0);
 
-/* ==================================================
-   IMAGE HELPERS
-================================================== */
-
-function loadImage(src) {
-
-  return new Promise(
-    function (resolve, reject) {
-
-      const image =
-        new Image();
-
-      image.onload =
-        function () {
-          resolve(image);
-        };
-
-      image.onerror =
-        function () {
-          reject(
-            new Error(
-              "Unable to read this image."
-            )
-          );
-        };
-
-      image.src = src;
-
-    }
+  return canvas.toDataURL(
+    "image/jpeg",
+    0.92
   );
 }
 
 
-function contrast(
-  value,
-  factor
-) {
+// --------------------------------------------------
+// SHOW RESULT
+// --------------------------------------------------
 
-  return (
-    (value - 128) *
-    factor +
-    128
-  );
+function showResult(image, prompt) {
+
+  generatedImage = image;
+
+  if (resultImage) {
+    resultImage.src = image;
+  }
+
+  if (resultPrompt) {
+    resultPrompt.textContent =
+      prompt || "YARUVA AI result";
+  }
+
+  resultSection?.classList.remove("hidden");
+
+  resultSection?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 }
 
 
-function clamp(value) {
+// --------------------------------------------------
+// NORMAL GENERATE
+// --------------------------------------------------
 
-  return Math.max(
-    0,
-    Math.min(
-      255,
-      Math.round(value)
-    )
-  );
-}
-
-
-/* ==================================================
-   GENERATE
-================================================== */
-
-generateBtn?.addEventListener(
-  "click",
-  generateImage
-);
-
-
-async function generateImage() {
+generateBtn?.addEventListener("click", async () => {
 
   if (!currentImage) {
 
-    alert(
-      "Please upload an image first."
-    );
+    alert("Upload an image first.");
 
     return;
   }
-
 
   const prompt =
-    promptInput.value.trim();
+    promptInput?.value?.trim() ||
+    "Enhance this image professionally.";
 
+  const originalText =
+    generateBtn.textContent;
 
-  if (!prompt) {
+  generateBtn.disabled = true;
 
-    alert(
-      "Tell YARUVA what you want to create."
-    );
-
-    promptInput.focus();
-
-    return;
-  }
-
-
-  const original =
-    generateBtn.innerHTML;
-
-
-  generateBtn.disabled =
-    true;
-
-
-  generateBtn.innerHTML = `
-    <span>YARUVA is creating…</span>
-    <b>✦</b>
-  `;
+  generateBtn.textContent =
+    "Creating...";
 
 
   try {
 
-    generatedImage =
+    const output =
       await yaruvaCreateImage(
         currentImage,
         prompt
       );
 
+    showResult(
+      output,
+      prompt
+    );
 
-    resultImage.src =
-      generatedImage;
-
-
-    resultPrompt.textContent =
-      prompt;
-
-
-    resultSection.hidden =
-      false;
-
-
-    resultSection.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-
-
-  }
-
-  catch (error) {
+  } catch (error) {
 
     console.error(error);
 
     alert(
-      error.message ||
-      "YARUVA could not process the image."
+      "YARUVA could not process this image."
     );
 
+  } finally {
+
+    generateBtn.disabled = false;
+
+    generateBtn.textContent =
+      originalText || "Generate";
+  }
+});
+
+
+// --------------------------------------------------
+// LOAD TRANSFORMERS.JS
+// --------------------------------------------------
+
+async function loadTransformers() {
+
+  if (transformersModule) {
+    return transformersModule;
   }
 
-  finally {
+  transformersModule = await import(
+    "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/+esm"
+  );
 
-    generateBtn.disabled =
-      false;
-
-    generateBtn.innerHTML =
-      original;
-
-  }
-
+  return transformersModule;
 }
 
 
-/* ==================================================
-   SAVE PROJECT
-================================================== */
+// --------------------------------------------------
+// LOAD REAL AI BACKGROUND REMOVAL MODEL
+// --------------------------------------------------
 
-saveProjectBtn?.addEventListener(
-  "click",
-  saveProject
-);
+async function loadRemoveModel(statusButton) {
+
+  if (aiRemoveModel) {
+    return aiRemoveModel;
+  }
+
+  if (statusButton) {
+    statusButton.textContent =
+      "Loading AI...";
+  }
+
+  const transformers =
+    await loadTransformers();
+
+  aiRemoveModel =
+    await transformers.pipeline(
+      "background-removal",
+      "Xenova/modnet",
+      {
+        dtype: "q8"
+      }
+    );
+
+  return aiRemoveModel;
+}
 
 
-function saveProject() {
+// --------------------------------------------------
+// REAL AI BACKGROUND REMOVAL
+// --------------------------------------------------
 
-  if (!generatedImage) {
+async function removeBackgroundAI(button) {
+
+  if (!currentImage) {
 
     alert(
-      "Generate an image first."
+      "Upload an image first."
     );
 
     return;
   }
 
+  const originalText =
+    button?.textContent || "Remove";
 
-  const projects =
-    JSON.parse(
-      localStorage.getItem(
-        "yaruvaProjects"
-      ) || "[]"
+  if (button) {
+    button.disabled = true;
+    button.textContent =
+      "AI Loading...";
+  }
+
+
+  try {
+
+    const model =
+      await loadRemoveModel(button);
+
+    if (button) {
+      button.textContent =
+        "AI Processing...";
+    }
+
+
+    const output =
+      await model(currentImage);
+
+
+    if (
+      !output ||
+      !output[0]
+    ) {
+      throw new Error(
+        "No AI mask returned."
+      );
+    }
+
+
+    // Transformers.js returns
+    // a mask canvas for MODNet
+
+    const maskCanvas =
+      output[0].toCanvas();
+
+
+    const original =
+      await loadImage(currentImage);
+
+
+    const canvas =
+      document.createElement("canvas");
+
+    const ctx =
+      canvas.getContext("2d");
+
+
+    canvas.width =
+      original.naturalWidth;
+
+    canvas.height =
+      original.naturalHeight;
+
+
+    // Draw original image
+
+    ctx.drawImage(
+      original,
+      0,
+      0,
+      canvas.width,
+      canvas.height
     );
 
 
-  projects.unshift({
+    // Create mask canvas
 
-    id: Date.now(),
+    const resizedMask =
+      document.createElement("canvas");
 
-    title:
-      "YARUVA Creation",
-
-    prompt:
-      promptInput.value.trim(),
-
-    image:
-      generatedImage,
-
-    createdAt:
-      new Date().toISOString()
-
-  });
+    const maskCtx =
+      resizedMask.getContext(
+        "2d"
+      );
 
 
-  localStorage.setItem(
-    "yaruvaProjects",
-    JSON.stringify(
-      projects.slice(0, 30)
-    )
-  );
+    resizedMask.width =
+      canvas.width;
+
+    resizedMask.height =
+      canvas.height;
 
 
-  saveProjectBtn.textContent =
-    "✓ Saved";
+    maskCtx.drawImage(
+      maskCanvas,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
 
 
-  setTimeout(
-    function () {
+    const imageData =
+      ctx.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
 
-      saveProjectBtn.textContent =
-        "Save project";
 
-    },
-    1800
-  );
+    const maskData =
+      maskCtx.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
 
+
+    // Apply AI alpha mask
+
+    for (
+      let i = 0;
+      i < imageData.data.length;
+      i += 4
+    ) {
+
+      imageData.data[i + 3] =
+        maskData.data[i];
+
+    }
+
+
+    ctx.putImageData(
+      imageData,
+      0,
+      0
+    );
+
+
+    const result =
+      canvas.toDataURL(
+        "image/png"
+      );
+
+
+    showResult(
+      result,
+      "AI Background Removal — YARUVA MODNet"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "YARUVA AI Remove Error:",
+      error
+    );
+
+    alert(
+      "AI background removal failed. Please try again."
+    );
+
+  } finally {
+
+    if (button) {
+
+      button.disabled = false;
+
+      button.textContent =
+        originalText || "Remove";
+    }
+  }
 }
 
 
-/* ==================================================
-   EXPORT
-================================================== */
+// --------------------------------------------------
+// MAGIC TOOLS
+// --------------------------------------------------
 
-exportBtn?.addEventListener(
+document
+  .querySelectorAll("[data-magic]")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      async () => {
+
+        const title =
+          button.querySelector(
+            "strong"
+          )?.textContent?.trim() || "";
+
+
+        // REAL AI FEATURE
+
+        if (
+          title.toLowerCase()
+            .includes("remove")
+        ) {
+
+          await removeBackgroundAI(
+            button
+          );
+
+          return;
+        }
+
+
+        // Other tools currently
+        // use YARUVA local processing
+
+        if (!currentImage) {
+
+          alert(
+            "Upload an image first."
+          );
+
+          return;
+        }
+
+
+        const prompt =
+          button.dataset.magic ||
+          title;
+
+
+        const oldText =
+          button.textContent;
+
+        button.disabled = true;
+
+        button.textContent =
+          "Working...";
+
+
+        try {
+
+          const output =
+            await yaruvaCreateImage(
+              currentImage,
+              prompt
+            );
+
+
+          showResult(
+            output,
+            prompt
+          );
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          alert(
+            "YARUVA could not process this image."
+          );
+
+        } finally {
+
+          button.disabled = false;
+
+          button.textContent =
+            oldText;
+        }
+      }
+    );
+  });
+
+
+// --------------------------------------------------
+// SAVE PROJECT
+// --------------------------------------------------
+
+saveProjectBtn?.addEventListener(
   "click",
-  function () {
+  () => {
 
     if (!generatedImage) {
 
       alert(
-        "Create an image first."
+        "Generate an image first."
       );
 
       return;
     }
 
 
-    const link =
-      document.createElement("a");
+    const projects =
+      JSON.parse(
+        localStorage.getItem(
+          "yaruvaProjects"
+        ) || "[]"
+      );
 
 
-    link.href =
-      generatedImage;
+    projects.unshift({
+
+      id:
+        Date.now(),
+
+      image:
+        generatedImage,
+
+      prompt:
+        resultPrompt?.textContent ||
+        "YARUVA AI result",
+
+      createdAt:
+        new Date().toLocaleString()
+
+    });
 
 
-    link.download =
-      "yaruva-ai-creation.jpg";
+    localStorage.setItem(
+      "yaruvaProjects",
+      JSON.stringify(
+        projects.slice(0, 30)
+      )
+    );
 
 
-    document.body.appendChild(link);
-
-    link.click();
-
-    link.remove();
-
+    alert(
+      "Saved to YARUVA Projects ✨"
+    );
   }
 );
 
 
-/* ==================================================
-   IMAGE → VIDEO
-================================================== */
+// --------------------------------------------------
+// VIDEO
+// --------------------------------------------------
 
-/*
-  The paid OpenAI video backend is intentionally
-  not used anymore.
+const videoBtn =
+  document.getElementById(
+    "videoBtn"
+  );
 
-  We will build YARUVA's free motion engine separately.
-*/
+const videoStatus =
+  document.getElementById(
+    "videoStatus"
+  );
+
+const videoResult =
+  document.getElementById(
+    "videoResult"
+  );
+
 
 videoBtn?.addEventListener(
   "click",
-  function () {
+  () => {
 
     if (videoStatus) {
 
-      videoStatus.hidden =
-        false;
-
       videoStatus.textContent =
-        "YARUVA free video engine is coming next. Image creation is ready.";
-
+        "YARUVA free video engine is coming next.";
     }
 
+    if (videoResult) {
+
+      videoResult.classList.remove(
+        "hidden"
+      );
+    }
   }
 );
 
 
-if (videoResult) {
-  videoResult.hidden = true;
-}
-
-
-/* ==================================================
-   PROFILE
-================================================== */
+// --------------------------------------------------
+// PROFILE
+// --------------------------------------------------
 
 document
-  .getElementById("profileNav")
-  ?.addEventListener(
-    "click",
-    function () {
+  .querySelectorAll(
+    "[data-profile]"
+  )
+  .forEach(button => {
 
-      alert(
-        "YARUVA profile — coming soon."
-      );
+    button.addEventListener(
+      "click",
+      () => {
 
-    }
-  );
+        alert(
+          "YARUVA Profile — coming soon."
+        );
+      }
+    );
+  });
