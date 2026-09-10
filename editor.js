@@ -1,6 +1,11 @@
 // ======================================================
-// YARUVA AI EDITOR V2
-// Real browser AI + improved background removal
+// YARUVA AI EDITOR V3
+// Free browser AI + YARUVA image engine
+// ======================================================
+
+
+// ======================================================
+// ELEMENTS
 // ======================================================
 
 const imageInput = document.getElementById("imageInput");
@@ -26,8 +31,8 @@ const canvasLabel = document.getElementById("canvasLabel");
 let currentImage = null;
 let generatedImage = null;
 
-let aiRemoveModel = null;
 let transformersModule = null;
+let aiRemoveModel = null;
 
 let showingBefore = false;
 
@@ -79,6 +84,7 @@ imageInput?.addEventListener("change", () => {
     alert("Please choose an image file.");
 
     return;
+
   }
 
 
@@ -121,6 +127,13 @@ imageInput?.addEventListener("change", () => {
 
     }
 
+
+    if (beforeAfterBtn) {
+
+      beforeAfterBtn.textContent = "Before / After";
+
+    }
+
   };
 
 
@@ -150,7 +163,9 @@ function loadImage(src) {
 
     img.onload = () => resolve(img);
 
-    img.onerror = reject;
+    img.onerror = () => reject(
+      new Error("Unable to load image.")
+    );
 
     img.src = src;
 
@@ -256,6 +271,8 @@ async function yaruvaCreateImage(imageData, prompt) {
     let b = data[i + 2];
 
 
+    // ENHANCE
+
     if (mode === "enhance") {
 
       r = (r - 128) * 1.10 + 128;
@@ -264,6 +281,8 @@ async function yaruvaCreateImage(imageData, prompt) {
 
     }
 
+
+    // CINEMATIC
 
     if (mode === "cinematic") {
 
@@ -277,6 +296,8 @@ async function yaruvaCreateImage(imageData, prompt) {
     }
 
 
+    // LUXURY
+
     if (mode === "luxury") {
 
       r = (r - 128) * 1.22 + 128;
@@ -287,6 +308,8 @@ async function yaruvaCreateImage(imageData, prompt) {
 
     }
 
+
+    // RELIGHT
 
     if (mode === "relight") {
 
@@ -301,6 +324,8 @@ async function yaruvaCreateImage(imageData, prompt) {
     }
 
 
+    // PORTRAIT
+
     if (mode === "portrait") {
 
       r = (r - 128) * 1.08 + 128;
@@ -311,18 +336,27 @@ async function yaruvaCreateImage(imageData, prompt) {
 
 
     data[i] =
-      Math.max(0, Math.min(255, r));
+      Math.max(
+        0,
+        Math.min(255, r)
+      );
 
     data[i + 1] =
-      Math.max(0, Math.min(255, g));
+      Math.max(
+        0,
+        Math.min(255, g)
+      );
 
     data[i + 2] =
-      Math.max(0, Math.min(255, b));
+      Math.max(
+        0,
+        Math.min(255, b)
+      );
 
   }
 
 
-  // Cinematic vignette
+  // CINEMATIC VIGNETTE
 
   if (mode === "cinematic") {
 
@@ -415,14 +449,19 @@ function showResult(image, prompt) {
 
     resultImage.src = image;
 
-    // Checkerboard preview for transparent PNGs
+
+    // Transparent PNG checkerboard
+
     resultImage.style.backgroundImage =
       "linear-gradient(45deg,#e8e8e8 25%,transparent 25%)," +
       "linear-gradient(-45deg,#e8e8e8 25%,transparent 25%)," +
       "linear-gradient(45deg,transparent 75%,#e8e8e8 75%)," +
       "linear-gradient(-45deg,transparent 75%,#e8e8e8 75%)";
 
-    resultImage.style.backgroundSize = "24px 24px";
+
+    resultImage.style.backgroundSize =
+      "24px 24px";
+
 
     resultImage.style.backgroundPosition =
       "0 0,0 12px,12px -12px,-12px 0px";
@@ -473,6 +512,7 @@ generateBtn?.addEventListener(
       );
 
       return;
+
     }
 
 
@@ -508,7 +548,11 @@ generateBtn?.addEventListener(
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        "YARUVA Generate Error:",
+        error
+      );
+
 
       alert(
         "YARUVA could not process this image."
@@ -576,12 +620,14 @@ async function loadRemoveModel(button) {
     await loadTransformers();
 
 
+  // Official MODNet configuration
+
   aiRemoveModel =
     await transformers.pipeline(
       "background-removal",
       "Xenova/modnet",
       {
-        dtype: "q8"
+        dtype: "fp32"
       }
     );
 
@@ -592,272 +638,244 @@ async function loadRemoveModel(button) {
 
 
 // ======================================================
-// IMPROVE AI MASK
-// ======================================================
-
-function improveMask(maskData, width, height) {
-
-  const source =
-    new Uint8ClampedArray(
-      maskData
-    );
-
-
-  const dilated =
-    new Uint8ClampedArray(
-      source.length
-    );
-
-
-  // Small dilation.
-  // Helps close tiny holes inside clothes/hair.
-
-  for (
-    let y = 1;
-    y < height - 1;
-    y++
-  ) {
-
-    for (
-      let x = 1;
-      x < width - 1;
-      x++
-    ) {
-
-      const index =
-        (y * width + x) * 4;
-
-
-      let max = 0;
-
-
-      for (
-        let yy = -1;
-        yy <= 1;
-        yy++
-      ) {
-
-        for (
-          let xx = -1;
-          xx <= 1;
-          xx++
-        ) {
-
-          const neighbour =
-            (
-              (y + yy) *
-              width +
-              (x + xx)
-            ) * 4;
-
-
-          max = Math.max(
-            max,
-            source[neighbour]
-          );
-
-        }
-
-      }
-
-
-      dilated[index] = max;
-
-    }
-
-  }
-
-
-  const result =
-    new Uint8ClampedArray(
-      source.length
-    );
-
-
-  // Small erosion after dilation.
-  // Gives cleaner outer edges.
-
-  for (
-    let y = 1;
-    y < height - 1;
-    y++
-  ) {
-
-    for (
-      let x = 1;
-      x < width - 1;
-      x++
-    ) {
-
-      const index =
-        (y * width + x) * 4;
-
-
-      let min = 255;
-
-
-      for (
-        let yy = -1;
-        yy <= 1;
-        yy++
-      ) {
-
-        for (
-          let xx = -1;
-          xx <= 1;
-          xx++
-        ) {
-
-          const neighbour =
-            (
-              (y + yy) *
-              width +
-              (x + xx)
-            ) * 4;
-
-
-          min = Math.min(
-            min,
-            dilated[neighbour]
-          );
-
-        }
-
-      }
-
-
-      result[index] = min;
-
-    }
-
-  }
-
-
-  return result;
-
-}
-
-
-// ======================================================
-// REAL AI BACKGROUND REMOVAL V2
+// REAL AI BACKGROUND REMOVAL
 // ======================================================
 
 async function removeBackgroundAI(button) {
 
   if (!currentImage) {
 
-    alert("Upload an image first.");
+    alert(
+      "Upload an image first."
+    );
 
     return;
 
   }
 
-  const originalText =
 
-    button?.textContent || "Remove";
+  const originalText =
+    button?.textContent ||
+    "Remove";
+
 
   if (button) {
 
     button.disabled = true;
 
     button.textContent =
-
-      "AI Loading...";
+      "Loading AI...";
 
   }
 
+
   try {
 
-    // Load the browser AI model
+    // Load MODNet
 
     const model =
-
       await loadRemoveModel(button);
+
 
     if (button) {
 
       button.textContent =
-
         "AI Processing...";
 
     }
 
-    // Run MODNet
+
+    // Run AI segmentation
 
     const output =
-
       await model(currentImage);
 
+
     if (
-
       !output ||
-
       !output[0]
-
     ) {
 
       throw new Error(
-
-        "AI did not return an image."
-
+        "MODNet did not return a mask."
       );
 
     }
 
-    // IMPORTANT:
 
-    // MODNet's background-removal output
+    // Load original image
 
-    // is already transparent.
+    const original =
+      await loadImage(currentImage);
 
-    // Do NOT apply the mask a second time.
 
-    const resultCanvas =
+    const width =
+      original.naturalWidth;
 
-      output[0].toCanvas();
+    const height =
+      original.naturalHeight;
 
-    // Convert directly to PNG
 
-    const result =
+    // Original image canvas
 
-      resultCanvas.toDataURL(
+    const canvas =
+      document.createElement("canvas");
 
-        "image/png"
 
+    canvas.width =
+      width;
+
+    canvas.height =
+      height;
+
+
+    const ctx =
+      canvas.getContext(
+        "2d",
+        {
+          willReadFrequently: true
+        }
       );
 
-    // Show final transparent result
+
+    ctx.drawImage(
+      original,
+      0,
+      0,
+      width,
+      height
+    );
+
+
+    // Get AI mask canvas
+
+    const maskCanvas =
+      output[0].toCanvas();
+
+
+    // Resize mask to original image size
+
+    const resizedMask =
+      document.createElement("canvas");
+
+
+    resizedMask.width =
+      width;
+
+    resizedMask.height =
+      height;
+
+
+    const maskCtx =
+      resizedMask.getContext(
+        "2d",
+        {
+          willReadFrequently: true
+        }
+      );
+
+
+    maskCtx.drawImage(
+      maskCanvas,
+      0,
+      0,
+      width,
+      height
+    );
+
+
+    // Read original pixels
+
+    const imageData =
+      ctx.getImageData(
+        0,
+        0,
+        width,
+        height
+      );
+
+
+    // Read AI mask pixels
+
+    const maskData =
+      maskCtx.getImageData(
+        0,
+        0,
+        width,
+        height
+      );
+
+
+    const pixels =
+      imageData.data;
+
+    const maskPixels =
+      maskData.data;
+
+
+    // Apply AI mask to alpha
+
+    for (
+      let i = 0;
+      i < pixels.length;
+      i += 4
+    ) {
+
+      // MODNet mask is grayscale.
+      // Use red channel as alpha.
+
+      pixels[i + 3] =
+        maskPixels[i];
+
+    }
+
+
+    // Put transparent pixels back
+
+    ctx.putImageData(
+      imageData,
+      0,
+      0
+    );
+
+
+    // Export transparent PNG
+
+    const result =
+      canvas.toDataURL(
+        "image/png"
+      );
+
 
     showResult(
-
       result,
-
       "AI Background Removal — YARUVA AI"
-
     );
+
 
     if (imageStatus) {
 
       imageStatus.textContent =
-
-        "AI ready";
+        "AI background removed";
 
     }
+
 
   } catch (error) {
 
     console.error(
-
-      "YARUVA AI Remove Error:",
-
+      "YARUVA MODNet Error:",
       error
-
     );
 
+
+    // IMPORTANT:
+    // Show the actual browser error
+    // so we can fix it if it happens again.
+
     alert(
-
-      "AI background removal failed. Please try again."
-
+      "YARUVA AI error: " +
+      (error?.message || error)
     );
 
   } finally {
@@ -867,7 +885,6 @@ async function removeBackgroundAI(button) {
       button.disabled = false;
 
       button.textContent =
-
         originalText;
 
     }
@@ -878,13 +895,11 @@ async function removeBackgroundAI(button) {
 
 
 // ======================================================
-// AI MAGIC
+// AI MAGIC TOOLS
 // ======================================================
 
 document
-  .querySelectorAll(
-    "[data-magic]"
-  )
+  .querySelectorAll("[data-magic]")
   .forEach(button => {
 
     button.addEventListener(
@@ -958,7 +973,11 @@ document
 
         } catch (error) {
 
-          console.error(error);
+          console.error(
+            "YARUVA Magic Error:",
+            error
+          );
+
 
           alert(
             "YARUVA could not process this image."
@@ -1018,19 +1037,24 @@ beforeAfterBtn?.addEventListener(
       beforeAfterBtn.textContent =
         "Show Result";
 
+
       previewImage.src =
         generatedImage;
 
+
       canvasLabel.textContent =
         "AI result";
+
 
     } else {
 
       beforeAfterBtn.textContent =
         "Before / After";
 
+
       previewImage.src =
         currentImage;
+
 
       canvasLabel.textContent =
         "Your image";
@@ -1060,17 +1084,29 @@ saveProjectBtn?.addEventListener(
     }
 
 
-    const projects =
-      JSON.parse(
-        localStorage.getItem(
-          "yaruvaProjects"
-        ) || "[]"
-      );
+    let projects = [];
+
+
+    try {
+
+      projects =
+        JSON.parse(
+          localStorage.getItem(
+            "yaruvaProjects"
+          ) || "[]"
+        );
+
+    } catch {
+
+      projects = [];
+
+    }
 
 
     projects.unshift({
 
-      id: Date.now(),
+      id:
+        Date.now(),
 
       image:
         generatedImage,
@@ -1110,10 +1146,12 @@ const videoBtn =
     "videoBtn"
   );
 
+
 const videoStatus =
   document.getElementById(
     "videoStatus"
   );
+
 
 const videoResult =
   document.getElementById(
@@ -1127,16 +1165,19 @@ videoBtn?.addEventListener(
 
     if (videoStatus) {
 
-      videoStatus.hidden = false;
+      videoStatus.hidden =
+        false;
 
       videoStatus.textContent =
         "YARUVA free video engine is coming next.";
+
     }
 
 
     if (videoResult) {
 
-      videoResult.hidden = true;
+      videoResult.hidden =
+        true;
 
     }
 
@@ -1163,7 +1204,15 @@ document
         );
 
       }
-
     );
 
   });
+
+
+// ======================================================
+// YARUVA READY
+// ======================================================
+
+console.log(
+  "YARUVA AI Editor V3 loaded successfully."
+);
