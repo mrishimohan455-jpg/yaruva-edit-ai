@@ -48,14 +48,6 @@ let showingBefore = false;
 // UPLOAD
 // ======================================================
 
-uploadBtn?.addEventListener("click", (event) => {
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  imageInput?.click();
-
-});
 
 
 uploadBox?.addEventListener("click", (event) => {
