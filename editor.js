@@ -1507,3 +1507,1164 @@ document
 console.log(
   "YARUVA AI Editor V4 loaded successfully."
 );
+// ======================================================
+
+// YARUVA BACKGROUND STUDIO V1
+
+// Free browser-based background replacement
+
+// ======================================================
+
+(function initBackgroundStudio() {
+
+  // Prevent duplicate studio
+
+  if (document.getElementById("yaruvaBackgroundStudio")) {
+
+    return;
+
+  }
+
+  const studio = document.createElement("section");
+
+  studio.id = "yaruvaBackgroundStudio";
+
+  studio.className = "creative-section";
+
+  studio.style.display = "none";
+
+  studio.innerHTML = `
+
+    <div class="section-head">
+
+      <h2>Background Studio</h2>
+
+      <span>YARUVA AI</span>
+
+    </div>
+
+    <div style="
+
+      background:#ffffff;
+
+      border-radius:28px;
+
+      padding:20px;
+
+      box-shadow:0 12px 35px rgba(30,20,50,.08);
+
+    ">
+
+      <p style="
+
+        margin:0 0 16px;
+
+        font-weight:600;
+
+        color:#777;
+
+      ">
+
+        Choose a new background for your subject.
+
+      </p>
+
+      <div
+
+        id="yaruvaBackgroundGrid"
+
+        style="
+
+          display:grid;
+
+          grid-template-columns:repeat(2,1fr);
+
+          gap:12px;
+
+        "
+
+      >
+
+        <button
+
+          class="yaruva-bg"
+
+          data-bg="studio"
+
+          style="
+
+            min-height:110px;
+
+            border:0;
+
+            border-radius:20px;
+
+            background:
+
+              radial-gradient(circle at 50% 35%,#ffffff,#dfe3ea 60%,#aeb5c2);
+
+            color:#17131d;
+
+            font-weight:800;
+
+            font-size:15px;
+
+          "
+
+        >
+
+          Studio
+
+        </button>
+
+        <button
+
+          class="yaruva-bg"
+
+          data-bg="sunset"
+
+          style="
+
+            min-height:110px;
+
+            border:0;
+
+            border-radius:20px;
+
+            background:
+
+              linear-gradient(
+
+                145deg,
+
+                #ffb36b,
+
+                #ed6a8a 45%,
+
+                #6b4ea2
+
+              );
+
+            color:white;
+
+            font-weight:800;
+
+            font-size:15px;
+
+          "
+
+        >
+
+          Sunset
+
+        </button>
+
+        <button
+
+          class="yaruva-bg"
+
+          data-bg="night"
+
+          style="
+
+            min-height:110px;
+
+            border:0;
+
+            border-radius:20px;
+
+            background:
+
+              radial-gradient(
+
+                circle at 65% 25%,
+
+                #5e72b8,
+
+                #17172c 48%,
+
+                #07070f
+
+              );
+
+            color:white;
+
+            font-weight:800;
+
+            font-size:15px;
+
+          "
+
+        >
+
+          Night
+
+        </button>
+
+        <button
+
+          class="yaruva-bg"
+
+          data-bg="luxury"
+
+          style="
+
+            min-height:110px;
+
+            border:0;
+
+            border-radius:20px;
+
+            background:
+
+              linear-gradient(
+
+                135deg,
+
+                #efe3c2,
+
+                #b99452 45%,
+
+                #30251c
+
+              );
+
+            color:white;
+
+            font-weight:800;
+
+            font-size:15px;
+
+          "
+
+        >
+
+          Luxury
+
+        </button>
+
+        <button
+
+          class="yaruva-bg"
+
+          data-bg="ocean"
+
+          style="
+
+            min-height:110px;
+
+            border:0;
+
+            border-radius:20px;
+
+            background:
+
+              linear-gradient(
+
+                160deg,
+
+                #9de7ef,
+
+                #318ca6 50%,
+
+                #123c59
+
+              );
+
+            color:white;
+
+            font-weight:800;
+
+            font-size:15px;
+
+          "
+
+        >
+
+          Ocean
+
+        </button>
+
+        <button
+
+          class="yaruva-bg"
+
+          data-bg="purple"
+
+          style="
+
+            min-height:110px;
+
+            border:0;
+
+            border-radius:20px;
+
+            background:
+
+              radial-gradient(
+
+                circle at 30% 20%,
+
+                #d5a6ff,
+
+                #6940a5 45%,
+
+                #21112f
+
+              );
+
+            color:white;
+
+            font-weight:800;
+
+            font-size:15px;
+
+          "
+
+        >
+
+          Creative
+
+        </button>
+
+      </div>
+
+      <div style="
+
+        margin-top:18px;
+
+        display:flex;
+
+        gap:10px;
+
+      ">
+
+        <button
+
+          id="yaruvaOriginalBg"
+
+          style="
+
+            flex:1;
+
+            padding:14px;
+
+            border-radius:16px;
+
+            border:1px solid #ddd;
+
+            background:#fff;
+
+            font-weight:700;
+
+          "
+
+        >
+
+          Transparent
+
+        </button>
+
+        <button
+
+          id="yaruvaSaveBg"
+
+          style="
+
+            flex:1;
+
+            padding:14px;
+
+            border-radius:16px;
+
+            border:0;
+
+            background:#17131d;
+
+            color:#fff;
+
+            font-weight:800;
+
+          "
+
+        >
+
+          Save result
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+  // Insert after result section
+
+  if (resultSection) {
+
+    resultSection.insertAdjacentElement(
+
+      "afterend",
+
+      studio
+
+    );
+
+  }
+
+  // --------------------------------------------------
+
+  // BACKGROUND DRAWING
+
+  // --------------------------------------------------
+
+  function drawBackground(
+
+    ctx,
+
+    width,
+
+    height,
+
+    type
+
+  ) {
+
+    let gradient;
+
+    if (type === "studio") {
+
+      gradient =
+
+        ctx.createRadialGradient(
+
+          width * 0.5,
+
+          height * 0.35,
+
+          20,
+
+          width * 0.5,
+
+          height * 0.5,
+
+          height
+
+        );
+
+      gradient.addColorStop(
+
+        0,
+
+        "#ffffff"
+
+      );
+
+      gradient.addColorStop(
+
+        0.55,
+
+        "#dfe3ea"
+
+      );
+
+      gradient.addColorStop(
+
+        1,
+
+        "#aeb5c2"
+
+      );
+
+    }
+
+    if (type === "sunset") {
+
+      gradient =
+
+        ctx.createLinearGradient(
+
+          0,
+
+          0,
+
+          width,
+
+          height
+
+        );
+
+      gradient.addColorStop(
+
+        0,
+
+        "#ffbd73"
+
+      );
+
+      gradient.addColorStop(
+
+        0.45,
+
+        "#ed6a8a"
+
+      );
+
+      gradient.addColorStop(
+
+        1,
+
+        "#5b3b91"
+
+      );
+
+    }
+
+    if (type === "night") {
+
+      gradient =
+
+        ctx.createRadialGradient(
+
+          width * 0.65,
+
+          height * 0.2,
+
+          10,
+
+          width * 0.55,
+
+          height * 0.5,
+
+          height
+
+        );
+
+      gradient.addColorStop(
+
+        0,
+
+        "#5e72b8"
+
+      );
+
+      gradient.addColorStop(
+
+        0.45,
+
+        "#17172c"
+
+      );
+
+      gradient.addColorStop(
+
+        1,
+
+        "#07070f"
+
+      );
+
+    }
+
+    if (type === "luxury") {
+
+      gradient =
+
+        ctx.createLinearGradient(
+
+          0,
+
+          0,
+
+          width,
+
+          height
+
+        );
+
+      gradient.addColorStop(
+
+        0,
+
+        "#efe3c2"
+
+      );
+
+      gradient.addColorStop(
+
+        0.45,
+
+        "#b99452"
+
+      );
+
+      gradient.addColorStop(
+
+        1,
+
+        "#30251c"
+
+      );
+
+    }
+
+    if (type === "ocean") {
+
+      gradient =
+
+        ctx.createLinearGradient(
+
+          0,
+
+          0,
+
+          width,
+
+          height
+
+        );
+
+      gradient.addColorStop(
+
+        0,
+
+        "#9de7ef"
+
+      );
+
+      gradient.addColorStop(
+
+        0.5,
+
+        "#318ca6"
+
+      );
+
+      gradient.addColorStop(
+
+        1,
+
+        "#123c59"
+
+      );
+
+    }
+
+    if (type === "purple") {
+
+      gradient =
+
+        ctx.createRadialGradient(
+
+          width * 0.3,
+
+          height * 0.2,
+
+          20,
+
+          width * 0.5,
+
+          height * 0.5,
+
+          height
+
+        );
+
+      gradient.addColorStop(
+
+        0,
+
+        "#d5a6ff"
+
+      );
+
+      gradient.addColorStop(
+
+        0.45,
+
+        "#6940a5"
+
+      );
+
+      gradient.addColorStop(
+
+        1,
+
+        "#21112f"
+
+      );
+
+    }
+
+    ctx.fillStyle =
+
+      gradient;
+
+    ctx.fillRect(
+
+      0,
+
+      0,
+
+      width,
+
+      height
+
+    );
+
+    // Soft studio glow
+
+    if (
+
+      type === "studio" ||
+
+      type === "sunset" ||
+
+      type === "luxury"
+
+    ) {
+
+      const glow =
+
+        ctx.createRadialGradient(
+
+          width * 0.5,
+
+          height * 0.3,
+
+          0,
+
+          width * 0.5,
+
+          height * 0.3,
+
+          height * 0.55
+
+        );
+
+      glow.addColorStop(
+
+        0,
+
+        "rgba(255,255,255,.35)"
+
+      );
+
+      glow.addColorStop(
+
+        1,
+
+        "rgba(255,255,255,0)"
+
+      );
+
+      ctx.fillStyle =
+
+        glow;
+
+      ctx.fillRect(
+
+        0,
+
+        0,
+
+        width,
+
+        height
+
+      );
+
+    }
+
+  }
+
+  // --------------------------------------------------
+
+  // COMPOSITE SUBJECT + BACKGROUND
+
+  // --------------------------------------------------
+
+  async function applyBackground(
+
+    type
+
+  ) {
+
+    if (!generatedImage) {
+
+      alert(
+
+        "Remove the background first."
+
+      );
+
+      return;
+
+    }
+
+    const subject =
+
+      await loadImage(
+
+        generatedImage
+
+      );
+
+    const width =
+
+      subject.naturalWidth;
+
+    const height =
+
+      subject.naturalHeight;
+
+    const canvas =
+
+      document.createElement(
+
+        "canvas"
+
+      );
+
+    canvas.width =
+
+      width;
+
+    canvas.height =
+
+      height;
+
+    const ctx =
+
+      canvas.getContext(
+
+        "2d"
+
+      );
+
+    // Background
+
+    drawBackground(
+
+      ctx,
+
+      width,
+
+      height,
+
+      type
+
+    );
+
+    // Subject
+
+    ctx.drawImage(
+
+      subject,
+
+      0,
+
+      0,
+
+      width,
+
+      height
+
+    );
+
+    const result =
+
+      canvas.toDataURL(
+
+        "image/png"
+
+      );
+
+    showResult(
+
+      result,
+
+      "YARUVA AI Background Studio — " +
+
+      type
+
+    );
+
+    if (imageStatus) {
+
+      imageStatus.textContent =
+
+        "Background applied";
+
+    }
+
+  }
+
+  // --------------------------------------------------
+
+  // SHOW STUDIO AFTER AI REMOVE
+
+  // --------------------------------------------------
+
+  const originalShowResult =
+
+    window.showResult;
+
+  // Our showResult function isn't global in
+
+  // all browser setups, so observe result changes.
+
+  const observer =
+
+    new MutationObserver(
+
+      () => {
+
+        if (
+
+          generatedImage &&
+
+          resultSection &&
+
+          !resultSection.hidden
+
+        ) {
+
+          studio.style.display =
+
+            "block";
+
+        }
+
+      }
+
+    );
+
+  if (resultSection) {
+
+    observer.observe(
+
+      resultSection,
+
+      {
+
+        attributes:true,
+
+        subtree:true
+
+      }
+
+    );
+
+  }
+
+  // Also reveal when clicking Remove result
+
+  document
+
+    .querySelectorAll(
+
+      "[data-magic]"
+
+    )
+
+    .forEach(
+
+      button => {
+
+        button.addEventListener(
+
+          "click",
+
+          () => {
+
+            setTimeout(
+
+              () => {
+
+                if (
+
+                  generatedImage
+
+                ) {
+
+                  studio.style.display =
+
+                    "block";
+
+                }
+
+              },
+
+              500
+
+            );
+
+          }
+
+        );
+
+      }
+
+    );
+
+  // --------------------------------------------------
+
+  // BACKGROUND BUTTONS
+
+  // --------------------------------------------------
+
+  studio
+
+    .querySelectorAll(
+
+      ".yaruva-bg"
+
+    )
+
+    .forEach(
+
+      button => {
+
+        button.addEventListener(
+
+          "click",
+
+          async () => {
+
+            const type =
+
+              button.dataset.bg;
+
+            button.style.transform =
+
+              "scale(.96)";
+
+            setTimeout(
+
+              () => {
+
+                button.style.transform =
+
+                  "";
+
+              },
+
+              120
+
+            );
+
+            await applyBackground(
+
+              type
+
+            );
+
+          }
+
+        );
+
+      }
+
+    );
+
+  // --------------------------------------------------
+
+  // TRANSPARENT
+
+  // --------------------------------------------------
+
+  document
+
+    .getElementById(
+
+      "yaruvaOriginalBg"
+
+    )
+
+    ?.addEventListener(
+
+      "click",
+
+      () => {
+
+        if (!generatedImage) {
+
+          alert(
+
+            "Remove the background first."
+
+          );
+
+          return;
+
+        }
+
+        showResult(
+
+          generatedImage,
+
+          "AI Background Removal — YARUVA AI"
+
+        );
+
+      }
+
+    );
+
+  // --------------------------------------------------
+
+  // SAVE
+
+  // --------------------------------------------------
+
+  document
+
+    .getElementById(
+
+      "yaruvaSaveBg"
+
+    )
+
+    ?.addEventListener(
+
+      "click",
+
+      () => {
+
+        if (!generatedImage) {
+
+          alert(
+
+            "Create a background result first."
+
+          );
+
+          return;
+
+        }
+
+        const link =
+
+          document.createElement(
+
+            "a"
+
+          );
+
+        link.download =
+
+          "yaruva-ai-background.png";
+
+        link.href =
+
+          generatedImage;
+
+        link.click();
+
+      }
+
+    );
+
+})();
