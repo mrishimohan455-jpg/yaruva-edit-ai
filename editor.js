@@ -645,246 +645,394 @@ async function removeBackgroundAI(button) {
 
   if (!currentImage) {
 
-    alert(
-      "Upload an image first."
-    );
+    alert("Upload an image first.");
 
     return;
 
   }
 
-
   const originalText =
-    button?.textContent ||
-    "Remove";
 
+    button?.textContent || "Remove";
 
   if (button) {
 
     button.disabled = true;
 
     button.textContent =
+
       "Loading AI...";
 
   }
 
-
   try {
 
-    // Load MODNet
+    // --------------------------------------------------
+
+    // LOAD MODNET
+
+    // --------------------------------------------------
 
     const model =
-      await loadRemoveModel(button);
 
+      await loadRemoveModel(button);
 
     if (button) {
 
       button.textContent =
+
         "AI Processing...";
 
     }
 
+    // --------------------------------------------------
 
-    // Run AI segmentation
+    // RUN MODNET
+
+    // --------------------------------------------------
 
     const output =
+
       await model(currentImage);
 
-
     if (
+
       !output ||
+
       !output[0]
+
     ) {
 
       throw new Error(
+
         "MODNet did not return a mask."
+
       );
 
     }
 
+    // --------------------------------------------------
 
-    // Load original image
+    // LOAD ORIGINAL IMAGE
+
+    // --------------------------------------------------
 
     const original =
+
       await loadImage(currentImage);
 
-
     const width =
+
       original.naturalWidth;
 
     const height =
+
       original.naturalHeight;
 
+    // --------------------------------------------------
 
-    // Original image canvas
+    // ORIGINAL IMAGE CANVAS
+
+    // --------------------------------------------------
 
     const canvas =
+
       document.createElement("canvas");
 
-
     canvas.width =
+
       width;
 
     canvas.height =
+
       height;
 
-
     const ctx =
+
       canvas.getContext(
+
         "2d",
+
         {
+
           willReadFrequently: true
+
         }
+
       );
 
-
     ctx.drawImage(
+
       original,
+
       0,
+
       0,
+
       width,
+
       height
+
     );
 
+    // --------------------------------------------------
 
-    // Get AI mask canvas
+    // AI MASK
+
+    // --------------------------------------------------
 
     const maskCanvas =
+
       output[0].toCanvas();
 
-
-    // Resize mask to original image size
-
     const resizedMask =
+
       document.createElement("canvas");
 
-
     resizedMask.width =
+
       width;
 
     resizedMask.height =
+
       height;
 
-
     const maskCtx =
-      resizedMask.getContext(
-        "2d",
-        {
-          willReadFrequently: true
-        }
-      );
 
+      resizedMask.getContext(
+
+        "2d",
+
+        {
+
+          willReadFrequently: true
+
+        }
+
+      );
 
     maskCtx.drawImage(
+
       maskCanvas,
+
       0,
+
       0,
+
       width,
+
       height
+
     );
 
+    // --------------------------------------------------
 
-    // Read original pixels
+    // READ IMAGE + MASK
+
+    // --------------------------------------------------
 
     const imageData =
+
       ctx.getImageData(
+
         0,
+
         0,
+
         width,
+
         height
+
       );
-
-
-    // Read AI mask pixels
 
     const maskData =
+
       maskCtx.getImageData(
+
         0,
+
         0,
+
         width,
+
         height
+
       );
 
-
     const pixels =
+
       imageData.data;
 
     const maskPixels =
+
       maskData.data;
 
+    // --------------------------------------------------
 
-    // Apply AI mask to alpha
+    // CLEAN AI MASK
+
+    // --------------------------------------------------
 
     for (
+
       let i = 0;
+
       i < pixels.length;
+
       i += 4
+
     ) {
 
-      // MODNet mask is grayscale.
-      // Use red channel as alpha.
+      const raw =
+
+        maskPixels[i];
+
+      // Increase mask contrast.
+
+      //
+
+      // 0   = background
+
+      // 255 = person
+
+      //
+
+      // This removes the unwanted
+
+      // checkerboard transparency
+
+      // from the subject.
+
+      let alpha;
+
+      if (raw < 45) {
+
+        alpha = 0;
+
+      }
+
+      else if (raw > 190) {
+
+        alpha = 255;
+
+      }
+
+      else {
+
+        // Smooth transition
+
+        // for hair and edges.
+
+        alpha =
+
+          Math.round(
+
+            ((raw - 45) / 145) * 255
+
+          );
+
+      }
 
       pixels[i + 3] =
-        maskPixels[i];
+
+        Math.max(
+
+          0,
+
+          Math.min(
+
+            255,
+
+            alpha
+
+          )
+
+        );
 
     }
 
+    // --------------------------------------------------
 
-    // Put transparent pixels back
+    // APPLY CLEAN MASK
+
+    // --------------------------------------------------
 
     ctx.putImageData(
+
       imageData,
+
       0,
+
       0
+
     );
 
+    // --------------------------------------------------
 
-    // Export transparent PNG
+    // EXPORT TRANSPARENT PNG
+
+    // --------------------------------------------------
 
     const result =
+
       canvas.toDataURL(
+
         "image/png"
+
       );
 
+    // --------------------------------------------------
+
+    // SHOW RESULT
+
+    // --------------------------------------------------
 
     showResult(
-      result,
-      "AI Background Removal — YARUVA AI"
-    );
 
+      result,
+
+      "AI Background Removal — YARUVA AI"
+
+    );
 
     if (imageStatus) {
 
       imageStatus.textContent =
+
         "AI background removed";
 
     }
 
+  }
 
-  } catch (error) {
+  catch (error) {
 
     console.error(
+
       "YARUVA MODNet Error:",
+
       error
+
     );
-
-
-    // IMPORTANT:
-    // Show the actual browser error
-    // so we can fix it if it happens again.
 
     alert(
+
       "YARUVA AI error: " +
+
       (error?.message || error)
+
     );
 
-  } finally {
+  }
+
+  finally {
 
     if (button) {
 
       button.disabled = false;
 
       button.textContent =
+
         originalText;
 
     }
@@ -892,7 +1040,6 @@ async function removeBackgroundAI(button) {
   }
 
 }
-
 
 // ======================================================
 // AI MAGIC TOOLS
