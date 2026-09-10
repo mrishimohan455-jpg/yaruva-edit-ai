@@ -746,245 +746,119 @@ async function removeBackgroundAI(button) {
 
   if (!currentImage) {
 
-    alert(
-      "Upload an image first."
-    );
+    alert("Upload an image first.");
 
     return;
+
   }
 
-
   const originalText =
-    button?.textContent ||
-    "Remove";
 
+    button?.textContent || "Remove";
 
   if (button) {
 
     button.disabled = true;
 
     button.textContent =
+
       "AI Loading...";
 
   }
 
-
   try {
 
-    const model =
-      await loadRemoveModel(
-        button
-      );
+    // Load the browser AI model
 
+    const model =
+
+      await loadRemoveModel(button);
 
     if (button) {
 
       button.textContent =
+
         "AI Processing...";
 
     }
 
+    // Run MODNet
 
     const output =
-      await model(
-        currentImage
-      );
 
+      await model(currentImage);
 
     if (
+
       !output ||
+
       !output[0]
+
     ) {
 
       throw new Error(
-        "AI did not return a mask."
+
+        "AI did not return an image."
+
       );
 
     }
 
+    // IMPORTANT:
 
-    const maskCanvas =
+    // MODNet's background-removal output
+
+    // is already transparent.
+
+    // Do NOT apply the mask a second time.
+
+    const resultCanvas =
+
       output[0].toCanvas();
 
-
-    const original =
-      await loadImage(
-        currentImage
-      );
-
-
-    const canvas =
-      document.createElement(
-        "canvas"
-      );
-
-
-    const ctx =
-      canvas.getContext(
-        "2d",
-        {
-          willReadFrequently: true
-        }
-      );
-
-
-    canvas.width =
-      original.naturalWidth;
-
-    canvas.height =
-      original.naturalHeight;
-
-
-    ctx.drawImage(
-      original,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-
-    // Resize AI mask
-
-    const maskCanvasResized =
-      document.createElement(
-        "canvas"
-      );
-
-
-    const maskCtx =
-      maskCanvasResized.getContext(
-        "2d",
-        {
-          willReadFrequently: true
-        }
-      );
-
-
-    maskCanvasResized.width =
-      canvas.width;
-
-    maskCanvasResized.height =
-      canvas.height;
-
-
-    maskCtx.drawImage(
-      maskCanvas,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-
-    const imageData =
-      ctx.getImageData(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-
-    const maskImageData =
-      maskCtx.getImageData(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-
-    // Improve mask
-
-    const improvedMask =
-      improveMask(
-        maskImageData.data,
-        canvas.width,
-        canvas.height
-      );
-
-
-    // Apply improved alpha
-
-    for (
-      let i = 0;
-      i < imageData.data.length;
-      i += 4
-    ) {
-
-      let alpha =
-        improvedMask[i];
-
-
-      // Softer edge transition
-
-      if (alpha < 25) {
-
-        alpha = 0;
-
-      } else if (alpha > 230) {
-
-        alpha = 255;
-
-      } else {
-
-        alpha =
-          Math.round(
-            (
-              (alpha - 25) /
-              205
-            ) * 255
-          );
-
-      }
-
-
-      imageData.data[i + 3] =
-        alpha;
-
-    }
-
-
-    ctx.putImageData(
-      imageData,
-      0,
-      0
-    );
-
+    // Convert directly to PNG
 
     const result =
-      canvas.toDataURL(
+
+      resultCanvas.toDataURL(
+
         "image/png"
+
       );
 
+    // Show final transparent result
 
     showResult(
-      result,
-      "AI Background Removal — YARUVA AI"
-    );
 
+      result,
+
+      "AI Background Removal — YARUVA AI"
+
+    );
 
     if (imageStatus) {
 
       imageStatus.textContent =
+
         "AI ready";
 
     }
 
-
   } catch (error) {
 
     console.error(
-      "YARUVA Remove V2:",
-      error
-    );
 
+      "YARUVA AI Remove Error:",
+
+      error
+
+    );
 
     alert(
-      "AI background removal failed. Please try again."
-    );
 
+      "AI background removal failed. Please try again."
+
+    );
 
   } finally {
 
@@ -993,6 +867,7 @@ async function removeBackgroundAI(button) {
       button.disabled = false;
 
       button.textContent =
+
         originalText;
 
     }
