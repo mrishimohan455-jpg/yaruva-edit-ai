@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>YARUVA — AI Creative Studio</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">Y</span>
+        <span>YARUVA</span>
+      </div>
+
+      <button class="icon-btn" id="profileBtn" aria-label="Profile">
+        ◉
+      </button>
+    </header>
+
+
+    <!-- MAIN HOME -->
+    <main class="home">
+
+      <!-- HERO -->
+      <section class="hero">
+
+        <div class="eyebrow">
+          AI CREATIVE STUDIO
+        </div>
+
+        <h1>
+          Create anything<br>
+          <span>with AI.</span>
+        </h1>
+
+        <p>
+          Turn your ideas into images, edits and cinematic videos.
+        </p>
+
+        <button
+          class="primary"
+          onclick="location.href='editor.html'">
+          Start creating <b>→</b>
+        </button>
+
+      </section>
+
+
+      <!-- AI TOOLS -->
+      <section>
+
+        <div class="section-head">
+          <h2>AI Tools</h2>
+          <span>Explore</span>
+        </div>
+
+        <div class="tools-grid">
+
+          <button
+            class="tool-card"
+            onclick="location.href='editor.html'">
+
+            <i>✦</i>
+
+            <strong>AI Edit</strong>
+
+            <small>
+              Edit with a prompt
+            </small>
+
+          </button>
+
+
+          <button
+            class="tool-card"
+            onclick="location.href='editor.html?mode=video'">
+
+            <i>▶</i>
+
+            <strong>Image to Video</strong>
+
+            <small>
+              Animate your image
+            </small>
+
+          </button>
+
+
+          <button
+            class="tool-card"
+            onclick="location.href='editor.html?mode=style'">
+
+            <i>◈</i>
+
+            <strong>AI Styles</strong>
+
+            <small>
+              Transform the look
+            </small>
+
+          </button>
+
+
+          <button
+            class="tool-card"
+            onclick="location.href='editor.html?mode=remove'">
+
+            <i>⌫</i>
+
+            <strong>Remove</strong>
+
+            <small>
+              Clean your image
+            </small>
+
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- QUICK START -->
+      <section>
+
+        <div class="section-head">
+          <h2>Quick start</h2>
+        </div>
+
+        <div class="prompt-card">
+
+          <div class="prompt-icon">
+            ✦
+          </div>
+
+          <div>
+            <strong>Ask YARUVA AI</strong>
+
+            <p>
+              “Make this cinematic and premium…”
+            </p>
+          </div>
+
+          <button
+            onclick="location.href='editor.html'">
+            →
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- RECENT PROJECTS -->
+      <section class="recent">
+
+        <div class="section-head">
+
+          <h2>Recent projects</h2>
+
+          <span>
+            View all
+          </span>
+
+        </div>
+
+        <div class="empty">
+          Your creations will appear here.
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
+
+      <button class="active">
+        ⌂
+        <span>Home</span>
+      </button>
+
+
+      <button
+        onclick="location.href='editor.html'">
+
+        ✦
+        <span>Create</span>
+
+      </button>
+
+
+      <button
+        onclick="location.href='projects.html'">
+
+        ▣
+        <span>Projects</span>
+
+      </button>
+
+
+      <button
+        id="bottomProfileBtn">
+
+        ◉
+        <span>Profile</span>
+
+      </button>
+
+    </nav>
+
+  </div>
+
+
+  <!-- JAVASCRIPT -->
+  <script src="app.js"></script>
+
+</body>
+</html>
