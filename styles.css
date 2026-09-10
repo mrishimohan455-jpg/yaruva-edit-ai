@@ -958,3 +958,18 @@ section + section {
   }
 
 }
+/* YARUVA iPhone file picker */
+
+.file-input {
+
+  position: absolute;
+
+  width: 1px;
+
+  height: 1px;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+}
