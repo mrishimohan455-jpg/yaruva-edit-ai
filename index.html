@@ -2,227 +2,206 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f7f1e8">
   <title>YARUVA — AI Creative Studio</title>
-
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-  <div class="app-shell">
+<div class="app-shell">
 
-    <!-- TOP BAR -->
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-mark">Y</span>
-        <span>YARUVA</span>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">Y</span>
+      <span>YARUVA</span>
+    </div>
+
+    <button class="icon-btn" id="profileBtn" aria-label="Profile">
+      ◉
+    </button>
+  </header>
+
+  <main class="home">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="eyebrow">AI CREATIVE STUDIO</div>
+
+      <h1>
+        Make it
+        <br>
+        <span>unforgettable.</span>
+      </h1>
+
+      <p>
+        Turn one idea into a polished image,
+        cinematic video or visual story.
+      </p>
+
+      <button
+        class="primary"
+        onclick="location.href='editor.html'">
+        Start creating <b>→</b>
+      </button>
+    </section>
+
+
+    <!-- AI TOOLS -->
+    <section>
+
+      <div class="section-head">
+        <h2>What will you create?</h2>
+        <span>4 tools</span>
       </div>
 
-      <button class="icon-btn" id="profileBtn" aria-label="Profile">
-        ◉
-      </button>
-    </header>
-
-
-    <!-- MAIN HOME -->
-    <main class="home">
-
-      <!-- HERO -->
-      <section class="hero">
-
-        <div class="eyebrow">
-          AI CREATIVE STUDIO
-        </div>
-
-        <h1>
-          Create anything<br>
-          <span>with AI.</span>
-        </h1>
-
-        <p>
-          Turn your ideas into images, edits and cinematic videos.
-        </p>
+      <div class="tools-grid">
 
         <button
-          class="primary"
+          class="tool-card"
           onclick="location.href='editor.html'">
-          Start creating <b>→</b>
+
+          <i>✦</i>
+
+          <strong>AI Edit</strong>
+
+          <small>
+            Tell YARUVA what to change
+          </small>
+
         </button>
 
-      </section>
+
+        <button
+          class="tool-card"
+          onclick="location.href='editor.html?mode=video'">
+
+          <i>▶</i>
+
+          <strong>Image → Video</strong>
+
+          <small>
+            Bring a still image to life
+          </small>
+
+        </button>
 
 
-      <!-- AI TOOLS -->
-      <section>
+        <button
+          class="tool-card"
+          onclick="location.href='editor.html?mode=style'">
 
-        <div class="section-head">
-          <h2>AI Tools</h2>
-          <span>Explore</span>
+          <i>◈</i>
+
+          <strong>AI Styles</strong>
+
+          <small>
+            Find your visual identity
+          </small>
+
+        </button>
+
+
+        <button
+          class="tool-card"
+          onclick="location.href='editor.html?mode=remove'">
+
+          <i>⌫</i>
+
+          <strong>Remove</strong>
+
+          <small>
+            Clean anything in seconds
+          </small>
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- QUICK START -->
+    <section>
+
+      <div class="section-head">
+        <h2>Quick start</h2>
+        <span>Prompt it</span>
+      </div>
+
+      <div class="prompt-card">
+
+        <div class="prompt-icon">
+          ✦
         </div>
 
-        <div class="tools-grid">
+        <div>
+          <strong>Ask YARUVA AI</strong>
 
-          <button
-            class="tool-card"
-            onclick="location.href='editor.html'">
-
-            <i>✦</i>
-
-            <strong>AI Edit</strong>
-
-            <small>
-              Edit with a prompt
-            </small>
-
-          </button>
-
-
-          <button
-            class="tool-card"
-            onclick="location.href='editor.html?mode=video'">
-
-            <i>▶</i>
-
-            <strong>Image to Video</strong>
-
-            <small>
-              Animate your image
-            </small>
-
-          </button>
-
-
-          <button
-            class="tool-card"
-            onclick="location.href='editor.html?mode=style'">
-
-            <i>◈</i>
-
-            <strong>AI Styles</strong>
-
-            <small>
-              Transform the look
-            </small>
-
-          </button>
-
-
-          <button
-            class="tool-card"
-            onclick="location.href='editor.html?mode=remove'">
-
-            <i>⌫</i>
-
-            <strong>Remove</strong>
-
-            <small>
-              Clean your image
-            </small>
-
-          </button>
-
+          <p>
+            “Make this cinematic and premium…”
+          </p>
         </div>
 
-      </section>
+        <button onclick="location.href='editor.html'">
+          →
+        </button>
+
+      </div>
+
+    </section>
 
 
-      <!-- QUICK START -->
-      <section>
+    <!-- RECENT PROJECTS -->
+    <section class="recent">
 
-        <div class="section-head">
-          <h2>Quick start</h2>
-        </div>
+      <div class="section-head">
+        <h2>Recent projects</h2>
 
-        <div class="prompt-card">
+        <span onclick="location.href='projects.html'">
+          View all
+        </span>
+      </div>
 
-          <div class="prompt-icon">
-            ✦
-          </div>
+      <div class="empty">
+        Your creations will appear here.
+      </div>
 
-          <div>
-            <strong>Ask YARUVA AI</strong>
+    </section>
 
-            <p>
-              “Make this cinematic and premium…”
-            </p>
-          </div>
-
-          <button
-            onclick="location.href='editor.html'">
-            →
-          </button>
-
-        </div>
-
-      </section>
+  </main>
 
 
-      <!-- RECENT PROJECTS -->
-      <section class="recent">
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
 
-        <div class="section-head">
+    <button class="active">
+      ⌂
+      <span>Home</span>
+    </button>
 
-          <h2>Recent projects</h2>
+    <button onclick="location.href='editor.html'">
+      ✦
+      <span>Create</span>
+    </button>
 
-          <span>
-            View all
-          </span>
+    <button onclick="location.href='projects.html'">
+      ▣
+      <span>Projects</span>
+    </button>
 
-        </div>
+    <button id="profileNav">
+      ◉
+      <span>Profile</span>
+    </button>
 
-        <div class="empty">
-          Your creations will appear here.
-        </div>
+  </nav>
 
-      </section>
-
-    </main>
-
-
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="bottom-nav">
-
-      <button class="active">
-        ⌂
-        <span>Home</span>
-      </button>
+</div>
 
 
-      <button
-        onclick="location.href='editor.html'">
-
-        ✦
-        <span>Create</span>
-
-      </button>
-
-
-      <button
-        onclick="location.href='projects.html'">
-
-        ▣
-        <span>Projects</span>
-
-      </button>
-
-
-      <button
-        id="bottomProfileBtn">
-
-        ◉
-        <span>Profile</span>
-
-      </button>
-
-    </nav>
-
-  </div>
-
-
-  <!-- JAVASCRIPT -->
-  <script src="app.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
