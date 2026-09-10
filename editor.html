@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
-  <title>YARUVA — AI Editor</title>
-
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f6f0e7">
+  <title>YARUVA — Create</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -13,92 +12,85 @@
 
 <div class="app-shell">
 
-  <!-- HEADER -->
   <header class="topbar">
-
-    <button class="icon-btn" onclick="history.back()">
-      ←
-    </button>
+    <button class="icon-btn" onclick="location.href='index.html'">←</button>
 
     <div class="brand">
       <span class="brand-mark">Y</span>
-      <span>AI EDITOR</span>
+      <span>YARUVA</span>
     </div>
 
-    <button class="icon-btn" id="exportBtn">
-      ↑
-    </button>
-
+    <button class="icon-btn" id="exportBtn">↗</button>
   </header>
 
 
-  <main class="home">
+  <main class="editor-page">
 
-    <!-- EDITOR INTRO -->
-    <section class="hero">
+    <div class="editor-title">
+      <div>
+        <div class="eyebrow">CREATE STUDIO</div>
+        <h1>Bring your idea<br><span>to life.</span></h1>
+      </div>
+    </div>
 
-      <div class="eyebrow">
-        YARUVA AI
+
+    <!-- IMAGE AREA -->
+
+    <section class="canvas-card">
+
+      <div class="canvas-top">
+        <span id="canvasLabel">Your canvas</span>
+        <span id="imageStatus">Ready</span>
       </div>
 
-      <h1>
-        Create.<br>
-        <span>Transform.</span>
-      </h1>
+      <div
+        class="upload-box"
+        id="uploadBox">
 
-      <p>
-        Upload an image and tell YARUVA what you want to create.
-      </p>
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/*"
+          hidden>
 
-    </section>
+        <div class="upload-icon">✦</div>
 
+        <h2>Drop your image here</h2>
 
-    <!-- IMAGE UPLOAD -->
-    <section>
+        <p>
+          or choose a photo from your device
+        </p>
 
-      <div class="section-head">
-        <h2>Your image</h2>
+        <button
+          class="primary"
+          id="uploadBtn"
+          type="button">
+          Choose image
+        </button>
+
       </div>
 
-      <label class="upload-box" for="imageInput">
 
-        <div class="upload-icon">
-          ＋
-        </div>
-
-        <strong>
-          Upload image
-        </strong>
-
-        <small>
-          JPG, PNG or WEBP
-        </small>
-
-      </label>
-
-      <input
-        id="imageInput"
-        type="file"
-        accept="image/png,image/jpeg,image/webp"
-        hidden
-      >
-
-    </section>
-
-
-    <!-- PREVIEW -->
-    <section id="previewSection" hidden>
-
-      <div class="section-head">
-        <h2>Preview</h2>
-      </div>
-
-      <div class="preview-card">
+      <div
+        class="preview-card"
+        id="previewCard"
+        hidden>
 
         <img
-          id="imagePreview"
-          alt="Uploaded image"
-        >
+          id="previewImage"
+          alt="YARUVA preview">
+
+        <div class="preview-actions">
+
+          <button id="changeImageBtn">
+            Replace
+          </button>
+
+          <button id="beforeAfterBtn">
+            Before / After
+          </button>
+
+        </div>
 
       </div>
 
@@ -106,104 +98,126 @@
 
 
     <!-- AI PROMPT -->
-    <section>
+
+    <section class="creative-section">
 
       <div class="section-head">
-        <h2>Tell YARUVA what to do</h2>
+        <h2>Tell YARUVA</h2>
+        <span>AI prompt</span>
       </div>
 
-      <textarea
-        id="promptInput"
-        class="ai-prompt"
-        rows="4"
-        placeholder="Example: Make this photo cinematic, luxury and realistic..."
-      ></textarea>
+      <div class="ai-prompt">
 
+        <textarea
+          id="promptInput"
+          rows="4"
+          placeholder="Describe what you want to create...
 
-      <div class="suggestions">
+Example: Make this cinematic with dramatic lighting and a premium movie look."></textarea>
 
-        <button
-          data-prompt="Make this image cinematic and premium."
-        >
-          ✦ Cinematic
-        </button>
+        <div class="prompt-footer">
 
-        <button
-          data-prompt="Enhance the image with realistic lighting and sharp details."
-        >
-          ✨ Enhance
-        </button>
+          <div class="suggestions">
 
-        <button
-          data-prompt="Give this image a luxury editorial look."
-        >
-          ◆ Luxury
-        </button>
+            <button data-prompt="Make this cinematic with dramatic lighting and a premium movie look.">
+              Cinematic
+            </button>
 
-        <button
-          data-prompt="Create a dramatic professional portrait."
-        >
-          ◉ Portrait
-        </button>
+            <button data-prompt="Enhance the image with natural skin tones, sharp details and professional lighting.">
+              Enhance
+            </button>
+
+            <button data-prompt="Give this image a luxury editorial fashion look.">
+              Luxury
+            </button>
+
+          </div>
+
+          <button
+            class="generate-btn"
+            id="generateBtn">
+
+            <span>Generate</span>
+            <b>✦</b>
+
+          </button>
+
+        </div>
 
       </div>
-
-
-      <button
-        id="generateBtn"
-        class="primary generate-btn"
-      >
-        Generate with AI
-        <b>→</b>
-      </button>
 
     </section>
 
 
-    <!-- AI MAGIC -->
-    <section>
+    <!-- MAGIC -->
+
+    <section class="creative-section">
 
       <div class="section-head">
         <h2>AI Magic</h2>
         <span>One tap</span>
       </div>
 
-      <div class="tools-grid">
+      <div class="magic-grid">
 
-        <button class="tool-card magic-btn" data-action="enhance">
-          <i>✨</i>
+        <button
+          class="magic-card"
+          data-magic="Enhance this image professionally. Improve clarity, lighting, colors and details while keeping the subject natural.">
+
+          <span>✦</span>
           <strong>Enhance</strong>
-          <small>Improve quality</small>
+          <small>Clean & sharp</small>
+
         </button>
 
-        <button class="tool-card magic-btn" data-action="cinematic">
-          <i>◉</i>
+        <button
+          class="magic-card"
+          data-magic="Transform this image into a cinematic movie still with dramatic lighting, rich depth and premium color grading.">
+
+          <span>◉</span>
           <strong>Cinematic</strong>
-          <small>Film-style look</small>
+          <small>Movie look</small>
+
         </button>
 
-        <button class="tool-card magic-btn" data-action="remove">
-          <i>⌫</i>
-          <strong>Remove</strong>
-          <small>Clean distractions</small>
-        </button>
+        <button
+          class="magic-card"
+          data-magic="Give this image a premium luxury editorial aesthetic with elegant lighting, sophisticated colors and high-end fashion photography styling.">
 
-        <button class="tool-card magic-btn" data-action="relight">
-          <i>☼</i>
-          <strong>Relight</strong>
-          <small>Fix lighting</small>
-        </button>
-
-        <button class="tool-card magic-btn" data-action="luxury">
-          <i>◆</i>
+          <span>◇</span>
           <strong>Luxury</strong>
-          <small>Premium style</small>
+          <small>Editorial style</small>
+
         </button>
 
-        <button class="tool-card magic-btn" data-action="portrait">
-          <i>◎</i>
+        <button
+          class="magic-card"
+          data-magic="Relight this image with beautiful professional lighting while preserving the person's natural appearance and realistic details.">
+
+          <span>☼</span>
+          <strong>Relight</strong>
+          <small>Better light</small>
+
+        </button>
+
+        <button
+          class="magic-card"
+          data-magic="Remove unwanted distractions and objects from the background while keeping the main subject realistic.">
+
+          <span>⌫</span>
+          <strong>Remove</strong>
+          <small>Clean background</small>
+
+        </button>
+
+        <button
+          class="magic-card"
+          data-magic="Create a beautiful professional portrait treatment with natural skin, refined lighting and premium photographic detail.">
+
+          <span>○</span>
           <strong>Portrait</strong>
           <small>Studio finish</small>
+
         </button>
 
       </div>
@@ -211,31 +225,38 @@
     </section>
 
 
-    <!-- BEFORE / AFTER -->
-    <section id="compareSection" hidden>
+    <!-- RESULT -->
+
+    <section
+      class="result-section"
+      id="resultSection"
+      hidden>
 
       <div class="section-head">
-        <h2>Result</h2>
+        <h2>Your result</h2>
+        <span>AI generated</span>
       </div>
 
-      <div class="preview-card">
+      <div class="result-card">
 
         <img
-          id="resultPreview"
-          alt="AI generated result"
-        >
+          id="resultImage"
+          alt="AI generated result">
 
-      </div>
+        <div class="result-info">
 
-      <div class="prompt-card">
+          <strong>YARUVA created this</strong>
 
-        <div class="prompt-icon">
-          ✓
-        </div>
+          <p id="resultPrompt">
+            Your AI creation is ready.
+          </p>
 
-        <div>
-          <strong>AI edit complete</strong>
-          <p>Your new creation is ready.</p>
+          <button
+            class="primary"
+            id="saveProjectBtn">
+            Save project
+          </button>
+
         </div>
 
       </div>
@@ -243,44 +264,57 @@
     </section>
 
 
-    <!-- VIDEO -->
-    <section>
+    <!-- IMAGE TO VIDEO -->
+
+    <section class="creative-section video-section">
 
       <div class="section-head">
         <h2>Image → Video</h2>
-        <span>AI</span>
+        <span>Cinematic</span>
       </div>
 
-      <textarea
-        id="videoPrompt"
-        class="ai-prompt"
-        rows="3"
-        placeholder="Example: Slowly zoom in while the subject moves naturally..."
-      ></textarea>
+      <div class="video-card">
 
-      <button
-        id="videoBtn"
-        class="primary generate-btn"
-      >
-        Create AI Video
-        <b>▶</b>
-      </button>
+        <div class="video-icon">▶</div>
 
-      <div id="videoStatus"></div>
+        <h2>Make it move.</h2>
 
-      <video
-        id="videoPreview"
-        controls
-        playsinline
-        hidden
-      ></video>
+        <p>
+          Turn your image into a short cinematic video.
+        </p>
+
+        <textarea
+          id="videoPrompt"
+          rows="3"
+          placeholder="Example: Slow camera movement, wind moving the hair, cinematic lighting..."></textarea>
+
+        <button
+          class="generate-btn"
+          id="videoBtn">
+          Create video <b>▶</b>
+        </button>
+
+        <div
+          class="video-status"
+          id="videoStatus"
+          hidden>
+          Preparing your cinematic video…
+        </div>
+
+        <video
+          id="videoResult"
+          controls
+          playsinline
+          hidden>
+        </video>
+
+      </div>
 
     </section>
 
   </main>
 
 
-  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
 
     <button onclick="location.href='index.html'">
@@ -298,7 +332,7 @@
       <span>Projects</span>
     </button>
 
-    <button>
+    <button id="profileNav">
       ◉
       <span>Profile</span>
     </button>
