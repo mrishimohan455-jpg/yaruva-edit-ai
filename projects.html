@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>YARUVA — My Projects</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .projects-page {
+      padding: 28px 20px;
+    }
+
+    .projects-title {
+      padding: 25px 4px 30px;
+    }
+
+    .projects-title .eyebrow {
+      margin-bottom: 10px;
+    }
+
+    .projects-title h1 {
+      font-size: 38px;
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+
+    .projects-title p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .project-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .project-item {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 18px;
+      background: var(--card);
+      border: 1px solid var(--line);
+    }
+
+    .project-thumb {
+      width: 82px;
+      height: 82px;
+      flex: 0 0 82px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #171c25;
+    }
+
+    .project-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .project-info strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .project-info small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .project-delete {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.06);
+      color: #9ca5b5;
+    }
+
+    .empty-projects {
+      padding: 55px 25px;
+      text-align: center;
+      border: 1px dashed rgba(255,255,255,.1);
+      border-radius: 20px;
+    }
+
+    .empty-projects .empty-icon {
+      font-size: 35px;
+      margin-bottom: 15px;
+    }
+
+    .empty-projects strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .empty-projects p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+  <!-- HEADER -->
+  <header class="topbar">
+
+    <button
+      class="icon-btn"
+      onclick="location.href='index.html'">
+      ←
+    </button>
+
+    <div class="brand">
+      <span class="brand-mark">Y</span>
+      <span>PROJECTS</span>
+    </div>
+
+    <button
+      class="icon-btn"
+      onclick="location.href='editor.html'">
+      +
+    </button>
+
+  </header>
+
+
+  <main class="projects-page">
+
+    <!-- TITLE -->
+    <section class="projects-title">
+
+      <div class="eyebrow">
+        YOUR CREATIONS
+      </div>
+
+      <h1>
+        My Projects
+      </h1>
+
+      <p>
+        Your AI creations are saved here on this device.
+      </p>
+
+    </section>
+
+
+    <!-- PROJECTS -->
+    <section>
+
+      <div
+        id="projectList"
+        class="project-list">
+      </div>
+
+
+      <!-- EMPTY STATE -->
+      <div
+        id="emptyProjects"
+        class="empty-projects">
+
+        <div class="empty-icon">
+          ✦
+        </div>
+
+        <strong>
+          No projects yet
+        </strong>
+
+        <p>
+          Create your first AI image or video and it will appear here.
+        </p>
+
+        <button
+          class="primary"
+          onclick="location.href='editor.html'">
+          Create something
+          <b>→</b>
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+
+    <button
+      onclick="location.href='index.html'">
+      ⌂
+      <span>Home</span>
+    </button>
+
+    <button
+      onclick="location.href='editor.html'">
+      ✦
+      <span>Create</span>
+    </button>
+
+    <button class="active">
+      ▣
+      <span>Projects</span>
+    </button>
+
+    <button>
+      ◉
+      <span>Profile</span>
+    </button>
+
+  </nav>
+
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const list =
+      document.getElementById("projectList");
+
+    const empty =
+      document.getElementById("emptyProjects");
+
+
+    let projects = [];
+
+    try {
+
+      projects =
+        JSON.parse(
+          localStorage.getItem("yaruva_projects") || "[]"
+        );
+
+    } catch (error) {
+
+      projects = [];
+
+    }
+
+
+    if (!projects.length) {
+
+      empty.style.display = "block";
+
+      return;
+
+    }
+
+
+    empty.style.display = "none";
+
+
+    projects.forEach(project => {
+
+      const item =
+        document.createElement("article");
+
+      item.className =
+        "project-item";
+
+
+      const thumb =
+        document.createElement("img");
+
+      thumb.className =
+        "project-thumb";
+
+      thumb.src =
+        project.url || "";
+
+      thumb.alt =
+        "YARUVA project";
+
+
+      const info =
+        document.createElement("div");
+
+      info.className =
+        "project-info";
+
+
+      const title =
+        document.createElement("strong");
+
+      title.textContent =
+        project.prompt ||
+        "YARUVA Creation";
+
+
+      const date =
+        document.createElement("small");
+
+      date.textContent =
+        formatDate(project.createdAt);
+
+
+      const type =
+        document.createElement("small");
+
+      type.textContent =
+        project.type === "video"
+          ? "AI Video"
+          : "AI Image";
+
+
+      info.appendChild(title);
+      info.appendChild(type);
+      info.appendChild(date);
+
+
+      const deleteBtn =
+        document.createElement("button");
+
+      deleteBtn.className =
+        "project-delete";
+
+      deleteBtn.textContent =
+        "×";
+
+
+      deleteBtn.addEventListener(
+        "click",
+        () => {
+
+          removeProject(project.id);
+
+        }
+      );
+
+
+      item.appendChild(thumb);
+      item.appendChild(info);
+      item.appendChild(deleteBtn);
+
+      list.appendChild(item);
+
+    });
+
+
+    function removeProject(id) {
+
+      projects =
+        projects.filter(
+          project =>
+            project.id !== id
+        );
+
+
+      localStorage.setItem(
+        "yaruva_projects",
+        JSON.stringify(projects)
+      );
+
+
+      location.reload();
+
+    }
+
+
+    function formatDate(value) {
+
+      if (!value) {
+        return "Recently created";
+      }
+
+
+      const date =
+        new Date(value);
+
+
+      if (Number.isNaN(date.getTime())) {
+        return "Recently created";
+      }
+
+
+      return date.toLocaleDateString(
+        undefined,
+        {
+          day: "numeric",
+          month: "short",
+          year: "numeric"
+        }
+      );
+
+    }
+
+  });
+</script>
+
+</body>
+</html>
