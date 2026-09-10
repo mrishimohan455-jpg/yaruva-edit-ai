@@ -1,3 +1,13 @@
+/*
+====================================================
+ YARUVA AI — FREE LOCAL CREATIVE ENGINE
+ No OpenAI API
+ No API key
+ No paid AI service
+ Runs directly in the browser
+====================================================
+*/
+
 const imageInput = document.getElementById("imageInput");
 const uploadBtn = document.getElementById("uploadBtn");
 const uploadBox = document.getElementById("uploadBox");
@@ -24,31 +34,23 @@ let currentImage = "";
 let generatedImage = "";
 
 
-/* =========================
+/* ==================================================
    IMAGE UPLOAD
-   ========================= */
+================================================== */
 
-uploadBtn?.addEventListener("click", () => {
-  imageInput?.click();
-});
-
-changeImageBtn?.addEventListener("click", () => {
-  imageInput?.click();
-});
-
-imageInput?.addEventListener("change", event => {
-  const file = event.target.files?.[0];
+function readImage(file) {
 
   if (!file) return;
 
   if (!file.type.startsWith("image/")) {
-    alert("Please choose an image file.");
+    alert("Please choose a valid image.");
     return;
   }
 
   const reader = new FileReader();
 
-  reader.onload = () => {
+  reader.onload = function () {
+
     currentImage = reader.result;
 
     previewImage.src = currentImage;
@@ -56,7 +58,8 @@ imageInput?.addEventListener("change", event => {
     uploadBox.hidden = true;
     previewCard.hidden = false;
 
-    const status = document.getElementById("imageStatus");
+    const status =
+      document.getElementById("imageStatus");
 
     if (status) {
       status.textContent = "Image ready";
@@ -64,396 +67,767 @@ imageInput?.addEventListener("change", event => {
   };
 
   reader.readAsDataURL(file);
+}
+
+
+uploadBtn?.addEventListener("click", function () {
+  imageInput?.click();
 });
 
 
-/* =========================
+changeImageBtn?.addEventListener("click", function () {
+  imageInput?.click();
+});
+
+
+imageInput?.addEventListener("change", function (event) {
+
+  const file = event.target.files?.[0];
+
+  readImage(file);
+
+});
+
+
+/* ==================================================
    DRAG & DROP
-   ========================= */
+================================================== */
 
-uploadBox?.addEventListener("dragover", event => {
-  event.preventDefault();
-  uploadBox.style.transform = "scale(.99)";
-});
+uploadBox?.addEventListener("dragover", function (event) {
 
-uploadBox?.addEventListener("dragleave", () => {
-  uploadBox.style.transform = "";
-});
-
-uploadBox?.addEventListener("drop", event => {
   event.preventDefault();
 
+  uploadBox.style.transform = "scale(.98)";
+
+});
+
+
+uploadBox?.addEventListener("dragleave", function () {
+
   uploadBox.style.transform = "";
 
-  const file = event.dataTransfer.files?.[0];
+});
 
-  if (!file || !file.type.startsWith("image/")) {
-    alert("Please drop an image.");
-    return;
+
+uploadBox?.addEventListener("drop", function (event) {
+
+  event.preventDefault();
+
+  uploadBox.style.transform = "";
+
+  const file =
+    event.dataTransfer.files?.[0];
+
+  readImage(file);
+
+});
+
+
+/* ==================================================
+   PROMPT SUGGESTIONS
+================================================== */
+
+document
+  .querySelectorAll("[data-prompt]")
+  .forEach(function (button) {
+
+    button.addEventListener("click", function () {
+
+      promptInput.value =
+        button.dataset.prompt || "";
+
+      promptInput.focus();
+
+    });
+
+  });
+
+
+/* ==================================================
+   AI MAGIC
+================================================== */
+
+document
+  .querySelectorAll("[data-magic]")
+  .forEach(function (button) {
+
+    button.addEventListener("click", function () {
+
+      promptInput.value =
+        button.dataset.magic || "";
+
+      promptInput.focus();
+
+      document
+        .querySelector(".ai-prompt")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
+    });
+
+  });
+
+
+/* ==================================================
+   YARUVA IMAGE ENGINE
+================================================== */
+
+async function yaruvaCreateImage(
+  imageData,
+  prompt
+) {
+
+  const image =
+    await loadImage(imageData);
+
+  const canvas =
+    document.createElement("canvas");
+
+  const ctx =
+    canvas.getContext("2d");
+
+  const MAX_SIZE = 1600;
+
+  let width =
+    image.naturalWidth ||
+    image.width;
+
+  let height =
+    image.naturalHeight ||
+    image.height;
+
+
+  /* Resize large images */
+
+  if (
+    width > MAX_SIZE ||
+    height > MAX_SIZE
+  ) {
+
+    const scale =
+      Math.min(
+        MAX_SIZE / width,
+        MAX_SIZE / height
+      );
+
+    width =
+      Math.round(width * scale);
+
+    height =
+      Math.round(height * scale);
   }
 
-  const reader = new FileReader();
 
-  reader.onload = () => {
-    currentImage = reader.result;
+  canvas.width = width;
+  canvas.height = height;
 
-    previewImage.src = currentImage;
 
-    uploadBox.hidden = true;
-    previewCard.hidden = false;
+  ctx.drawImage(
+    image,
+    0,
+    0,
+    width,
+    height
+  );
 
-    const status = document.getElementById("imageStatus");
 
-    if (status) {
-      status.textContent = "Image ready";
+  const text =
+    String(prompt || "")
+      .toLowerCase();
+
+
+  let mode = "enhance";
+
+
+  if (
+    text.includes("cinematic") ||
+    text.includes("cinema") ||
+    text.includes("movie") ||
+    text.includes("film")
+  ) {
+
+    mode = "cinematic";
+
+  }
+
+  else if (
+    text.includes("luxury") ||
+    text.includes("editorial") ||
+    text.includes("fashion")
+  ) {
+
+    mode = "luxury";
+
+  }
+
+  else if (
+    text.includes("relight") ||
+    text.includes("lighting") ||
+    text.includes("light")
+  ) {
+
+    mode = "relight";
+
+  }
+
+  else if (
+    text.includes("portrait") ||
+    text.includes("professional portrait")
+  ) {
+
+    mode = "portrait";
+
+  }
+
+
+  processPixels(
+    canvas,
+    ctx,
+    mode
+  );
+
+
+  return canvas.toDataURL(
+    "image/jpeg",
+    0.94
+  );
+}
+
+
+/* ==================================================
+   IMAGE PROCESSING
+================================================== */
+
+function processPixels(
+  canvas,
+  ctx,
+  mode
+) {
+
+  const width =
+    canvas.width;
+
+  const height =
+    canvas.height;
+
+
+  const imageData =
+    ctx.getImageData(
+      0,
+      0,
+      width,
+      height
+    );
+
+
+  const pixels =
+    imageData.data;
+
+
+  for (
+    let i = 0;
+    i < pixels.length;
+    i += 4
+  ) {
+
+    let r = pixels[i];
+    let g = pixels[i + 1];
+    let b = pixels[i + 2];
+
+
+    const brightness =
+      (r + g + b) / 3;
+
+
+    /* ================================
+       ENHANCE
+    ================================= */
+
+    if (mode === "enhance") {
+
+      r = contrast(r, 1.12);
+      g = contrast(g, 1.12);
+      b = contrast(b, 1.12);
+
+      r *= 1.05;
+      g *= 1.05;
+      b *= 1.05;
     }
-  };
-
-  reader.readAsDataURL(file);
-});
 
 
-/* =========================
-   PROMPT SUGGESTIONS
-   ========================= */
+    /* ================================
+       CINEMATIC
+    ================================= */
 
-document.querySelectorAll("[data-prompt]").forEach(button => {
-  button.addEventListener("click", () => {
-    promptInput.value = button.dataset.prompt || "";
-    promptInput.focus();
-  });
-});
+    if (mode === "cinematic") {
 
+      r = contrast(r, 1.18);
+      g = contrast(g, 1.12);
+      b = contrast(b, 1.08);
 
-/* =========================
-   AI MAGIC
-   ========================= */
-
-document.querySelectorAll("[data-magic]").forEach(button => {
-  button.addEventListener("click", () => {
-
-    promptInput.value = button.dataset.magic || "";
-
-    promptInput.focus();
-
-    document.querySelector(".ai-prompt")?.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
-  });
-});
+      r *= 1.05;
+      g *= 0.98;
+      b *= 0.94;
 
 
-/* =========================
-   AI IMAGE GENERATION
-   ========================= */
+      if (brightness < 90) {
 
-generateBtn?.addEventListener("click", generateImage);
+        b *= 1.08;
+
+      }
+
+
+      if (brightness > 190) {
+
+        r *= 1.04;
+
+      }
+    }
+
+
+    /* ================================
+       LUXURY
+    ================================= */
+
+    if (mode === "luxury") {
+
+      r = contrast(r, 1.10);
+      g = contrast(g, 1.06);
+      b = contrast(b, 1.08);
+
+      r *= 1.08;
+      g *= 1.02;
+      b *= 1.04;
+    }
+
+
+    /* ================================
+       RELIGHT
+    ================================= */
+
+    if (mode === "relight") {
+
+      const lift =
+        brightness < 150
+          ? 1.17
+          : 1.05;
+
+      r *= lift;
+      g *= lift;
+      b *= lift;
+    }
+
+
+    /* ================================
+       PORTRAIT
+    ================================= */
+
+    if (mode === "portrait") {
+
+      r *= 1.05;
+      g *= 1.02;
+      b *= 0.98;
+
+      r = contrast(r, 1.04);
+      g = contrast(g, 1.04);
+      b = contrast(b, 1.02);
+    }
+
+
+    pixels[i] =
+      clamp(r);
+
+    pixels[i + 1] =
+      clamp(g);
+
+    pixels[i + 2] =
+      clamp(b);
+  }
+
+
+  ctx.putImageData(
+    imageData,
+    0,
+    0
+  );
+
+
+  /* ================================
+     CINEMATIC VIGNETTE
+  ================================= */
+
+  if (mode === "cinematic") {
+
+    const gradient =
+      ctx.createRadialGradient(
+        width / 2,
+        height / 2,
+        Math.min(width, height) * 0.18,
+        width / 2,
+        height / 2,
+        Math.max(width, height) * 0.72
+      );
+
+
+    gradient.addColorStop(
+      0,
+      "rgba(0,0,0,0)"
+    );
+
+
+    gradient.addColorStop(
+      0.72,
+      "rgba(0,0,0,.08)"
+    );
+
+
+    gradient.addColorStop(
+      1,
+      "rgba(0,0,0,.40)"
+    );
+
+
+    ctx.fillStyle =
+      gradient;
+
+
+    ctx.fillRect(
+      0,
+      0,
+      width,
+      height
+    );
+  }
+
+}
+
+
+/* ==================================================
+   IMAGE HELPERS
+================================================== */
+
+function loadImage(src) {
+
+  return new Promise(
+    function (resolve, reject) {
+
+      const image =
+        new Image();
+
+      image.onload =
+        function () {
+          resolve(image);
+        };
+
+      image.onerror =
+        function () {
+          reject(
+            new Error(
+              "Unable to read this image."
+            )
+          );
+        };
+
+      image.src = src;
+
+    }
+  );
+}
+
+
+function contrast(
+  value,
+  factor
+) {
+
+  return (
+    (value - 128) *
+    factor +
+    128
+  );
+}
+
+
+function clamp(value) {
+
+  return Math.max(
+    0,
+    Math.min(
+      255,
+      Math.round(value)
+    )
+  );
+}
+
+
+/* ==================================================
+   GENERATE
+================================================== */
+
+generateBtn?.addEventListener(
+  "click",
+  generateImage
+);
+
 
 async function generateImage() {
 
   if (!currentImage) {
-    alert("Please upload an image first.");
+
+    alert(
+      "Please upload an image first."
+    );
+
     return;
   }
 
-  const prompt = promptInput.value.trim();
+
+  const prompt =
+    promptInput.value.trim();
+
 
   if (!prompt) {
-    alert("Tell YARUVA what you want to create.");
+
+    alert(
+      "Tell YARUVA what you want to create."
+    );
+
     promptInput.focus();
+
     return;
   }
 
-  const originalText = generateBtn.innerHTML;
 
-  generateBtn.disabled = true;
+  const original =
+    generateBtn.innerHTML;
+
+
+  generateBtn.disabled =
+    true;
+
+
   generateBtn.innerHTML = `
-    <span>Creating…</span>
+    <span>YARUVA is creating…</span>
     <b>✦</b>
   `;
 
+
   try {
 
-    const response = await fetch("/api/edit-image", {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify({
-        image: currentImage,
+    generatedImage =
+      await yaruvaCreateImage(
+        currentImage,
         prompt
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        data?.error ||
-        "YARUVA could not generate the image."
       );
-    }
 
-    if (!data.image) {
-      throw new Error(
-        "No generated image was returned."
-      );
-    }
 
-    generatedImage = data.image;
+    resultImage.src =
+      generatedImage;
 
-    resultImage.src = generatedImage;
 
-    resultPrompt.textContent = prompt;
+    resultPrompt.textContent =
+      prompt;
 
-    resultSection.hidden = false;
+
+    resultSection.hidden =
+      false;
+
 
     resultSection.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
 
-  } catch (error) {
+
+  }
+
+  catch (error) {
 
     console.error(error);
 
     alert(
       error.message ||
-      "Something went wrong while creating your image."
+      "YARUVA could not process the image."
     );
 
-  } finally {
-
-    generateBtn.disabled = false;
-    generateBtn.innerHTML = originalText;
   }
+
+  finally {
+
+    generateBtn.disabled =
+      false;
+
+    generateBtn.innerHTML =
+      original;
+
+  }
+
 }
 
 
-/* =========================
+/* ==================================================
    SAVE PROJECT
-   ========================= */
+================================================== */
 
-saveProjectBtn?.addEventListener("click", saveProject);
+saveProjectBtn?.addEventListener(
+  "click",
+  saveProject
+);
+
 
 function saveProject() {
 
   if (!generatedImage) {
-    alert("Generate an image first.");
+
+    alert(
+      "Generate an image first."
+    );
+
     return;
   }
+
 
   const projects =
     JSON.parse(
-      localStorage.getItem("yaruvaProjects") || "[]"
+      localStorage.getItem(
+        "yaruvaProjects"
+      ) || "[]"
     );
 
-  const project = {
-    id: Date.now(),
-    title: "YARUVA Creation",
-    prompt: promptInput.value.trim(),
-    image: generatedImage,
-    createdAt: new Date().toISOString()
-  };
 
-  projects.unshift(project);
+  projects.unshift({
+
+    id: Date.now(),
+
+    title:
+      "YARUVA Creation",
+
+    prompt:
+      promptInput.value.trim(),
+
+    image:
+      generatedImage,
+
+    createdAt:
+      new Date().toISOString()
+
+  });
+
 
   localStorage.setItem(
     "yaruvaProjects",
-    JSON.stringify(projects.slice(0, 30))
+    JSON.stringify(
+      projects.slice(0, 30)
+    )
   );
 
-  saveProjectBtn.textContent = "✓ Saved";
 
-  setTimeout(() => {
-    saveProjectBtn.textContent = "Save project";
-  }, 1800);
+  saveProjectBtn.textContent =
+    "✓ Saved";
+
+
+  setTimeout(
+    function () {
+
+      saveProjectBtn.textContent =
+        "Save project";
+
+    },
+    1800
+  );
+
 }
 
 
-/* =========================
+/* ==================================================
    EXPORT
-   ========================= */
+================================================== */
 
-exportBtn?.addEventListener("click", () => {
+exportBtn?.addEventListener(
+  "click",
+  function () {
 
-  if (!generatedImage) {
-    alert("Create an image first.");
-    return;
-  }
+    if (!generatedImage) {
 
-  const link = document.createElement("a");
-
-  link.href = generatedImage;
-  link.download = "yaruva-ai-creation.png";
-
-  document.body.appendChild(link);
-
-  link.click();
-
-  link.remove();
-});
-
-
-/* =========================
-   IMAGE → VIDEO
-   ========================= */
-
-videoBtn?.addEventListener("click", createVideo);
-
-async function createVideo() {
-
-  if (!currentImage) {
-    alert("Upload an image first.");
-    return;
-  }
-
-  const prompt =
-    videoPrompt.value.trim() ||
-    "Create a cinematic animation from this image with subtle camera movement and natural motion.";
-
-  const originalText = videoBtn.innerHTML;
-
-  videoBtn.disabled = true;
-
-  videoBtn.innerHTML = `
-    Creating video…
-    <b>▶</b>
-  `;
-
-  videoStatus.hidden = false;
-  videoStatus.textContent =
-    "YARUVA is preparing your cinematic video…";
-
-  videoResult.hidden = true;
-
-  try {
-
-    const response = await fetch("/api/video", {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify({
-        prompt,
-        image: currentImage
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        data?.error ||
-        "Video generation failed."
+      alert(
+        "Create an image first."
       );
-    }
-
-    if (!data.id) {
-      throw new Error(
-        "No video job was created."
-      );
-    }
-
-    await pollVideo(data.id);
-
-  } catch (error) {
-
-    console.error(error);
-
-    videoStatus.textContent =
-      error.message ||
-      "Unable to create the video.";
-
-  } finally {
-
-    videoBtn.disabled = false;
-    videoBtn.innerHTML = originalText;
-  }
-}
-
-
-/* =========================
-   VIDEO STATUS
-   ========================= */
-
-async function pollVideo(id) {
-
-  const maxAttempts = 60;
-
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-
-    const response = await fetch(
-      `/api/video-status?id=${encodeURIComponent(id)}`
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        data?.error ||
-        "Unable to check video status."
-      );
-    }
-
-    const progress =
-      data.progress != null
-        ? Math.round(data.progress)
-        : null;
-
-    if (data.status === "completed") {
-
-      videoStatus.textContent =
-        "Your cinematic video is ready.";
-
-      videoResult.src =
-        `/api/video-content?id=${encodeURIComponent(id)}`;
-
-      videoResult.hidden = false;
-
-      videoResult.load();
 
       return;
     }
 
-    if (
-      data.status === "failed" ||
-      data.status === "error"
-    ) {
 
-      throw new Error(
-        data?.error?.message ||
-        "Video generation failed."
-      );
+    const link =
+      document.createElement("a");
+
+
+    link.href =
+      generatedImage;
+
+
+    link.download =
+      "yaruva-ai-creation.jpg";
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+  }
+);
+
+
+/* ==================================================
+   IMAGE → VIDEO
+================================================== */
+
+/*
+  The paid OpenAI video backend is intentionally
+  not used anymore.
+
+  We will build YARUVA's free motion engine separately.
+*/
+
+videoBtn?.addEventListener(
+  "click",
+  function () {
+
+    if (videoStatus) {
+
+      videoStatus.hidden =
+        false;
+
+      videoStatus.textContent =
+        "YARUVA free video engine is coming next. Image creation is ready.";
+
     }
 
-    videoStatus.textContent =
-      progress != null
-        ? `Creating your video… ${progress}%`
-        : "Creating your cinematic video…";
-
-    await new Promise(resolve =>
-      setTimeout(resolve, 5000)
-    );
   }
+);
 
-  throw new Error(
-    "Video generation is taking longer than expected. Please try again later."
-  );
+
+if (videoResult) {
+  videoResult.hidden = true;
 }
 
 
-/* =========================
+/* ==================================================
    PROFILE
-   ========================= */
+================================================== */
 
 document
   .getElementById("profileNav")
-  ?.addEventListener("click", () => {
-    alert("YARUVA profile — coming soon.");
-  });
+  ?.addEventListener(
+    "click",
+    function () {
+
+      alert(
+        "YARUVA profile — coming soon."
+      );
+
+    }
+  );
