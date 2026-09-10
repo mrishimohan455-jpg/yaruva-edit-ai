@@ -25,32 +25,104 @@ let transformersModule = null;
 // UPLOAD
 // --------------------------------------------------
 
-uploadBtn?.addEventListener("click", () => {
+uploadBtn?.addEventListener("click", (event) => {
+
+  event.preventDefault();
+
+  event.stopPropagation();
+
   imageInput?.click();
+
 });
 
-uploadBox?.addEventListener("click", () => {
+uploadBox?.addEventListener("click", (event) => {
+
+  // Don't trigger the picker twice when
+
+  // the user clicks the Choose image button.
+
+  if (event.target === uploadBtn || uploadBtn?.contains(event.target)) {
+
+    return;
+
+  }
+
   imageInput?.click();
+
 });
 
 imageInput?.addEventListener("change", () => {
+
   const file = imageInput.files?.[0];
 
   if (!file) return;
 
+  if (!file.type.startsWith("image/")) {
+
+    alert("Please choose an image file.");
+
+    return;
+
+  }
+
   const reader = new FileReader();
 
   reader.onload = () => {
+
     currentImage = reader.result;
 
+    // Show uploaded image
+
     if (previewImage) {
+
       previewImage.src = currentImage;
+
     }
 
-    previewCard?.classList.remove("hidden");
+    // IMPORTANT:
+
+    // HTML uses the hidden attribute,
+
+    // so remove it directly.
+
+    if (previewCard) {
+
+      previewCard.hidden = false;
+
+    }
+
+    // Update status
+
+    const imageStatus =
+
+      document.getElementById("imageStatus");
+
+    if (imageStatus) {
+
+      imageStatus.textContent = "Image ready";
+
+    }
+
+    const canvasLabel =
+
+      document.getElementById("canvasLabel");
+
+    if (canvasLabel) {
+
+      canvasLabel.textContent = "Your image";
+
+    }
+
+  };
+
+  reader.onerror = () => {
+
+    alert("YARUVA couldn't read this image. Please try again.");
+
   };
 
   reader.readAsDataURL(file);
+
 });
 
 
@@ -265,7 +337,9 @@ function showResult(image, prompt) {
       prompt || "YARUVA AI result";
   }
 
-  resultSection?.classList.remove("hidden");
+  if (resultSection) {
+  resultSection.hidden = false;
+}
 
   resultSection?.scrollIntoView({
     behavior: "smooth",
