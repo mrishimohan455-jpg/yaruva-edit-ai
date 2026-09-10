@@ -2,122 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
-  <title>YARUVA — My Projects</title>
-
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f6f0e7">
+  <title>YARUVA — Projects</title>
   <link rel="stylesheet" href="styles.css">
-
-  <style>
-    .projects-page {
-      padding: 28px 20px;
-    }
-
-    .projects-title {
-      padding: 25px 4px 30px;
-    }
-
-    .projects-title .eyebrow {
-      margin-bottom: 10px;
-    }
-
-    .projects-title h1 {
-      font-size: 38px;
-      line-height: 1;
-      letter-spacing: -2px;
-    }
-
-    .projects-title p {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .project-list {
-      display: grid;
-      gap: 14px;
-    }
-
-    .project-item {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      padding: 12px;
-      border-radius: 18px;
-      background: var(--card);
-      border: 1px solid var(--line);
-    }
-
-    .project-thumb {
-      width: 82px;
-      height: 82px;
-      flex: 0 0 82px;
-      border-radius: 14px;
-      object-fit: cover;
-      background: #171c25;
-    }
-
-    .project-info {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .project-info strong {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 7px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .project-info small {
-      display: block;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.5;
-    }
-
-    .project-delete {
-      width: 34px;
-      height: 34px;
-      flex: 0 0 34px;
-      border-radius: 10px;
-      background: rgba(255,255,255,.06);
-      color: #9ca5b5;
-    }
-
-    .empty-projects {
-      padding: 55px 25px;
-      text-align: center;
-      border: 1px dashed rgba(255,255,255,.1);
-      border-radius: 20px;
-    }
-
-    .empty-projects .empty-icon {
-      font-size: 35px;
-      margin-bottom: 15px;
-    }
-
-    .empty-projects strong {
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .empty-projects p {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-  </style>
 </head>
 
 <body>
 
 <div class="app-shell">
 
-  <!-- HEADER -->
   <header class="topbar">
 
     <button
@@ -128,7 +22,7 @@
 
     <div class="brand">
       <span class="brand-mark">Y</span>
-      <span>PROJECTS</span>
+      <span>YARUVA</span>
     </div>
 
     <button
@@ -142,55 +36,54 @@
 
   <main class="projects-page">
 
-    <!-- TITLE -->
-    <section class="projects-title">
+    <section class="projects-heading">
 
-      <div class="eyebrow">
-        YOUR CREATIONS
-      </div>
+      <div class="eyebrow">YOUR CREATIVE SPACE</div>
 
       <h1>
-        My Projects
+        Your<br>
+        <span>projects.</span>
       </h1>
 
       <p>
-        Your AI creations are saved here on this device.
+        Everything you've created with YARUVA,
+        in one place.
       </p>
 
     </section>
 
 
-    <!-- PROJECTS -->
     <section>
 
-      <div
-        id="projectList"
-        class="project-list">
+      <div class="section-head">
+        <h2>Creations</h2>
+        <span id="projectCount">0 projects</span>
       </div>
 
-
-      <!-- EMPTY STATE -->
       <div
-        id="emptyProjects"
-        class="empty-projects">
+        class="projects-grid"
+        id="projectsGrid">
+      </div>
 
-        <div class="empty-icon">
+      <div
+        class="projects-empty"
+        id="projectsEmpty">
+
+        <div class="empty-project-icon">
           ✦
         </div>
 
-        <strong>
-          No projects yet
-        </strong>
+        <h2>No creations yet</h2>
 
         <p>
-          Create your first AI image or video and it will appear here.
+          Your AI creations will appear here
+          after you save them.
         </p>
 
         <button
           class="primary"
           onclick="location.href='editor.html'">
-          Create something
-          <b>→</b>
+          Create your first project →
         </button>
 
       </div>
@@ -200,17 +93,14 @@
   </main>
 
 
-  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
 
-    <button
-      onclick="location.href='index.html'">
+    <button onclick="location.href='index.html'">
       ⌂
       <span>Home</span>
     </button>
 
-    <button
-      onclick="location.href='editor.html'">
+    <button onclick="location.href='editor.html'">
       ✦
       <span>Create</span>
     </button>
@@ -220,7 +110,7 @@
       <span>Projects</span>
     </button>
 
-    <button>
+    <button id="profileNav">
       ◉
       <span>Profile</span>
     </button>
@@ -231,178 +121,164 @@
 
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
 
-    const list =
-      document.getElementById("projectList");
+const grid =
+  document.getElementById("projectsGrid");
 
-    const empty =
-      document.getElementById("emptyProjects");
+const empty =
+  document.getElementById("projectsEmpty");
 
+const count =
+  document.getElementById("projectCount");
 
-    let projects = [];
-
-    try {
-
-      projects =
-        JSON.parse(
-          localStorage.getItem("yaruva_projects") || "[]"
-        );
-
-    } catch (error) {
-
-      projects = [];
-
-    }
+const projects =
+  JSON.parse(
+    localStorage.getItem("yaruvaProjects") || "[]"
+  );
 
 
-    if (!projects.length) {
+function renderProjects() {
 
-      empty.style.display = "block";
+  count.textContent =
+    `${projects.length} ${
+      projects.length === 1
+        ? "project"
+        : "projects"
+    }`;
 
-      return;
+  if (!projects.length) {
 
-    }
+    empty.style.display = "grid";
+    grid.innerHTML = "";
 
+    return;
+  }
 
-    empty.style.display = "none";
+  empty.style.display = "none";
 
-
-    projects.forEach(project => {
-
-      const item =
-        document.createElement("article");
-
-      item.className =
-        "project-item";
-
-
-      const thumb =
-        document.createElement("img");
-
-      thumb.className =
-        "project-thumb";
-
-      thumb.src =
-        project.url || "";
-
-      thumb.alt =
-        "YARUVA project";
-
-
-      const info =
-        document.createElement("div");
-
-      info.className =
-        "project-info";
-
-
-      const title =
-        document.createElement("strong");
-
-      title.textContent =
-        project.prompt ||
-        "YARUVA Creation";
-
+  grid.innerHTML =
+    projects.map(project => {
 
       const date =
-        document.createElement("small");
+        project.createdAt
+          ? new Date(project.createdAt)
+              .toLocaleDateString(
+                undefined,
+                {
+                  day: "numeric",
+                  month: "short"
+                }
+              )
+          : "";
 
-      date.textContent =
-        formatDate(project.createdAt);
+      return `
 
+        <article class="project-card">
 
-      const type =
-        document.createElement("small");
+          <div class="project-image">
 
-      type.textContent =
-        project.type === "video"
-          ? "AI Video"
-          : "AI Image";
+            <img
+              src="${project.image}"
+              alt="YARUVA project">
 
+          </div>
 
-      info.appendChild(title);
-      info.appendChild(type);
-      info.appendChild(date);
+          <div class="project-details">
 
+            <strong>
+              ${escapeHTML(
+                project.title ||
+                "YARUVA Creation"
+              )}
+            </strong>
 
-      const deleteBtn =
-        document.createElement("button");
+            <small>
+              ${date}
+            </small>
 
-      deleteBtn.className =
-        "project-delete";
+          </div>
 
-      deleteBtn.textContent =
-        "×";
+          <button
+            class="delete-project"
+            data-id="${project.id}"
+            aria-label="Delete project">
+            ×
+          </button>
 
+        </article>
 
-      deleteBtn.addEventListener(
+      `;
+
+    }).join("");
+
+  document
+    .querySelectorAll(".delete-project")
+    .forEach(button => {
+
+      button.addEventListener(
         "click",
-        () => {
-
-          removeProject(project.id);
-
-        }
+        deleteProject
       );
-
-
-      item.appendChild(thumb);
-      item.appendChild(info);
-      item.appendChild(deleteBtn);
-
-      list.appendChild(item);
 
     });
+}
 
 
-    function removeProject(id) {
+function deleteProject(event) {
 
-      projects =
-        projects.filter(
-          project =>
-            project.id !== id
-        );
+  const id =
+    Number(event.currentTarget.dataset.id);
+
+  const index =
+    projects.findIndex(
+      project => project.id === id
+    );
+
+  if (index === -1) return;
+
+  if (
+    !confirm(
+      "Delete this YARUVA project?"
+    )
+  ) return;
+
+  projects.splice(index, 1);
+
+  localStorage.setItem(
+    "yaruvaProjects",
+    JSON.stringify(projects)
+  );
+
+  renderProjects();
+}
 
 
-      localStorage.setItem(
-        "yaruva_projects",
-        JSON.stringify(projects)
+function escapeHTML(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+document
+  .getElementById("profileNav")
+  ?.addEventListener(
+    "click",
+    () => {
+      alert(
+        "YARUVA profile — coming soon."
       );
-
-
-      location.reload();
-
     }
+  );
 
 
-    function formatDate(value) {
+renderProjects();
 
-      if (!value) {
-        return "Recently created";
-      }
-
-
-      const date =
-        new Date(value);
-
-
-      if (Number.isNaN(date.getTime())) {
-        return "Recently created";
-      }
-
-
-      return date.toLocaleDateString(
-        undefined,
-        {
-          day: "numeric",
-          month: "short",
-          year: "numeric"
-        }
-      );
-
-    }
-
-  });
 </script>
 
 </body>
