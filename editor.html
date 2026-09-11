@@ -36,96 +36,68 @@
 
     <!-- IMAGE AREA -->
 
-    <section class="canvas-card">
+  <!-- IMAGE AREA -->
 
-      <div class="canvas-top">
-        <span id="canvasLabel">Your canvas</span>
-        <span id="imageStatus">Ready</span>
-      </div>
+<section class="canvas-card">
 
-      <div
-        class="upload-box"
-        id="uploadBox">
+  <div class="canvas-top">
+    <span id="canvasLabel">Your canvas</span>
+    <span id="imageStatus">Ready</span>
+  </div>
 
-        <input
+  <div class="upload-box" id="uploadBox">
 
-  type="file"
+    <input
+      type="file"
+      id="imageInput"
+      accept="image/*"
+      hidden>
 
-  id="imageInput"
+    <div class="upload-icon">✦</div>
 
-  accept="image/*"
+    <h2>Drop your image here</h2>
 
-  class="file-input"
+    <p>
+      or choose a photo from your device
+    </p>
 
-  hidden>
+    <label
+      class="primary"
+      id="uploadBtn"
+      for="imageInput">
+      Choose image
+    </label>
 
-<div class="upload-icon">✦</div>
+  </div>
 
-<h2>Drop your image here</h2>
+  <div
+    class="preview-card"
+    id="previewCard"
+    hidden>
 
-<p>
+    <img
+      id="previewImage"
+      alt="YARUVA preview">
 
-  or choose a photo from your device
+    <div class="preview-actions">
 
-</p>
+      <button
+        id="changeImageBtn"
+        type="button">
+        Replace
+      </button>
 
-<button
+      <button
+        id="beforeAfterBtn"
+        type="button">
+        Before / After
+      </button>
 
-  class="primary"
+    </div>
 
-  id="uploadBtn"
+  </div>
 
-  type="button">
-
-  Choose image
-
-</button>
-          
-          
-    
-
-        <div class="upload-icon">✦</div>
-
-        <h2>Drop your image here</h2>
-
-        <p>
-          or choose a photo from your device
-        </p>
-
-        <button
-          class="primary"
-          id="uploadBtn"
-          for="imageInput">
-          Choose image
-        </label>
-
-      </div>
-
-
-      <div
-        class="preview-card"
-        id="previewCard"
-        hidden>
-
-        <img
-          id="previewImage"
-          alt="YARUVA preview">
-
-        <div class="preview-actions">
-
-          <button id="changeImageBtn">
-            Replace
-          </button>
-
-          <button id="beforeAfterBtn">
-            Before / After
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
+</section>
 
 
     <!-- AI PROMPT -->
