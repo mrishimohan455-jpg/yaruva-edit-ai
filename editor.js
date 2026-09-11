@@ -47,27 +47,7 @@ let showingBefore = false;
 // ======================================================
 // UPLOAD
 // ======================================================
-uploadBtn?.addEventListener("click", () => {
 
-  imageInput?.click();
-
-});
-
-
-uploadBox?.addEventListener("click", (event) => {
-
-  if (
-    event.target === uploadBtn ||
-    uploadBtn?.contains(event.target)
-  ) {
-
-    return;
-
-  }
-
-  imageInput?.click();
-
-});
 
 
 changeImageBtn?.addEventListener("click", () => {
